@@ -14,7 +14,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const signIn = () => {};
-  const signUp = () => {};
 
   return (
     <View style={styles.container}>
@@ -41,7 +40,6 @@ const Login = () => {
           ) : (
             <>
               <Button title="Sign In" onPress={signIn} disabled={loading} />
-              <Button title="Sign Up" onPress={signUp} disabled={loading} />
             </>
           )}
         </View>

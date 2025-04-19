@@ -1,14 +1,81 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  Button,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { useState } from "react";
 
-const Signup = () => {
+const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const signUp = async () => {
+    await setLoading(true);
+    // try {
+    //   await auth().createUserWithEmailAndPassword(email, password);
+    // } catch (e) {
+    //   alert(e.message);
+    // }
+  };
+
   return (
-    <View>
-      <Text>Signup</Text>
+    <View style={styles.container}>
+      <KeyboardAvoidingView>
+        <View>
+          <Text>SignUp</Text>
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.input}
+          />
+          {loading ? (
+            <Text>Loading ...</Text>
+          ) : (
+            <>
+              <Button title="Sign Up" onPress={signUp} disabled={loading} />
+            </>
+          )}
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
 
-export default Signup;
+export default SignUp;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  input: {
+    height: 40,
+    width: 250,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+  button: {
+    marginTop: 12,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+  },
+});
