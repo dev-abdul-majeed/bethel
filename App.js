@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Login from "./src/screens/Login";
 import SignUp from "./src/screens/Signup";
@@ -8,7 +7,6 @@ import { useEffect, useState } from "react";
 export default function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-  const router = useRouter();
   const onAuthStateChanged = (user) => {
     console.log("onAuthStateChanged: ", user);
     setUser(user);
@@ -31,9 +29,7 @@ export default function App() {
   }
   return (
     <>
-      <Stack>
-        <Login />
-      </Stack>
+      <Login />
     </>
   );
 }
