@@ -4,13 +4,11 @@ import Login from "./src/screens/Login";
 import SignUp from "./src/screens/Signup";
 import auth, { onAuthStateChanged } from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
-import { useRouter, useSegments } from "expo-router";
 
 export default function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
   const router = useRouter();
-  const segments = useSegments();
   const onAuthStateChanged = (user) => {
     console.log("onAuthStateChanged: ", user);
     setUser(user);
@@ -31,7 +29,13 @@ export default function App() {
       </>
     );
   }
-  return <Login />;
+  return (
+    <>
+      <Stack>
+        <Login />
+      </Stack>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
