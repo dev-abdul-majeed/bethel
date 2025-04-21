@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 
 import auth from "@react-native-firebase/auth";
+
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,8 +19,11 @@ const SignUp = () => {
     setLoading(true);
     try {
       await auth().createUserWithEmailAndPassword(email, password);
+      alert("Check your email");
     } catch (e) {
       alert(e.message);
+    } finally {
+      setLoading(false);
     }
   };
 

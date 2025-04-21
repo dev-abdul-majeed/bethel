@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F9ABCC9A12F47CAB7C668DC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 73A0678ED5EA42B394F1192D /* GoogleService-Info.plist */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1EDCA447A6FB4CCB8AAACF5C /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C23411A38D4166828843DD /* noop-file.swift */; };
+		3211C722654D4A499F0DBD99 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 459979EB45AC43FFB55296E4 /* GoogleService-Info.plist */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		834BE0489A7B71BF13A7631D /* Pods_bethel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0A5D9E8E068C2EA76100C3F /* Pods_bethel.framework */; };
+		7E2BF6230AF5524D31169477 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C02AE7BAD58189A741A55C00 /* PrivacyInfo.xcprivacy */; };
+		A7377D0CE0A79CC1BD2F636A /* Pods_bethel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1870706018D89745305D8B3 /* Pods_bethel.framework */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		DAED26FA37F306A21B2AE7E6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BE4380D48BFE8AA12E6C6241 /* PrivacyInfo.xcprivacy */; };
+		C618C42D1658498B9429027D /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF901C42DC0C4E7EB3CF8F34 /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,16 +26,16 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = bethel/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = bethel/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = bethel/main.m; sourceTree = "<group>"; };
-		5AC9DF2FED124C7DB9940258 /* bethel-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "bethel-Bridging-Header.h"; path = "bethel/bethel-Bridging-Header.h"; sourceTree = "<group>"; };
+		459979EB45AC43FFB55296E4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "bethel/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6A6188F015A64502B63327EC /* bethel-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "bethel-Bridging-Header.h"; path = "bethel/bethel-Bridging-Header.h"; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-bethel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bethel.debug.xcconfig"; path = "Target Support Files/Pods-bethel/Pods-bethel.debug.xcconfig"; sourceTree = "<group>"; };
-		73A0678ED5EA42B394F1192D /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "bethel/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-bethel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bethel.release.xcconfig"; path = "Target Support Files/Pods-bethel/Pods-bethel.release.xcconfig"; sourceTree = "<group>"; };
+		A1870706018D89745305D8B3 /* Pods_bethel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bethel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = bethel/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BE4380D48BFE8AA12E6C6241 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = bethel/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		C7C23411A38D4166828843DD /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "bethel/noop-file.swift"; sourceTree = "<group>"; };
+		C02AE7BAD58189A741A55C00 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = bethel/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		DF901C42DC0C4E7EB3CF8F34 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "bethel/noop-file.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F0A5D9E8E068C2EA76100C3F /* Pods_bethel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bethel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-bethel/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -44,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				834BE0489A7B71BF13A7631D /* Pods_bethel.framework in Frameworks */,
+				A7377D0CE0A79CC1BD2F636A /* Pods_bethel.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,10 +61,10 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				73A0678ED5EA42B394F1192D /* GoogleService-Info.plist */,
-				C7C23411A38D4166828843DD /* noop-file.swift */,
-				5AC9DF2FED124C7DB9940258 /* bethel-Bridging-Header.h */,
-				BE4380D48BFE8AA12E6C6241 /* PrivacyInfo.xcprivacy */,
+				459979EB45AC43FFB55296E4 /* GoogleService-Info.plist */,
+				DF901C42DC0C4E7EB3CF8F34 /* noop-file.swift */,
+				6A6188F015A64502B63327EC /* bethel-Bridging-Header.h */,
+				C02AE7BAD58189A741A55C00 /* PrivacyInfo.xcprivacy */,
 			);
 			name = bethel;
 			sourceTree = "<group>";
@@ -73,7 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				F0A5D9E8E068C2EA76100C3F /* Pods_bethel.framework */,
+				A1870706018D89745305D8B3 /* Pods_bethel.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -150,14 +150,14 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "bethel" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				195EBC14A7860183D343D510 /* [Expo] Configure project */,
+				91932D53B981440E6FDB17FB /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				A6D7D5D90B93EB396CCC27F9 /* [CP] Embed Pods Frameworks */,
-				48C3436C456F2625BD1A45AF /* [CP-User] [RNFB] Core Configuration */,
+				D2933DEA600263ADAB9A8797 /* [CP] Embed Pods Frameworks */,
+				36EF65AA13B8DDD50BD3D8B0 /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -207,8 +207,8 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				0F9ABCC9A12F47CAB7C668DC /* GoogleService-Info.plist in Resources */,
-				DAED26FA37F306A21B2AE7E6 /* PrivacyInfo.xcprivacy in Resources */,
+				3211C722654D4A499F0DBD99 /* GoogleService-Info.plist in Resources */,
+				7E2BF6230AF5524D31169477 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,26 +252,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		195EBC14A7860183D343D510 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-bethel/expo-configure-project.sh\"\n";
-		};
-		48C3436C456F2625BD1A45AF /* [CP-User] [RNFB] Core Configuration */ = {
+		36EF65AA13B8DDD50BD3D8B0 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -328,7 +309,26 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-bethel/Pods-bethel-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A6D7D5D90B93EB396CCC27F9 /* [CP] Embed Pods Frameworks */ = {
+		91932D53B981440E6FDB17FB /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-bethel/expo-configure-project.sh\"\n";
+		};
+		D2933DEA600263ADAB9A8797 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -356,7 +356,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				1EDCA447A6FB4CCB8AAACF5C /* noop-file.swift in Sources */,
+				C618C42D1658498B9429027D /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

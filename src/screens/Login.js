@@ -7,13 +7,24 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
+import auth from "@react-native-firebase/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const signIn = () => {};
+  const signIn = async () => {
+    setLoading(true);
+    try {
+      await auth().signInWithEmailAndPassword(email, password);
+      alert("Logged In");
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
