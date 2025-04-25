@@ -4,7 +4,14 @@ import { View, Button, Image, Text, ActivityIndicator } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
 
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
+import { storage } from "../services/firebase";
 
 const ImageUpload = () => {
   const [image, setImage] = useState(null);
@@ -13,9 +20,11 @@ const ImageUpload = () => {
 
   const [uploadStatus, setUploadStatus] = useState("");
 
+  const [downloadUrl, setDownloadUrl] = useState("");
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
 
       allowsEditing: false,
 
@@ -26,6 +35,8 @@ const ImageUpload = () => {
       setImage(result.assets[0]);
 
       setUploadStatus("");
+
+      setDownloadUrl("");
     }
   };
 
@@ -36,18 +47,28 @@ const ImageUpload = () => {
       .split("/")
       .pop()}`;
 
-    const storageRef = ref(getStorage(), imageName);
+    const storageRef = ref(storage, imageName);
 
     const blob = await (await fetch(image.uri)).blob();
 
-    return await uploadBytesResumable(storageRef, blob);
+    return uploadBytesResumable(storageRef, blob);
   };
 
   const handleUpload = async () => {
     try {
       setUploading(true);
 
-      const uploadTask = await uploadImageToStorage(image, "user_");
+      const imageName = `user_Images/${Date.now()}_${image.uri
+        .split("/")
+        .pop()}`;
+
+      const storageRef = ref(getStorage(), imageName);
+
+      const blob = await (await fetch(image.uri)).blob();
+
+      // DO NOT await here
+
+      const uploadTask = uploadBytesResumable(storageRef, blob);
 
       uploadTask.on(
         "state_changed",
@@ -65,16 +86,24 @@ const ImageUpload = () => {
           setUploadStatus("Upload failed: " + error.message);
         },
 
-        () => {
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
           setUploading(false);
 
           setUploadStatus("Upload complete!");
+
+          setDownloadUrl(downloadURL);
+
+          console.log("File available at:", downloadURL);
         }
       );
     } catch (error) {
       setUploading(false);
 
       setUploadStatus("Error: " + error.message);
+
+      console.log(error.message);
     }
   };
 
@@ -103,6 +132,12 @@ const ImageUpload = () => {
 
       {uploadStatus !== "" && (
         <Text style={{ marginTop: 20 }}>{uploadStatus}</Text>
+      )}
+
+      {downloadUrl !== "" && (
+        <Text selectable style={{ marginTop: 10, color: "blue" }}>
+          {downloadUrl}
+        </Text>
       )}
     </View>
   );

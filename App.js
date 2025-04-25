@@ -7,15 +7,6 @@ import { useEffect, useState } from "react";
 import ImageUpload from "./src/screens/ImageUpload";
 
 export default function App() {
-  const firebaseConfig = {
-    apiKey: "AIzaSyCGEgXz4gm2oVw7JlzTcfx9_Uy5XIh-PIQ",
-    projectId: "bethel-36eb6",
-    storageBucket: "bethel-36eb6.firebasestorage.app",
-    appId: "1:896585879663:android:4b78165eb54f55ab6fbd9a",
-  };
-
-  initializeApp(firebaseConfig);
-
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
   const onAuthStateChanged = (user) => {
@@ -40,7 +31,7 @@ export default function App() {
   }
   return (
     <>
-      <Login />
+      <ImageUpload />
     </>
   );
 }
