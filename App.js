@@ -1,14 +1,24 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+} from "react-native";
 import Login from "./src/screens/Login";
 import SignUp from "./src/screens/Signup";
-import auth, { onAuthStateChanged } from "@react-native-firebase/auth";
-import { initializeApp } from "firebase/app";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
-import ImageUpload from "./src/screens/ImageUpload";
+import Home from "./src/screens/Home";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+
   const onAuthStateChanged = (user) => {
     console.log("onAuthStateChanged: ", user);
     setUser(user);
@@ -20,19 +30,41 @@ export default function App() {
     return subscriber;
   }, []);
 
+  const Stack = createNativeStackNavigator();
+
   if (initializing) {
     return (
-      <>
+      <SafeAreaView>
         <View style={styles.container}>
           <ActivityIndicator />
         </View>
-      </>
+      </SafeAreaView>
     );
   }
   return (
-    <>
-      <ImageUpload />
-    </>
+    <SafeAreaProvider>
+      <StatusBar hidden />
+      <NavigationContainer>
+        {user ? (
+          <>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack.Navigator>
+          </>
+        ) : (
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Sign Up" component={SignUp} />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 

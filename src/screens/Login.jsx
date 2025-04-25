@@ -9,11 +9,12 @@ import {
 import React, { useState } from "react";
 import auth from "@react-native-firebase/auth";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = ({ navigation }) => {
+  const [email, setEmail] = useState("dev.abdul.majeed@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
 
+  // const navigation = useNavigation;
   const signIn = async () => {
     setLoading(true);
     try {
@@ -53,6 +54,14 @@ const Login = () => {
               <Button title="Sign In" onPress={signIn} disabled={loading} />
             </>
           )}
+
+          <Button
+            title="Sign Up"
+            onPress={() => {
+              navigation.navigate("Sign Up");
+            }}
+            disabled={loading}
+          />
         </View>
       </KeyboardAvoidingView>
     </View>
