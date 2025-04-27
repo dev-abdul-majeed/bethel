@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "896585879663",
+    "project_id": "bethel-36eb6",
+    "storage_bucket": "bethel-36eb6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896585879663:android:4b78165eb54f55ab6fbd9a",
+        "android_client_info": {
+          "package_name": "com.abdul.bethel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896585879663-rhbuabiupjkp440dkndrdmr41q9i0h86.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abdul.bethel",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "896585879663-f31aqijl0e93s8vaoqp6b5iv5ug4g0ii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGEgXz4gm2oVw7JlzTcfx9_Uy5XIh-PIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896585879663-f31aqijl0e93s8vaoqp6b5iv5ug4g0ii.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "896585879663-dq55bkraf9ebpn3f6hbujigtukjt8apg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.abdul.bethel"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
