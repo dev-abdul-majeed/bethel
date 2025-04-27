@@ -31,6 +31,7 @@ const Login = ({ navigation }) => {
     <View style={styles.container}>
       <KeyboardAvoidingView>
         <View>
+          <Text style={styles.logo}>Bethel</Text>
           <Text>Login</Text>
           <TextInput
             placeholder="Email"
@@ -89,6 +90,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
+    textAlign: "center",
+  },
+  logo: {
+    fontFamily: "Gilroy-Bold",
+    fontSize: 56,
     textAlign: "center",
   },
 });

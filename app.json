@@ -39,7 +39,19 @@
         }
       ],
       "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      "@react-native-firebase/auth",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/airborne-gp.ttf",
+            "./assets/fonts/arthemis.ttf",
+            "./assets/fonts/gilroy-light.ttf",
+            "./assets/fonts/gilroy-semibold.ttf",
+            "./assets/fonts/gilroy-bold.ttf"
+          ]
+        }
+      ]
     ],
     "extra": {
       "router": {
