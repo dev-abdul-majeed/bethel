@@ -2,8 +2,6 @@ import {
   ActivityIndicator,
   SafeAreaView,
   StyleSheet,
-  Text,
-  View,
   StatusBar,
 } from "react-native";
 import Login from "./src/screens/Login";
@@ -14,8 +12,12 @@ import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import Home from "./src/screens/Home";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { createTamagui, TamaguiProvider, View } from "tamagui";
+import { defaultConfig } from "@tamagui/config/v4";
 
 export default function App() {
+  const config = createTamagui(defaultConfig);
+
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
 
@@ -42,29 +44,43 @@ export default function App() {
     );
   }
   return (
-    <SafeAreaProvider>
-      <StatusBar hidden />
-      <NavigationContainer>
-        {user ? (
-          <>
-            <Stack.Navigator initialRouteName="Home">
+    <TamaguiProvider config={config}>
+      <SafeAreaProvider>
+        <StatusBar hidden />
+        <NavigationContainer>
+          {user ? (
+            <>
+              <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen
+                  name="Home"
+                  component={Home}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+              </Stack.Navigator>
+            </>
+          ) : (
+            <Stack.Navigator initialRouteName="Login">
               <Stack.Screen
-                name="Home"
-                component={Home}
+                name="Login"
+                component={Login}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Sign Up"
+                component={SignUp}
                 options={{
                   headerShown: false,
                 }}
               />
             </Stack.Navigator>
-          </>
-        ) : (
-          <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Sign Up" component={SignUp} />
-          </Stack.Navigator>
-        )}
-      </NavigationContainer>
-    </SafeAreaProvider>
+          )}
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </TamaguiProvider>
   );
 }
 

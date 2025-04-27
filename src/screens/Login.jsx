@@ -1,13 +1,15 @@
 import {
-  Button,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
   View,
+  Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import auth from "@react-native-firebase/auth";
+import { Button } from "tamagui";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("dev.abdul.majeed@gmail.com");
@@ -30,7 +32,7 @@ const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView>
-        <View>
+        <View style={styles.loginCard}>
           <Text style={styles.logo}>Bethel</Text>
           <Text>Login</Text>
           <TextInput
@@ -52,17 +54,27 @@ const Login = ({ navigation }) => {
             <Text>Loading ...</Text>
           ) : (
             <>
-              <Button title="Sign In" onPress={signIn} disabled={loading} />
+              <TouchableOpacity
+                onPress={signIn}
+                disabled={loading}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Sign In</Text>
+              </TouchableOpacity>
             </>
           )}
 
-          <Button
+          <TouchableOpacity
             title="Sign Up"
             onPress={() => {
               navigation.navigate("Sign Up");
             }}
             disabled={loading}
-          />
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+          <Button>Hi</Button>
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -70,12 +82,13 @@ const Login = ({ navigation }) => {
 };
 
 export default Login;
-
+const w = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "gray",
   },
   input: {
     height: 40,
@@ -87,14 +100,31 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 12,
+    width: 90,
+    alignItems: "center",
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 5,
   },
   buttonText: {
     color: "#fff",
     textAlign: "center",
   },
   logo: {
-    fontFamily: "Gilroy-Bold",
+    fontFamily: "AIRBORNE-GP",
     fontSize: 56,
     textAlign: "center",
+  },
+  loginCard: {
+    flex: 0.7,
+    flexDirection: "column",
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 15,
+    elevation: 3,
+    width: w,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 20,
   },
 });
