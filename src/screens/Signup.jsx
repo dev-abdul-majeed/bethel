@@ -1,21 +1,22 @@
 import {
-  Button,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
-  TextInput,
   View,
+  Dimensions,
 } from "react-native";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Button, Input, Paragraph, Spinner, XStack, YStack } from "tamagui";
+import { LinearGradient } from "expo-linear-gradient";
 
 import auth from "@react-native-firebase/auth";
 
-const SignUp = () => {
+const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const signUp = async () => {
+  const signUp = async ({ navigation }) => {
     setLoading(true);
     try {
       await auth().createUserWithEmailAndPassword(email, password);
@@ -30,30 +31,79 @@ const SignUp = () => {
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView>
-        <View>
-          <Text>SignUp</Text>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
-          />
-          {loading ? (
-            <Text>Loading ...</Text>
-          ) : (
+        <View style={styles.loginCard}>
+          <LinearGradient
+            colors={["#06C09D", "#2DB3BB"]}
+            start={{ x: 0.5, y: 0.0 }}
+            end={{ x: 0.5, y: 1.0 }}
+            style={styles.topGradient}
+          >
+            <YStack gap="$0" marginBottom="$10" alignItems="center">
+              <Text style={styles.logo}>Bethel</Text>
+              <Text style={styles.tagline}>A City of the Future</Text>
+            </YStack>
+          </LinearGradient>
+
+          <YStack gap="$3" minWidth={"$17"} maxWidth={"$17"}>
+            <Paragraph size="$8" fontWeight="800" color={"#336D82"}>
+              Register with Us
+            </Paragraph>
+            <Input
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.input}
+              size="$5"
+            />
+            <Input
+              size="$5"
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              style={styles.input}
+            />
+          </YStack>
+          <YStack gap="$10" alignItems="flex-end">
             <>
-              <Button title="Sign Up" onPress={signUp} disabled={loading} />
+              <Button
+                size="$4"
+                textProps={{ fontSize: 16, fontWeight: "bold" }}
+                width="$12"
+                marginTop={"$5"}
+                onPress={signUp}
+                disabled={loading}
+                elevation="$1"
+                color={"#ffffff"}
+                backgroundColor={"#06C09D"}
+                icon={
+                  loading
+                    ? () => <Spinner size="large" color="#6D61A" />
+                    : undefined
+                }
+              >
+                Sign Up
+              </Button>
             </>
-          )}
+
+            <XStack alignItems="center">
+              <Text>Already our user? </Text>
+              <Button
+                backgroundColor={"transparent"}
+                color={"#06C09D"}
+                size="$2"
+                textProps={{ fontSize: 16, fontWeight: "bold" }}
+                onPress={() => {
+                  navigation.navigate("Login");
+                }}
+                disabled={loading}
+              >
+                Sign In
+              </Button>
+            </XStack>
+          </YStack>
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -61,25 +111,46 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
+const w = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    backgroundColor: "gray",
+  },
+  topGradient: {
+    borderBottomRightRadius: 100,
+    elevation: 4,
+    marginBottom: 50,
+    paddingTop: 30,
   },
   input: {
     height: 40,
-    width: 250,
-    borderColor: "gray",
+    borderColor: "blue",
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 8,
   },
-  button: {
-    marginTop: 12,
-  },
-  buttonText: {
-    color: "#fff",
+  logo: {
+    fontFamily: "arthemis",
+    fontSize: 106,
     textAlign: "center",
+    width: w,
+    color: "white",
+  },
+  tagline: {
+    fontSize: 26,
+    fontFamily: "Halvetica",
+    color: "white",
+  },
+  loginCard: {
+    flex: 1,
+    backgroundColor: "white",
+    padding: 0,
+    width: w,
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
 });

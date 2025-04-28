@@ -43,8 +43,8 @@ const Login = ({ navigation }) => {
             </YStack>
           </LinearGradient>
 
-          <YStack gap="$3">
-            <Paragraph size="$8" fontWeight="800">
+          <YStack gap="$3" minWidth={"$17"} maxWidth={"$17"}>
+            <Paragraph size="$8" fontWeight="800" color={"#336D82"}>
               Welcome Back
             </Paragraph>
             <Input
