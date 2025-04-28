@@ -14,13 +14,14 @@ import Home from "./src/screens/Home";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createTamagui, TamaguiProvider, View } from "tamagui";
 import { defaultConfig } from "@tamagui/config/v4";
+import { useFonts } from "expo-font";
 
 export default function App() {
   const config = createTamagui(defaultConfig);
 
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-
+  const [loaded, error] = useFonts({});
   const onAuthStateChanged = (user) => {
     console.log("onAuthStateChanged: ", user);
     setUser(user);
@@ -32,15 +33,27 @@ export default function App() {
     return subscriber;
   }, []);
 
+  useEffect(() => {
+    if (loaded || error) {
+      console.log("Loading fonts");
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   const Stack = createNativeStackNavigator();
 
   if (initializing) {
     return (
-      <SafeAreaView>
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      </SafeAreaView>
+      <TamaguiProvider config={config}>
+        <SafeAreaView>
+          <View style={styles.container}>
+            <ActivityIndicator />
+          </View>
+        </SafeAreaView>
+      </TamaguiProvider>
     );
   }
   return (

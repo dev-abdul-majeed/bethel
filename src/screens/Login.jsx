@@ -2,14 +2,13 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Text,
-  TextInput,
   View,
   Dimensions,
-  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import auth from "@react-native-firebase/auth";
-import { Button } from "tamagui";
+import { Button, Input, Paragraph, Spinner, XStack, YStack } from "tamagui";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("dev.abdul.majeed@gmail.com");
@@ -33,48 +32,69 @@ const Login = ({ navigation }) => {
     <View style={styles.container}>
       <KeyboardAvoidingView>
         <View style={styles.loginCard}>
-          <Text style={styles.logo}>Bethel</Text>
-          <Text>Login</Text>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
-          />
-          {loading ? (
-            <Text>Loading ...</Text>
-          ) : (
+          <LinearGradient
+            colors={["#fffff", "#00000"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          ></LinearGradient>
+          <YStack gap="$0" marginBottom="$10" alignItems="center">
+            <Text style={styles.logo}>Bethel</Text>
+            <Text style={styles.tagline}>A City of the Future</Text>
+          </YStack>
+
+          <YStack gap="$3">
+            <Paragraph size="$8" fontWeight="800">
+              Login
+            </Paragraph>
+            <Input
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.input}
+              size="$5"
+            />
+            <Input
+              size="$5"
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              style={styles.input}
+            />
+          </YStack>
+          <YStack gap="$8" alignItems="flex-end">
             <>
-              <TouchableOpacity
+              <Button
+                size="$4"
+                textProps={{ fontSize: 16, fontWeight: "bold" }}
+                width="$12"
                 onPress={signIn}
                 disabled={loading}
-                style={styles.button}
+                elevation="$1"
+                icon={
+                  loading
+                    ? () => <Spinner size="large" color="#6D61A" />
+                    : undefined
+                }
               >
-                <Text style={styles.buttonText}>Sign In</Text>
-              </TouchableOpacity>
+                Sign In
+              </Button>
             </>
-          )}
 
-          <TouchableOpacity
-            title="Sign Up"
-            onPress={() => {
-              navigation.navigate("Sign Up");
-            }}
-            disabled={loading}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>
-          <Button>Hi</Button>
+            <XStack alignItems="center">
+              <Text>Don't Have an account? </Text>
+              <Button
+                onPress={() => {
+                  navigation.navigate("Sign Up");
+                }}
+                disabled={loading}
+              >
+                Sign Up
+              </Button>
+            </XStack>
+          </YStack>
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -86,45 +106,33 @@ const w = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
     backgroundColor: "gray",
   },
   input: {
     height: 40,
-    width: 250,
-    borderColor: "gray",
+    borderColor: "blue",
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 8,
   },
-  button: {
-    marginTop: 12,
-    width: 90,
-    alignItems: "center",
-    backgroundColor: "blue",
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    textAlign: "center",
-  },
   logo: {
-    fontFamily: "AIRBORNE-GP",
-    fontSize: 56,
+    fontFamily: "arthemis",
+    fontSize: 106,
     textAlign: "center",
+  },
+  tagline: {
+    fontSize: 26,
+    fontFamily: "Halvetica",
   },
   loginCard: {
-    flex: 0.7,
-    flexDirection: "column",
+    flex: 1,
     backgroundColor: "white",
-    padding: 20,
-    borderRadius: 15,
-    elevation: 3,
+    padding: 10,
     width: w,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
-    gap: 20,
   },
 });
