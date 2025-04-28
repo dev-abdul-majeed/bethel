@@ -6,10 +6,12 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState } from "react";
-import { Button, Input, Paragraph, Spinner, XStack, YStack } from "tamagui";
-import { LinearGradient } from "expo-linear-gradient";
+import { Button, Paragraph, Spinner, XStack, YStack } from "tamagui";
 
 import auth from "@react-native-firebase/auth";
+import LoginSignupTopLogo from "../components/shared/LoginSignupTopLogo";
+import EmailPasswordField from "../components/inputFields/EmailPasswordField";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -32,39 +34,36 @@ const SignUp = ({ navigation }) => {
     <View style={styles.container}>
       <KeyboardAvoidingView>
         <View style={styles.loginCard}>
-          <LinearGradient
-            colors={["#06C09D", "#2DB3BB"]}
-            start={{ x: 0.5, y: 0.0 }}
-            end={{ x: 0.5, y: 1.0 }}
-            style={styles.topGradient}
-          >
-            <YStack gap="$0" marginBottom="$10" alignItems="center">
-              <Text style={styles.logo}>Bethel</Text>
-              <Text style={styles.tagline}>A City of the Future</Text>
-            </YStack>
-          </LinearGradient>
+          <LoginSignupTopLogo />
 
           <YStack gap="$3" minWidth={"$17"} maxWidth={"$17"}>
             <Paragraph size="$8" fontWeight="800" color={"#336D82"}>
               Register with Us
             </Paragraph>
-            <Input
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              style={styles.input}
-              size="$5"
-            />
-            <Input
-              size="$5"
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.input}
-            />
+            <XStack gap={"$2"} justifyContent="center" alignItems="center">
+              <Ionicons name="mail" size={30} color="#5F99AE" />
+              <EmailPasswordField
+                handleTextChange={setEmail}
+                placeholder="Email"
+                value={email}
+                keyboardType="Email"
+                isPassword={false}
+              />
+            </XStack>
+            <XStack
+              gap={"$2"}
+              justifyContent="center"
+              alignItems="center"
+              alignContent="center"
+            >
+              <MaterialIcons name="password" size={30} color="#5F99AE" />
+              <EmailPasswordField
+                handleTextChange={setPassword}
+                placeholder="Password"
+                value={password}
+                isPassword={true}
+              />
+            </XStack>
           </YStack>
           <YStack gap="$10" alignItems="flex-end">
             <>
@@ -89,7 +88,7 @@ const SignUp = ({ navigation }) => {
             </>
 
             <XStack alignItems="center">
-              <Text>Already our user? </Text>
+              <Text>Already our registered user? </Text>
               <Button
                 backgroundColor={"transparent"}
                 color={"#06C09D"}
@@ -120,31 +119,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     backgroundColor: "gray",
   },
-  topGradient: {
-    borderBottomRightRadius: 100,
-    elevation: 4,
-    marginBottom: 50,
-    paddingTop: 30,
-  },
-  input: {
-    height: 40,
-    borderColor: "blue",
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-  },
-  logo: {
-    fontFamily: "arthemis",
-    fontSize: 106,
-    textAlign: "center",
-    width: w,
-    color: "white",
-  },
-  tagline: {
-    fontSize: 26,
-    fontFamily: "Halvetica",
-    color: "white",
-  },
+
   loginCard: {
     flex: 1,
     backgroundColor: "white",
