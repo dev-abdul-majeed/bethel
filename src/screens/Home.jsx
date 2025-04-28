@@ -2,12 +2,17 @@ import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import TopBar from "../components/shared/TopBar";
 import auth from "@react-native-firebase/auth";
-import { useNavigation } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
+const Drawer = createDrawerNavigator();
 
 function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <TopBar />
+      <Drawer.Navigator>
+        <Drawer.Screen name="Home" component={HomeScreen} />
+      </Drawer.Navigator>
 
       <View style={styles.body}>
         <Text>Home Screen Content</Text>

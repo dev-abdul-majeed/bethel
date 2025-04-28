@@ -33,12 +33,6 @@ export default function App() {
     return subscriber;
   }, []);
 
-  useEffect(() => {
-    if (loaded || error) {
-      console.log("Loading fonts App.js: ", error);
-    }
-  }, [loaded, error]);
-
   const Stack = createNativeStackNavigator();
 
   if (initializing) {
