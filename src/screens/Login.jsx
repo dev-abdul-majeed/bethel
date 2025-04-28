@@ -15,7 +15,6 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
 
-  // const navigation = useNavigation;
   const signIn = async () => {
     setLoading(true);
     try {
@@ -33,18 +32,20 @@ const Login = ({ navigation }) => {
       <KeyboardAvoidingView>
         <View style={styles.loginCard}>
           <LinearGradient
-            colors={["#fffff", "#00000"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          ></LinearGradient>
-          <YStack gap="$0" marginBottom="$10" alignItems="center">
-            <Text style={styles.logo}>Bethel</Text>
-            <Text style={styles.tagline}>A City of the Future</Text>
-          </YStack>
+            colors={["#06C09D", "#2DB3BB"]}
+            start={{ x: 0.5, y: 0.0 }}
+            end={{ x: 0.5, y: 1.0 }}
+            style={styles.topGradient}
+          >
+            <YStack gap="$0" marginBottom="$10" alignItems="center">
+              <Text style={styles.logo}>Bethel</Text>
+              <Text style={styles.tagline}>A City of the Future</Text>
+            </YStack>
+          </LinearGradient>
 
           <YStack gap="$3">
             <Paragraph size="$8" fontWeight="800">
-              Login
+              Welcome Back
             </Paragraph>
             <Input
               placeholder="Email"
@@ -64,15 +65,18 @@ const Login = ({ navigation }) => {
               style={styles.input}
             />
           </YStack>
-          <YStack gap="$8" alignItems="flex-end">
+          <YStack gap="$10" alignItems="flex-end">
             <>
               <Button
                 size="$4"
                 textProps={{ fontSize: 16, fontWeight: "bold" }}
                 width="$12"
+                marginTop={"$5"}
                 onPress={signIn}
                 disabled={loading}
                 elevation="$1"
+                color={"#ffffff"}
+                backgroundColor={"#06C09D"}
                 icon={
                   loading
                     ? () => <Spinner size="large" color="#6D61A" />
@@ -86,6 +90,10 @@ const Login = ({ navigation }) => {
             <XStack alignItems="center">
               <Text>Don't Have an account? </Text>
               <Button
+                backgroundColor={"transparent"}
+                color={"#06C09D"}
+                size="$2"
+                textProps={{ fontSize: 16, fontWeight: "bold" }}
                 onPress={() => {
                   navigation.navigate("Sign Up");
                 }}
@@ -111,6 +119,12 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     backgroundColor: "gray",
   },
+  topGradient: {
+    borderBottomRightRadius: 100,
+    elevation: 4,
+    marginBottom: 50,
+    paddingTop: 30,
+  },
   input: {
     height: 40,
     borderColor: "blue",
@@ -122,15 +136,18 @@ const styles = StyleSheet.create({
     fontFamily: "arthemis",
     fontSize: 106,
     textAlign: "center",
+    width: w,
+    color: "white",
   },
   tagline: {
     fontSize: 26,
     fontFamily: "Halvetica",
+    color: "white",
   },
   loginCard: {
     flex: 1,
     backgroundColor: "white",
-    padding: 10,
+    padding: 0,
     width: w,
     justifyContent: "flex-start",
     alignItems: "center",

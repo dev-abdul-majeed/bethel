@@ -35,13 +35,9 @@ export default function App() {
 
   useEffect(() => {
     if (loaded || error) {
-      console.log("Loading fonts");
+      console.log("Loading fonts App.js: ", error);
     }
   }, [loaded, error]);
-
-  if (!loaded && !error) {
-    return null;
-  }
 
   const Stack = createNativeStackNavigator();
 
