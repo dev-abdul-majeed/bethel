@@ -46,9 +46,8 @@
           "fonts": [
             "./assets/fonts/airborne-gp.ttf",
             "./assets/fonts/arthemis.ttf",
-            "./assets/fonts/gilroy-light.ttf",
-            "./assets/fonts/gilroy-semibold.ttf",
-            "./assets/fonts/gilroy-bold.ttf"
+            "./assets/fonts/Nexa-ExtraLight.ttf",
+            "./assets/fonts/Nexa-Heavy.ttf"
           ]
         }
       ]

@@ -1,9 +1,22 @@
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { YStack } from "tamagui";
+import { useFonts } from "expo-font";
 
 const LoginSignupTopLogo = () => {
+  const [loaded, error] = useFonts({
+    arthemis: require("../../../assets/fonts/arthemis.ttf"),
+    nexa: require("../../../assets/fonts/Nexa-Heavy.ttf"),
+    "nexa-light": require("../../../assets/fonts/Nexa-ExtraLight.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      console.log("Loading fonts arthemis: ", error);
+    }
+  }, [loaded, error]);
+
   return (
     <LinearGradient
       colors={["#06C09D", "#2DB3BB"]}
@@ -39,7 +52,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: 26,
-    fontFamily: "Halvetica",
+    fontFamily: "nexa-light",
     color: "white",
   },
 });
