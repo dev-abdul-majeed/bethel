@@ -2,17 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import TopBar from "../components/shared/TopBar";
 import auth from "@react-native-firebase/auth";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-
-const Drawer = createDrawerNavigator();
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ProfileForm from "./ProfileForm";
+const Stack = createNativeStackNavigator();
 
 function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <TopBar />
-      <Drawer.Navigator>
-        <Drawer.Screen name="Home" component={HomeScreen} />
-      </Drawer.Navigator>
 
       <View style={styles.body}>
         <Text>Home Screen Content</Text>
@@ -24,6 +21,16 @@ function Home({ navigation }) {
         />
       </View>
     </View>
+
+    // <Stack.Navigator initialRouteName="ProfileForm">
+    //   <Stack.Screen
+    //     name="ProfileForm"
+    //     component={ProfileForm}
+    //     options={{
+    //       headerShown: false,
+    //     }}
+    //   />
+    // </Stack.Navigator>
   );
 }
 

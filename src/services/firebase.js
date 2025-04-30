@@ -38,7 +38,7 @@ export const auth = initializeAuth(app, {
 
 export const googleProvider = new GoogleAuthProvider(app);
 
-export const db = getFirestore(app);
+export const db = getFirestore(app, "bethel");
 
 export const storage = getStorage(app);
 

@@ -19,12 +19,10 @@ function TopBar() {
           /* navigation open drawer logic here later */
         }}
       >
-        <Ionicons name="menu" size={28} color="black" />
+        <Image source={profileImage} style={styles.profileImage} />
       </TouchableOpacity>
 
       <Text style={styles.bannerText}>Welcome, {username}!</Text>
-
-      <Image source={profileImage} style={styles.profileImage} />
     </View>
   );
 }
