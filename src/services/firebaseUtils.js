@@ -10,33 +10,45 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { Alert } from "react-native";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 export async function uploadProfileToFirebase(formData, user) {
   let imageUrl = "";
 
-  //   if (formData.profile_image) {
-  //     const response = await fetch(formData.profile_image);
-  //     const blob = await response.blob();
+  const downloadURL = "";
+  try {
+    const imageName = `profile_images/${
+      formData.first_name + "_" + Date.now()
+    }_${formData.profile_image.split("/").pop()}`;
 
-  //     const imageRef = ref(storage, `users/${uid}/profile.jpg`);
-  //     await uploadBytes(imageRef, blob);
-  //     imageUrl = await getDownloadURL(imageRef);
-  //   }
+    const storageRef = ref(getStorage(), imageName);
 
-  //----------- Working code to add a doc
-  // try {
-  //   const docRef = await addDoc(collection(db, "profile_data"), {
-  //     first_name: formData.first_name,
-  //     last_name: formData.last_name,
-  //     gender: formData.gender,
-  //     dob: formData.dob,
-  //     about_me: formData.about_me,
-  //     profile_image: imageUrl,
-  //     user_id: user.uid,
-  //   });
-  //   Alert.alert("Profile Updated Successfully");
-  // } catch (e) {
-  //   Alert.alert("OOps, Something went wrong!");
-  // }
+    const blob = await (await fetch(formData.profile_image)).blob();
+
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+
+    uploadTask.on(
+      "state_changed",
+
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      },
+      (error) => {
+        console.log("Error while uploading Image", error);
+      },
+
+      async () => {
+        downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+      }
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
 
   try {
     const q = query(
@@ -51,7 +63,7 @@ export async function uploadProfileToFirebase(formData, user) {
       gender: formData.gender,
       dob: formData.dob,
       about_me: formData.about_me,
-      profile_image: imageUrl,
+      profile_image: downloadURL,
       user_id: user.uid,
     };
 

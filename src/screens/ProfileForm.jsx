@@ -5,7 +5,7 @@ import {
   Input,
   TextArea,
   YStack,
-  Text,
+  ScrollView,
   Label,
   Select,
   Avatar,
@@ -62,70 +62,66 @@ export default function ProfileForm() {
   };
 
   return (
-    <YStack space="$3" padding="$4">
-      <Label>First Name</Label>
-      <Input
-        value={form.first_name}
-        onChangeText={(text) => setForm({ ...form, first_name: text })}
-      />
-
-      <Label>Last Name</Label>
-      <Input
-        value={form.last_name}
-        onChangeText={(text) => setForm({ ...form, last_name: text })}
-      />
-
-      <Label>Gender</Label>
-      <Select
-        value={form.gender}
-        onValueChange={(val) => setForm({ ...form, gender: val })}
-      >
-        <Select.Item index={0} value="Male">
-          Male
-          <Select.ItemIndicator marginLeft="auto">
-            <Ionicons name="mail" size={30} color="#5F99AE" />
-          </Select.ItemIndicator>
-        </Select.Item>
-        <Select.Item index={1} value="Female">
-          Female
-          <Select.ItemIndicator marginLeft="auto">
-            <Ionicons name="mail" size={30} color="#5F99AE" />
-          </Select.ItemIndicator>
-        </Select.Item>
-        <Select.Item index={2} value="Other">
-          Other
-          <Select.ItemIndicator marginLeft="auto">
-            <Ionicons name="mail" size={30} color="#5F99AE" />
-          </Select.ItemIndicator>
-        </Select.Item>
-      </Select>
-
-      <Label>Date of Birth</Label>
-      <Input
-        placeholder="YYYY-MM-DD"
-        value={form.dob}
-        onChangeText={(text) => setForm({ ...form, dob: text })}
-      />
-
-      <Label>About Me</Label>
-      <TextArea
-        value={form.about_me}
-        onChangeText={(text) => setForm({ ...form, about_me: text })}
-      />
-
-      <Label>Profile Image</Label>
-      {form.profile_image ? (
-        <Avatar size="$4" source={{ uri: form.profile_image }} />
-      ) : null}
-      <Button onPress={handlePickImage}>Pick Image</Button>
-
-      <Button onPress={handleSubmit}>Save Profile</Button>
-      <Button
-        title="Log Out"
-        onPress={() => {
-          auth().signOut();
-        }}
-      />
-    </YStack>
+    <ScrollView>
+      <YStack space="$3" padding="$4">
+        <Label>First Name</Label>
+        <Input
+          value={form.first_name}
+          onChangeText={(text) => setForm({ ...form, first_name: text })}
+        />
+        <Label>Last Name</Label>
+        <Input
+          value={form.last_name}
+          onChangeText={(text) => setForm({ ...form, last_name: text })}
+        />
+        <Label>Gender</Label>
+        <Select
+          value={form.gender}
+          onValueChange={(val) => setForm({ ...form, gender: val })}
+        >
+          <Select.Item index={0} value="Male">
+            Male
+            <Select.ItemIndicator marginLeft="auto">
+              <Ionicons name="mail" size={30} color="#5F99AE" />
+            </Select.ItemIndicator>
+          </Select.Item>
+          <Select.Item index={1} value="Female">
+            Female
+            <Select.ItemIndicator marginLeft="auto">
+              <Ionicons name="mail" size={30} color="#5F99AE" />
+            </Select.ItemIndicator>
+          </Select.Item>
+          <Select.Item index={2} value="Other">
+            Other
+            <Select.ItemIndicator marginLeft="auto">
+              <Ionicons name="mail" size={30} color="#5F99AE" />
+            </Select.ItemIndicator>
+          </Select.Item>
+        </Select>
+        <Label>Date of Birth</Label>
+        <Input
+          placeholder="YYYY-MM-DD"
+          value={form.dob}
+          onChangeText={(text) => setForm({ ...form, dob: text })}
+        />
+        <Label>About Me</Label>
+        <TextArea
+          value={form.about_me}
+          onChangeText={(text) => setForm({ ...form, about_me: text })}
+        />
+        <Label>Profile Image</Label>
+        {form.profile_image ? (
+          <Avatar size="$4" source={{ uri: form.profile_image }} />
+        ) : null}
+        <Button onPress={handlePickImage}>Pick Image</Button>
+        <Button onPress={handleSubmit}>Save Profile</Button>
+        <Button
+          title="Log Out"
+          onPress={() => {
+            auth().signOut();
+          }}
+        />
+      </YStack>
+    </ScrollView>
   );
 }
