@@ -9,14 +9,14 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // or 'react-native-vector-icons/Ionicons'
 import profileImage from "../../../assets/favicon.png";
-function TopBar() {
+function TopBar({ navigation }) {
   const username = "John"; // Replace with actual user data
 
   return (
     <View style={styles.topBar}>
       <TouchableOpacity
         onPress={() => {
-          /* navigation open drawer logic here later */
+          navigation.navigate("ProfileForm");
         }}
       >
         <Image source={profileImage} style={styles.profileImage} />

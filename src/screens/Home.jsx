@@ -1,36 +1,31 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import TopBar from "../components/shared/TopBar";
 import auth from "@react-native-firebase/auth";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ProfileForm from "./ProfileForm";
-const Stack = createNativeStackNavigator();
+import ViewProfileCard from "../components/ViewProfileCard";
 
 function Home({ navigation }) {
   return (
     <View style={styles.container}>
-      <TopBar />
+      <TopBar navigation={navigation} />
 
+      <ViewProfileCard navigation={navigation} />
       <View style={styles.body}>
         <Text>Home Screen Content</Text>
-        <Button
-          title="Log Out"
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("ProfileForm");
+          }}
+        ></TouchableOpacity>
+        <TouchableOpacity
           onPress={() => {
             auth().signOut();
           }}
-        />
+        >
+          <Text>Log out</Text>
+        </TouchableOpacity>
       </View>
     </View>
-
-    // <Stack.Navigator initialRouteName="ProfileForm">
-    //   <Stack.Screen
-    //     name="ProfileForm"
-    //     component={ProfileForm}
-    //     options={{
-    //       headerShown: false,
-    //     }}
-    //   />
-    // </Stack.Navigator>
   );
 }
 
