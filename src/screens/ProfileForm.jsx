@@ -1,5 +1,5 @@
 // ProfileForm.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -12,11 +12,31 @@ import {
 } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { uploadProfileToFirebase } from "../services/firebaseUtils";
+import {
+  getUserProfile,
+  uploadProfileToFirebase,
+} from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
 import { auth } from "../services/firebase";
 
 export default function ProfileForm() {
+  const user = getAuth().currentUser;
+
+  useEffect(() => {
+    // Fetch data from Firebase
+    const initializeProfile = async () => {
+      const profileData = await getUserProfile(user.uid);
+      if (profileData) {
+        setForm((prevForm) => ({
+          ...prevForm,
+          ...profileData.data, // spread the fields correctly
+        }));
+      }
+    };
+
+    initializeProfile();
+  }, []);
+
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -38,9 +58,6 @@ export default function ProfileForm() {
   };
 
   const handleSubmit = async () => {
-    const user = getAuth().currentUser;
-    console.log("Handle Submit user ", user.uid);
-
     await uploadProfileToFirebase(form, user);
   };
 

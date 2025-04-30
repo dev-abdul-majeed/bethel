@@ -26,7 +26,7 @@ const LoginSignupTopLogo = () => {
     >
       <YStack gap="$0" marginBottom="$10" alignItems="center">
         <Text style={styles.logo}>Bethel</Text>
-        <Text style={styles.tagline}>A City of the Future</Text>
+        <Text style={styles.tagline}>A City of the Future!</Text>
       </YStack>
     </LinearGradient>
   );

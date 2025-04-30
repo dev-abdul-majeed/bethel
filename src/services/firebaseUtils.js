@@ -1,15 +1,16 @@
 // firebaseUtils.ts
 import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
   addDoc,
   collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { db, storage } from "./firebase";
+import { db } from "./firebase";
+import { Alert } from "react-native";
 export async function uploadProfileToFirebase(formData, user) {
-  console.log("Uploading...");
   let imageUrl = "";
 
   //   if (formData.profile_image) {
@@ -20,21 +21,76 @@ export async function uploadProfileToFirebase(formData, user) {
   //     await uploadBytes(imageRef, blob);
   //     imageUrl = await getDownloadURL(imageRef);
   //   }
-  try {
-    console.log("Trying to upload...");
 
-    const docRef = await addDoc(collection(db, "UserMD"), {
+  //----------- Working code to add a doc
+  // try {
+  //   const docRef = await addDoc(collection(db, "profile_data"), {
+  //     first_name: formData.first_name,
+  //     last_name: formData.last_name,
+  //     gender: formData.gender,
+  //     dob: formData.dob,
+  //     about_me: formData.about_me,
+  //     profile_image: imageUrl,
+  //     user_id: user.uid,
+  //   });
+  //   Alert.alert("Profile Updated Successfully");
+  // } catch (e) {
+  //   Alert.alert("OOps, Something went wrong!");
+  // }
+
+  try {
+    const q = query(
+      collection(db, "profile_data"),
+      where("user_id", "==", user.uid)
+    );
+    const querySnapshot = await getDocs(q);
+
+    const profilePayload = {
       first_name: formData.first_name,
       last_name: formData.last_name,
       gender: formData.gender,
       dob: formData.dob,
       about_me: formData.about_me,
       profile_image: imageUrl,
-    });
-    console.log("Document written with ID: ", docRef.id);
-    console.log("successful");
+      user_id: user.uid,
+    };
+
+    if (!querySnapshot.empty) {
+      // Document exists – update the first match
+      const existingDoc = querySnapshot.docs[0];
+      const docRef = doc(db, "profile_data", existingDoc.id);
+      await updateDoc(docRef, profilePayload);
+    } else {
+      // No existing document – create a new one
+      await addDoc(collection(db, "profile_data"), profilePayload);
+    }
+
+    Alert.alert("Profile saved successfully!");
   } catch (e) {
-    console.log("Something went wrong: ", e);
+    console.error("Error saving profile:", e);
+    Alert.alert("Oops, something went wrong!");
   }
-  console.log("After upload...");
+}
+
+export async function getUserProfile(uid) {
+  console.log("UserID:", uid);
+  try {
+    const q = query(
+      collection(db, "profile_data"),
+      where("user_id", "==", uid)
+    );
+    const querySnapshot = await getDocs(q);
+    console.log("QuerySnapshot:", querySnapshot);
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      console.log("Profile: ", doc.data());
+      return { id: doc.id, data: doc.data() };
+    } else {
+      console.log("No profile found for user:", uid);
+      return null;
+    }
+  } catch (e) {
+    console.error("Error getting user profile:", e);
+    return null;
+  }
 }
