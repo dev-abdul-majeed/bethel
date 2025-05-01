@@ -111,7 +111,10 @@ export default function ProfileForm() {
         />
         <Label>Profile Image</Label>
         {form.profile_image ? (
-          <Avatar size="$4" source={{ uri: form.profile_image }} />
+          <Avatar circular size="$20" alignSelf="center">
+            <Avatar.Image accessibilityLabel="Cam" src={form.profile_image} />
+            <Avatar.Fallback backgroundColor="$blue10" />
+          </Avatar>
         ) : null}
         <Button onPress={handlePickImage}>Pick Image</Button>
         <Button onPress={handleSubmit}>Save Profile</Button>

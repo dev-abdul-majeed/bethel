@@ -19,7 +19,7 @@ function TopBar({ navigation, info }) {
           navigation.navigate("ProfileForm");
         }}
       >
-        <Avatar circular size="$10">
+        <Avatar circular size="$8">
           <Avatar.Image accessibilityLabel="Cam" src={img} />
           <Avatar.Fallback backgroundColor="$blue10" />
         </Avatar>
