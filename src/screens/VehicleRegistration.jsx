@@ -23,6 +23,7 @@ const VehicleRegistration = () => {
 
   const [form, setForm] = useState({
     car_photo: "",
+    registrationNumber: "",
     year: "",
     brand: "",
     name: "",
@@ -84,6 +85,14 @@ const VehicleRegistration = () => {
           value={form.year}
           onChangeText={(text) => setForm({ ...form, year: text })}
           keyboardType="numeric"
+        />
+        <Label>Registration Number</Label>
+        <Input
+          placeholder="ABC01 DEF"
+          value={form.registrationNumber}
+          onChangeText={(text) =>
+            setForm({ ...form, registrationNumber: text })
+          }
         />
         <Label>Current Mileage (km)</Label>
         <Input

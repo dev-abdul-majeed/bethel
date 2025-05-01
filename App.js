@@ -17,6 +17,7 @@ import { defaultConfig } from "@tamagui/config/v4";
 import { useFonts } from "expo-font";
 import ProfileForm from "./src/screens/ProfileForm";
 import VehicleRegistration from "./src/screens/VehicleRegistration";
+import Vehicles from "./src/screens/Vehicles";
 
 export default function App() {
   const config = createTamagui(defaultConfig);
@@ -68,6 +69,7 @@ export default function App() {
                   name="VehicleRegistration"
                   component={VehicleRegistration}
                 />
+                <Stack.Screen name="Vehicles" component={Vehicles} />
               </Stack.Navigator>
             </>
           ) : (

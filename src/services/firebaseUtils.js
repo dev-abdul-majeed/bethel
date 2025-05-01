@@ -137,6 +137,7 @@ export async function uploadVehicleToFirebase(formData, user) {
       mileage: formData.mileage,
       last_serviced_mileage: formData.last_serviced_mileage,
       last_service_date: formData.last_service_date,
+      registrationNumber: formData.registrationNumber,
       user_id: user.uid,
     };
 
@@ -177,5 +178,32 @@ export async function getVehicleData(uid) {
   } catch (e) {
     console.error("Error getting user vehicle:", e);
     return null;
+  }
+}
+
+export async function getVehiclesData(uid) {
+  console.log("UserID:", uid);
+  try {
+    const q = query(
+      collection(db, "vehicles_data"),
+      where("user_id", "==", uid)
+    );
+    const querySnapshot = await getDocs(q);
+
+    const vehicles = [];
+
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
+        console.log("Vehicle: ", doc.data());
+        vehicles.push({ id: doc.id, data: doc.data() });
+      });
+    } else {
+      console.log("No vehicles found for user:", uid);
+    }
+
+    return vehicles; // always return an array (empty if none)
+  } catch (e) {
+    console.error("Error getting user vehicles:", e);
+    return [];
   }
 }

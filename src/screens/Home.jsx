@@ -51,7 +51,7 @@ function Home({ navigation }) {
           <Button
             borderRadius="$10"
             onPress={() => {
-              navigation.navigate("VehicleRegistration");
+              navigation.navigate("Vehicles");
             }}
           >
             Let's Go
