@@ -4,8 +4,10 @@ import TopBar from "../components/shared/TopBar";
 import auth, { getAuth } from "@react-native-firebase/auth";
 import ViewProfileCard from "../components/ViewProfileCard";
 import { getUserProfile } from "../services/firebaseUtils";
+import { useIsFocused } from "@react-navigation/native";
 
 function Home({ navigation }) {
+  const isFocused = useIsFocused();
   const user = getAuth().currentUser;
 
   const [form, setForm] = useState({
@@ -29,7 +31,7 @@ function Home({ navigation }) {
     };
 
     initializeProfile();
-  }, []);
+  }, [isFocused]);
   return (
     <View style={styles.container}>
       <TopBar navigation={navigation} info={form} />

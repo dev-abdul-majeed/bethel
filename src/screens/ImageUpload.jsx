@@ -40,20 +40,6 @@ const ImageUpload = () => {
     }
   };
 
-  const uploadImageToStorage = async (image, prefix) => {
-    if (!image || !image.uri) throw new Error("Invalid image object");
-
-    const imageName = `${prefix}Images/${Date.now()}_${image.uri
-      .split("/")
-      .pop()}`;
-
-    const storageRef = ref(storage, imageName);
-
-    const blob = await (await fetch(image.uri)).blob();
-
-    return uploadBytesResumable(storageRef, blob);
-  };
-
   const handleUpload = async () => {
     try {
       setUploading(true);

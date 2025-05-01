@@ -115,12 +115,6 @@ export default function ProfileForm() {
         ) : null}
         <Button onPress={handlePickImage}>Pick Image</Button>
         <Button onPress={handleSubmit}>Save Profile</Button>
-        <Button
-          title="Log Out"
-          onPress={() => {
-            auth().signOut();
-          }}
-        />
       </YStack>
     </ScrollView>
   );

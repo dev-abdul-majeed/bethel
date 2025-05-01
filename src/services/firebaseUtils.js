@@ -14,43 +14,34 @@ import {
   getDownloadURL,
   getStorage,
   ref,
+  uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
 export async function uploadProfileToFirebase(formData, user) {
   let imageUrl = "";
 
-  const downloadURL = "";
   try {
-    const imageName = `profile_images/${
-      formData.first_name + "_" + Date.now()
-    }_${formData.profile_image.split("/").pop()}`;
+    // Generate unique image name
+    const imageName = `profile_images/${user.uid}.jpg`;
 
     const storageRef = ref(getStorage(), imageName);
 
+    // Convert image URI to blob
     const blob = await (await fetch(formData.profile_image)).blob();
 
-    const uploadTask = uploadBytesResumable(storageRef, blob);
+    // Upload the blob
+    await uploadBytes(storageRef, blob);
 
-    uploadTask.on(
-      "state_changed",
-
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      },
-      (error) => {
-        console.log("Error while uploading Image", error);
-      },
-
-      async () => {
-        downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-      }
-    );
+    // Get downloadable URL
+    imageUrl = await getDownloadURL(storageRef);
   } catch (error) {
-    console.log(error.message);
+    console.error("Image upload error:", error);
+    Alert.alert("Failed to upload image.");
+    return;
   }
 
   try {
+    // Query for existing profile
     const q = query(
       collection(db, "profile_data"),
       where("user_id", "==", user.uid)
@@ -63,17 +54,17 @@ export async function uploadProfileToFirebase(formData, user) {
       gender: formData.gender,
       dob: formData.dob,
       about_me: formData.about_me,
-      profile_image: downloadURL,
+      profile_image: imageUrl,
       user_id: user.uid,
     };
 
     if (!querySnapshot.empty) {
-      // Document exists – update the first match
+      // Update existing profile
       const existingDoc = querySnapshot.docs[0];
       const docRef = doc(db, "profile_data", existingDoc.id);
       await updateDoc(docRef, profilePayload);
     } else {
-      // No existing document – create a new one
+      // Create new profile
       await addDoc(collection(db, "profile_data"), profilePayload);
     }
 
