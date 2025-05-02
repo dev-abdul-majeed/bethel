@@ -1,4 +1,3 @@
-// firebaseUtils.ts
 import {
   addDoc,
   collection,
@@ -18,153 +17,119 @@ import {
   getStorage,
   ref,
   uploadBytes,
-  uploadBytesResumable,
 } from "firebase/storage";
-export async function uploadProfileToFirebase(formData, user) {
-  let imageUrl = "";
 
-  try {
-    // Generate unique image name
-    const imageName = `profile_images/${user.uid}.jpg`;
+// ---------- REUSABLE HELPERS ---------- //
 
-    const storageRef = ref(getStorage(), imageName);
+async function uploadImage(path, fileUri) {
+  const storageRef = ref(getStorage(), path);
+  const blob = await (await fetch(fileUri)).blob();
+  await uploadBytes(storageRef, blob);
+  return await getDownloadURL(storageRef);
+}
 
-    // Convert image URI to blob
-    const blob = await (await fetch(formData.profile_image)).blob();
+async function getDocumentByField(collectionName, field, value) {
+  const q = query(collection(db, collectionName), where(field, "==", value));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.length > 0 ? snapshot.docs[0] : null;
+}
 
-    // Upload the blob
-    await uploadBytes(storageRef, blob);
-
-    // Get downloadable URL
-    imageUrl = await getDownloadURL(storageRef);
-  } catch (error) {
-    console.error("Image upload error:", error);
-    Alert.alert("Failed to upload image.");
-    return;
+async function saveOrUpdateDocument(collectionName, payload, docId = "") {
+  if (docId) {
+    const docRef = doc(db, collectionName, docId);
+    await updateDoc(docRef, payload);
+  } else {
+    await addDoc(collection(db, collectionName), payload);
   }
+}
 
+// ---------- PROFILE FUNCTIONS ---------- //
+
+export async function uploadProfileToFirebase(formData, user) {
   try {
-    // Query for existing profile
-    const q = query(
-      collection(db, "profile_data"),
-      where("user_id", "==", user.uid)
+    const imageUrl = await uploadImage(
+      `profile_images/${user.uid}.jpg`,
+      formData.profile_image
     );
-    const querySnapshot = await getDocs(q);
 
     const profilePayload = {
-      first_name: formData.first_name,
-      last_name: formData.last_name,
-      gender: formData.gender,
-      dob: formData.dob,
-      about_me: formData.about_me,
+      ...formData,
       profile_image: imageUrl,
       user_id: user.uid,
     };
 
-    if (!querySnapshot.empty) {
-      // Update existing profile
-      const existingDoc = querySnapshot.docs[0];
-      const docRef = doc(db, "profile_data", existingDoc.id);
-      await updateDoc(docRef, profilePayload);
-    } else {
-      // Create new profile
-      await addDoc(collection(db, "profile_data"), profilePayload);
-    }
+    const existingDoc = await getDocumentByField(
+      "profile_data",
+      "user_id",
+      user.uid
+    );
+
+    await saveOrUpdateDocument("profile_data", profilePayload, existingDoc?.id);
 
     Alert.alert("Profile saved successfully!");
-  } catch (e) {
-    console.error("Error saving profile:", e);
+  } catch (error) {
+    console.error("Error saving profile:", error);
     Alert.alert("Oops, something went wrong!");
   }
 }
 
 export async function getUserProfile(uid) {
   try {
-    const q = query(
-      collection(db, "profile_data"),
-      where("user_id", "==", uid)
+    const existingDoc = await getDocumentByField(
+      "profile_data",
+      "user_id",
+      uid
     );
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      const doc = querySnapshot.docs[0];
-      return { id: doc.id, data: doc.data() };
-    } else {
-      Alert.alert("No profile found for user:", uid);
-      return null;
-    }
-  } catch (e) {
-    Alert.alert("Error getting user profile:", e);
+    return existingDoc
+      ? { id: existingDoc.id, data: existingDoc.data() }
+      : null;
+  } catch (error) {
+    console.error("Error getting user profile:", error);
+    Alert.alert("Failed to fetch profile.");
     return null;
   }
 }
 
+// ---------- VEHICLE FUNCTIONS ---------- //
+
 export async function uploadVehicleToFirebase(formData, user) {
-  let imageUrl = "";
-
   try {
-    // Generate unique image name
-    const imageName = `vehicle_images/${user.uid}_${Date.now()}.jpg`;
-    const storageRef = ref(getStorage(), imageName);
+    const imageUrl = await uploadImage(
+      `vehicle_images/${user.uid}_${Date.now()}.jpg`,
+      formData.car_photo
+    );
 
-    // Convert image URI to blob
-    const blob = await (await fetch(formData.car_photo)).blob();
+    const vehiclePayload = {
+      ...formData,
+      car_photo: imageUrl,
+      user_id: user.uid,
+    };
 
-    // Upload the blob
-    await uploadBytes(storageRef, blob);
+    await saveOrUpdateDocument(
+      "vehicles_data",
+      vehiclePayload,
+      formData.vehicleId
+    );
 
-    // Get downloadable URL
-    imageUrl = await getDownloadURL(storageRef);
+    Alert.alert("Vehicle saved successfully!");
   } catch (error) {
-    console.error("Image upload error:", error);
-    Alert.alert("Failed to upload image.");
-    return;
-  }
-
-  const vehiclePayLoad = {
-    car_photo: imageUrl,
-    year: formData.year,
-    brand: formData.brand,
-    name: formData.name,
-    mileage: formData.mileage,
-    last_serviced_mileage: formData.last_serviced_mileage,
-    last_service_date: formData.last_service_date,
-    registrationNumber: formData.registrationNumber,
-    user_id: user.uid,
-  };
-
-  try {
-    if (formData.vehicleId) {
-      // Update existing vehicle by ID
-      const docRef = doc(db, "vehicles_data", formData.vehicleId);
-      await updateDoc(docRef, vehiclePayLoad);
-    } else {
-      // Create new vehicle entry
-      await addDoc(collection(db, "vehicles_data"), vehiclePayLoad);
-    }
-  } catch (e) {
-    console.error("Error saving vehicle data:", e);
+    console.error("Error saving vehicle data:", error);
+    Alert.alert("Oops, something went wrong!");
   }
 }
 
 export async function getVehicleData(uid, vid) {
   try {
-    const vehicleDocRef = doc(db, "vehicles_data", vid);
-    const vehicleDoc = await getDoc(vehicleDocRef);
+    const docRef = doc(db, "vehicles_data", vid);
+    const docSnap = await getDoc(docRef);
 
-    if (vehicleDoc.exists()) {
-      // Optionally check if this vehicle belongs to the user
-      if (vehicleDoc.data().user_id === uid) {
-        return { id: vehicleDoc.id, data: vehicleDoc.data() };
-      } else {
-        // console.warn("Vehicle does not belong to user:", uid);
-        return null;
-      }
-    } else {
-      // console.log("No vehicle found with ID:", vid);
-      return null;
+    if (docSnap.exists() && docSnap.data().user_id === uid) {
+      return { id: docSnap.id, data: docSnap.data() };
     }
-  } catch (e) {
-    Alert.alert("Error getting vehicle:", e);
+    return null;
+  } catch (error) {
+    console.error("Error getting vehicle:", error);
+    Alert.alert("Failed to fetch vehicle.");
     return null;
   }
 }
@@ -175,21 +140,12 @@ export async function getVehiclesData(uid) {
       collection(db, "vehicles_data"),
       where("user_id", "==", uid)
     );
-    const querySnapshot = await getDocs(q);
+    const snapshot = await getDocs(q);
 
-    const vehicles = [];
-
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        vehicles.push({ id: doc.id, data: doc.data() });
-      });
-    } else {
-      // console.log("No vehicles found for user:", uid);
-    }
-
-    return vehicles; // always return an array (empty if none)
-  } catch (e) {
-    Alert.alert("Error getting user vehicles:", e);
+    return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+  } catch (error) {
+    console.error("Error getting user vehicles:", error);
+    Alert.alert("Failed to fetch vehicles.");
     return [];
   }
 }
@@ -200,22 +156,19 @@ export async function deleteVehicle(vehicleId, userId) {
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      console.log("No such vehicle document!");
+      console.warn("No such vehicle document!");
       return;
     }
 
     const vehicleData = docSnap.data();
 
-    // Check if the user owns the vehicle
     if (vehicleData.user_id !== userId) {
       console.warn("User is not authorized to delete this vehicle.");
       return;
     }
 
-    // Delete image from storage if exists
     if (vehicleData.car_photo) {
       const storageRef = ref(getStorage(), vehicleData.car_photo);
-
       try {
         await deleteObject(storageRef);
         console.log("Image deleted from storage.");
@@ -224,10 +177,10 @@ export async function deleteVehicle(vehicleId, userId) {
       }
     }
 
-    // Delete Firestore document
     await deleteDoc(docRef);
     console.log("Vehicle document deleted from Firestore.");
   } catch (error) {
     console.error("Error deleting vehicle:", error);
+    Alert.alert("Failed to delete vehicle.");
   }
 }
