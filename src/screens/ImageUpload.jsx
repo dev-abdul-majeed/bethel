@@ -81,7 +81,7 @@ const ImageUpload = () => {
 
           setDownloadUrl(downloadURL);
 
-          console.log("File available at:", downloadURL);
+          // console.log("File available at:", downloadURL);
         }
       );
     } catch (error) {
@@ -89,7 +89,7 @@ const ImageUpload = () => {
 
       setUploadStatus("Error: " + error.message);
 
-      console.log(error.message);
+      // console.log(error.message);
     }
   };
 

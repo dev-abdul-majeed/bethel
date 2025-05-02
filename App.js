@@ -26,7 +26,6 @@ export default function App() {
   const [user, setUser] = useState();
   const [loaded, error] = useFonts({});
   const onAuthStateChanged = (user) => {
-    console.log("onAuthStateChanged: ", user);
     setUser(user);
     if (initializing) setInitializing(false);
   };

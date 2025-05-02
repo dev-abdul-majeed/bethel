@@ -1,31 +1,65 @@
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import React from "react";
 import { Button, Card, H2, H4, Image, Paragraph, XStack } from "tamagui";
 import { LinearGradient } from "expo-linear-gradient";
+import { deleteVehicle } from "../services/firebaseUtils";
+import { getAuth } from "@react-native-firebase/auth";
 
 const VehicleCard = ({
+  navigation,
   brand,
   name,
+  vid,
   registrationNumber,
   year,
   mileage,
   lastServicedMileage,
   lastServiceDate,
   carPhoto,
+  beforeDelete,
+  afterDelete,
 }) => {
+  const handleDelete = () => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this vehicle?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            console.log("Delete pressed", vid, getAuth().currentUser.uid);
+            await deleteVehicle(vid, getAuth().currentUser.uid);
+            afterDelete(!beforeDelete); // callback to refresh list or navigate back
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
   return (
     <Card elevate bordered marginBottom={30} backgroundColor={"white"}>
       <Card.Header
         padded
         height={300}
         marginBottom={30}
-        backgroundColor={"rgba(207, 216, 234, 0.65)"}
+        backgroundColor={"rgba(67, 59, 107, 0.82)"}
+        borderBottomRightRadius={150}
+        borderBottomLeftRadius={150}
       >
         <LinearGradient
           colors={["rgba(0, 179, 179, 0.2)", "rgb(0, 147, 172)"]}
           start={{ x: 0.96, y: 0.7 }}
           end={{ x: 0.04, y: 0.3 }}
-          style={{ width: 500, paddingLeft: 10, borderRadius: 10 }}
+          style={{
+            width: 500,
+            paddingLeft: 10,
+            borderRadius: 10,
+          }}
         >
           <H2 color={"white"}>{brand}</H2>
           <H4 theme="alt2" color={"white"}>
@@ -61,6 +95,9 @@ const VehicleCard = ({
           borderRadius="$10"
           backgroundColor={"rgb(0, 147, 172)"}
           textProps={{ color: "white", fontSize: 19 }}
+          onPress={() => {
+            navigation.navigate("VehicleRegistration", { vid });
+          }}
         >
           Edit
         </Button>
@@ -69,6 +106,7 @@ const VehicleCard = ({
           backgroundColor={"rgb(231, 105, 105)"}
           textProps={{ color: "white", fontSize: 19 }}
           marginLeft={20}
+          onPress={handleDelete}
         >
           Delete
         </Button>

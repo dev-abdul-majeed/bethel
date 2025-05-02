@@ -16,11 +16,11 @@ import {
   uploadVehicleToFirebase,
 } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
-import { Image } from "react-native";
+import { Alert, Image } from "react-native";
 
-const VehicleRegistration = () => {
+const VehicleRegistration = ({ navigation, route }) => {
   const user = getAuth().currentUser;
-
+  const vid = route?.params?.vid || "";
   const [form, setForm] = useState({
     car_photo: "",
     registrationNumber: "",
@@ -30,16 +30,19 @@ const VehicleRegistration = () => {
     mileage: "",
     last_serviced_mileage: "",
     last_service_date: "",
+    vehicleId: vid,
   });
 
   useEffect(() => {
     const initializeVehicle = async () => {
-      const vehicleData = await getVehicleData(user.uid);
-      if (vehicleData) {
-        setForm((prevForm) => ({
-          ...prevForm,
-          ...vehicleData.data,
-        }));
+      if (form.vehicleId) {
+        const vehicleData = await getVehicleData(user.uid, form.vehicleId);
+        if (vehicleData) {
+          setForm((prevForm) => ({
+            ...prevForm,
+            ...vehicleData.data,
+          }));
+        }
       }
     };
 
@@ -59,9 +62,17 @@ const VehicleRegistration = () => {
 
   const handleSubmit = async () => {
     try {
+      // Show loading indicator (optional — add a loading state if you want)
       await uploadVehicleToFirebase(form, user);
-      Alert.alert("Vehicle registered successfully!");
+
+      Alert.alert("Success", "Vehicle registered successfully!", [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Vehicles"),
+        },
+      ]);
     } catch (error) {
+      console.error("Error saving vehicle data:", error);
       Alert.alert("Error", "Something went wrong while saving vehicle data.");
     }
   };
