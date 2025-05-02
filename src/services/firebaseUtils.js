@@ -114,7 +114,7 @@ export async function uploadVehicleToFirebase(formData, user) {
     Alert.alert("Vehicle saved successfully!");
   } catch (error) {
     console.error("Error saving vehicle data:", error);
-    Alert.alert("Oops, something went wrong!");
+    throw new Error("Failed to upload image."); // <-- throw here!
   }
 }
 

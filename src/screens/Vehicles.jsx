@@ -5,20 +5,38 @@ import VehicleCard from "../components/VehicleCard";
 import { getVehiclesData } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
 import { useIsFocused } from "@react-navigation/native";
+import LoadingContent from "../components/shared/LoadingContent";
 const Vehicles = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [vehicles, setVehicles] = useState([]);
   const [deleted, setDeleted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const user = getAuth().currentUser;
 
   useEffect(() => {
     const initializeVehicle = async () => {
-      const vehicleData = await getVehiclesData(user.uid);
-      setVehicles(vehicleData);
+      setLoading(true); // start loading
+      try {
+        const vehicleData = await getVehiclesData(user.uid);
+        setVehicles(vehicleData);
+      } catch (error) {
+        console.error("Failed to fetch vehicles:", error);
+      } finally {
+        setLoading(false); // stop loading no matter what
+      }
     };
 
     initializeVehicle();
   }, [isFocused, deleted]);
+
+  if (loading)
+    return (
+      <LoadingContent
+        text="Loading Vehicles..."
+        size="large"
+        color="rgb(0, 86, 135)"
+      />
+    );
 
   return (
     <ScrollView marginBottom={20} paddingTop={15}>

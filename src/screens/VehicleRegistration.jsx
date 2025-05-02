@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Input,
-  TextArea,
-  YStack,
-  ScrollView,
-  Label,
-  Select,
-  Avatar,
-} from "tamagui";
+import { Button, Input, Label, YStack, ScrollView } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   getVehicleData,
   uploadVehicleToFirebase,
@@ -21,6 +11,7 @@ import { Alert, Image } from "react-native";
 const VehicleRegistration = ({ navigation, route }) => {
   const user = getAuth().currentUser;
   const vid = route?.params?.vid || "";
+
   const [form, setForm] = useState({
     car_photo: "",
     registrationNumber: "",
@@ -33,47 +24,58 @@ const VehicleRegistration = ({ navigation, route }) => {
     vehicleId: vid,
   });
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const initializeVehicle = async () => {
-      if (form.vehicleId) {
-        const vehicleData = await getVehicleData(user.uid, form.vehicleId);
+      if (vid) {
+        const vehicleData = await getVehicleData(user.uid, vid);
         if (vehicleData) {
-          setForm((prevForm) => ({
-            ...prevForm,
+          setForm((prev) => ({
+            ...prev,
             ...vehicleData.data,
           }));
         }
       }
     };
-
     initializeVehicle();
-  }, []);
+  }, [vid, user.uid]);
+
+  const handleChange = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handlePickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setForm({ ...form, car_photo: result.assets[0].uri });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        handleChange("car_photo", result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Image picking error:", error);
+      Alert.alert("Error selecting image.");
     }
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
-      // Show loading indicator (optional — add a loading state if you want)
-      await uploadVehicleToFirebase(form, user);
-
+      await uploadVehicleToFirebase(form, user); // <-- await here!
       Alert.alert("Success", "Vehicle registered successfully!", [
         {
           text: "OK",
-          onPress: () => navigation.navigate("Vehicles"),
+          onPress: () => navigation.pop(),
         },
       ]);
     } catch (error) {
-      console.error("Error saving vehicle data:", error);
       Alert.alert("Error", "Something went wrong while saving vehicle data.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,59 +85,60 @@ const VehicleRegistration = ({ navigation, route }) => {
         <Label>Car Brand</Label>
         <Input
           value={form.brand}
-          onChangeText={(text) => setForm({ ...form, brand: text })}
+          onChangeText={(text) => handleChange("brand", text)}
         />
         <Label>Car Name</Label>
         <Input
           value={form.name}
-          onChangeText={(text) => setForm({ ...form, name: text })}
+          onChangeText={(text) => handleChange("name", text)}
         />
         <Label>Year</Label>
         <Input
           placeholder="YYYY"
           value={form.year}
-          onChangeText={(text) => setForm({ ...form, year: text })}
+          onChangeText={(text) => handleChange("year", text)}
           keyboardType="numeric"
         />
         <Label>Registration Number</Label>
         <Input
           placeholder="ABC01 DEF"
           value={form.registrationNumber}
-          onChangeText={(text) =>
-            setForm({ ...form, registrationNumber: text })
-          }
+          onChangeText={(text) => handleChange("registrationNumber", text)}
         />
         <Label>Current Mileage (km)</Label>
         <Input
           value={form.mileage}
-          onChangeText={(text) => setForm({ ...form, mileage: text })}
+          onChangeText={(text) => handleChange("mileage", text)}
           keyboardType="numeric"
         />
         <Label>Last Serviced Mileage (km)</Label>
         <Input
           value={form.last_serviced_mileage}
-          onChangeText={(text) =>
-            setForm({ ...form, last_serviced_mileage: text })
-          }
+          onChangeText={(text) => handleChange("last_serviced_mileage", text)}
           keyboardType="numeric"
         />
         <Label>Last Service Date</Label>
         <Input
           placeholder="YYYY-MM-DD"
           value={form.last_service_date}
-          onChangeText={(text) => setForm({ ...form, last_service_date: text })}
+          onChangeText={(text) => handleChange("last_service_date", text)}
         />
+
         <Label>Car Photo</Label>
         {form.car_photo ? (
           <Image height={200} source={{ uri: form.car_photo }} />
         ) : null}
-        <Button onPress={handlePickImage}>Pick Car Photo</Button>
-        <Button onPress={handleSubmit}>Save Vehicle</Button>
+
+        <Button onPress={handlePickImage} disabled={loading}>
+          Pick Car Photo
+        </Button>
+
+        <Button onPress={handleSubmit} disabled={loading}>
+          {loading ? "Saving..." : "Save Vehicle"}
+        </Button>
       </YStack>
     </ScrollView>
   );
 };
 
 export default VehicleRegistration;
-
-// const styles = StyleSheet.create({});
