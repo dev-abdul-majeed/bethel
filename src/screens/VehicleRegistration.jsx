@@ -6,7 +6,7 @@ import {
   uploadVehicleToFirebase,
 } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
-import { Alert, Image } from "react-native";
+import { Alert, Image, Platform } from "react-native";
 
 const VehicleRegistration = ({ navigation, route }) => {
   const user = getAuth().currentUser;
@@ -24,6 +24,7 @@ const VehicleRegistration = ({ navigation, route }) => {
     vehicleId: vid,
   });
 
+  const [originalForm, setOriginalForm] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -31,10 +32,9 @@ const VehicleRegistration = ({ navigation, route }) => {
       if (vid) {
         const vehicleData = await getVehicleData(user.uid, vid);
         if (vehicleData) {
-          setForm((prev) => ({
-            ...prev,
-            ...vehicleData.data,
-          }));
+          const loadedData = { ...form, ...vehicleData.data, vehicleId: vid };
+          setForm(loadedData);
+          setOriginalForm(loadedData); // store original for comparison
         }
       }
     };
@@ -65,12 +65,9 @@ const VehicleRegistration = ({ navigation, route }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await uploadVehicleToFirebase(form, user); // <-- await here!
+      await uploadVehicleToFirebase(form, user);
       Alert.alert("Success", "Vehicle registered successfully!", [
-        {
-          text: "OK",
-          onPress: () => navigation.pop(),
-        },
+        { text: "OK", onPress: () => navigation.pop() },
       ]);
     } catch (error) {
       Alert.alert("Error", "Something went wrong while saving vehicle data.");
@@ -79,9 +76,30 @@ const VehicleRegistration = ({ navigation, route }) => {
     }
   };
 
+  // Check if all fields are filled
+  const isFormComplete = Object.values({
+    brand: form.brand,
+    name: form.name,
+    year: form.year,
+    registrationNumber: form.registrationNumber,
+    mileage: form.mileage,
+    last_serviced_mileage: form.last_serviced_mileage,
+    last_service_date: form.last_service_date,
+    car_photo: form.car_photo,
+  }).every((val) => val !== "");
+
+  // Check if any field has changed
+  const hasChanges =
+    originalForm &&
+    Object.keys(form).some((key) => form[key] !== originalForm[key]);
+
+  const isSaveEnabled = vid ? hasChanges : isFormComplete;
+
   return (
     <ScrollView>
       <YStack space="$3" padding="$4">
+        <Label>VehicleId: {form.vehicleId}</Label>
+
         <Label>Car Brand</Label>
         <Input
           value={form.brand}
@@ -119,21 +137,17 @@ const VehicleRegistration = ({ navigation, route }) => {
         />
         <Label>Last Service Date</Label>
         <Input
-          placeholder="YYYY-MM-DD"
           value={form.last_service_date}
           onChangeText={(text) => handleChange("last_service_date", text)}
         />
-
         <Label>Car Photo</Label>
         {form.car_photo ? (
           <Image height={200} source={{ uri: form.car_photo }} />
         ) : null}
-
         <Button onPress={handlePickImage} disabled={loading}>
           Pick Car Photo
         </Button>
-
-        <Button onPress={handleSubmit} disabled={loading}>
+        <Button onPress={handleSubmit} disabled={!isSaveEnabled || loading}>
           {loading ? "Saving..." : "Save Vehicle"}
         </Button>
       </YStack>

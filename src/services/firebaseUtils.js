@@ -66,10 +66,10 @@ export async function uploadProfileToFirebase(formData, user) {
 
     await saveOrUpdateDocument("profile_data", profilePayload, existingDoc?.id);
 
-    Alert.alert("Profile saved successfully!");
+    // Alert.alert("Profile saved successfully!");
   } catch (error) {
     console.error("Error saving profile:", error);
-    Alert.alert("Oops, something went wrong!");
+    // Alert.alert("Oops, something went wrong!");
   }
 }
 
@@ -85,7 +85,7 @@ export async function getUserProfile(uid) {
       : null;
   } catch (error) {
     console.error("Error getting user profile:", error);
-    Alert.alert("Failed to fetch profile.");
+    // Alert.alert("Failed to fetch profile.");
     return null;
   }
 }
@@ -93,6 +93,7 @@ export async function getUserProfile(uid) {
 // ---------- VEHICLE FUNCTIONS ---------- //
 
 export async function uploadVehicleToFirebase(formData, user) {
+  console.log(formData);
   try {
     const imageUrl = await uploadImage(
       `vehicle_images/${user.uid}_${Date.now()}.jpg`,
@@ -111,7 +112,7 @@ export async function uploadVehicleToFirebase(formData, user) {
       formData.vehicleId
     );
 
-    Alert.alert("Vehicle saved successfully!");
+    // Alert.alert("Vehicle saved successfully!");
   } catch (error) {
     console.error("Error saving vehicle data:", error);
     throw new Error("Failed to upload image."); // <-- throw here!
@@ -129,7 +130,7 @@ export async function getVehicleData(uid, vid) {
     return null;
   } catch (error) {
     console.error("Error getting vehicle:", error);
-    Alert.alert("Failed to fetch vehicle.");
+    // Alert.alert("Failed to fetch vehicle.");
     return null;
   }
 }
@@ -145,7 +146,7 @@ export async function getVehiclesData(uid) {
     return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
   } catch (error) {
     console.error("Error getting user vehicles:", error);
-    Alert.alert("Failed to fetch vehicles.");
+    // Alert.alert("Failed to fetch vehicles.");
     return [];
   }
 }
@@ -181,6 +182,6 @@ export async function deleteVehicle(vehicleId, userId) {
     console.log("Vehicle document deleted from Firestore.");
   } catch (error) {
     console.error("Error deleting vehicle:", error);
-    Alert.alert("Failed to delete vehicle.");
+    // Alert.alert("Failed to delete vehicle.");
   }
 }
