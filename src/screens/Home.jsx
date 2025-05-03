@@ -37,7 +37,7 @@ function Home({ navigation }) {
     <View style={styles.container}>
       <TopBar navigation={navigation} info={form} />
 
-      <ViewProfileCard navigation={navigation} />
+      {/* <ViewProfileCard navigation={navigation} /> */}
 
       <Card elevate size="$4" width={"100%"} scale={0.95} borderRadius={30}>
         <Card.Header padded>
@@ -58,6 +58,52 @@ function Home({ navigation }) {
           </Button>
         </Card.Footer>
       </Card>
+
+      <Card elevate size="$4" width={"100%"} scale={0.95} borderRadius={30}>
+        <Card.Header padded>
+          <H2>Manage Business</H2>
+          <Paragraph theme="alt2">
+            View and manage your business details
+          </Paragraph>
+        </Card.Header>
+        <Card.Footer padded>
+          <XStack flex={1} />
+          <Button
+            borderRadius="$10"
+            onPress={() => {
+              const businessExists = false; // Replace with actual logic to check business existence
+              if (businessExists) {
+                navigation.navigate("ManageBusiness");
+              } else {
+                navigation.navigate("ChooseBusiness");
+              }
+            }}
+          >
+            Manage Now
+          </Button>
+        </Card.Footer>
+      </Card>
+
+      <Card elevate size="$4" width={"100%"} scale={0.95} borderRadius={30}>
+        <Card.Header padded>
+          <H2>Book Appointment</H2>
+          <Paragraph theme="alt2">
+            Schedule your appointments easily
+          </Paragraph>
+        </Card.Header>
+        <Card.Footer padded>
+          <XStack flex={1} />
+          <Button
+            borderRadius="$10"
+            onPress={() => {
+              navigation.navigate("Appointments");
+            }}
+          >
+            Book Now
+          </Button>
+        </Card.Footer>
+      </Card>
+
       <View style={styles.body}>
         <Text>Home Screen Content, {form.first_name}</Text>
         <TouchableOpacity

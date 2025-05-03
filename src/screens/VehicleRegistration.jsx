@@ -6,8 +6,9 @@ import {
   uploadVehicleToFirebase,
 } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
-import { Alert, Image, Platform } from "react-native";
+import { Alert, Image, KeyboardAvoidingView, Platform } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const VehicleRegistration = ({ navigation, route }) => {
   const user = getAuth().currentUser;
@@ -104,7 +105,13 @@ const VehicleRegistration = ({ navigation, route }) => {
   );
 
   return (
-    <ScrollView>
+    <KeyboardAwareScrollView
+      contentContainerStyle={{ paddingBottom: 45 }}
+      enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled"
+      extraScrollHeight={140}
+    >
+    <ScrollView contentContainerStyle={{ paddingBottom: 45 }}>
       <YStack space="$3" padding="$4">
         {renderLabelWithIcon("car-outline", `VehicleId: ${form.vehicleId}`)}
 
@@ -170,6 +177,7 @@ const VehicleRegistration = ({ navigation, route }) => {
         </Button>
       </YStack>
     </ScrollView>
+    </KeyboardAwareScrollView>
   );
 };
 
