@@ -9,6 +9,7 @@ import {
   Label,
   Select,
   Avatar,
+  XStack,
 } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -64,17 +65,26 @@ export default function ProfileForm() {
   return (
     <ScrollView>
       <YStack space="$3" padding="$4">
-        <Label>First Name</Label>
+        <XStack alignItems="center" space="$2">
+          <Ionicons name="person-outline" size={20} />
+          <Label>First Name</Label>
+        </XStack>
         <Input
           value={form.first_name}
           onChangeText={(text) => setForm({ ...form, first_name: text })}
         />
-        <Label>Last Name</Label>
+        <XStack alignItems="center" space="$2">
+          <Ionicons name="person-outline" size={20} />
+          <Label>Last Name</Label>
+        </XStack>
         <Input
           value={form.last_name}
           onChangeText={(text) => setForm({ ...form, last_name: text })}
         />
-        <Label>Gender</Label>
+        <XStack alignItems="center" space="$2">
+          <Ionicons name="male-female-outline" size={20} />
+          <Label>Gender</Label>
+        </XStack>
         <Select
           value={form.gender}
           onValueChange={(val) => setForm({ ...form, gender: val })}
@@ -82,34 +92,43 @@ export default function ProfileForm() {
           <Select.Item index={0} value="Male">
             Male
             <Select.ItemIndicator marginLeft="auto">
-              <Ionicons name="mail" size={30} color="#5F99AE" />
+              <Ionicons name="male" size={30} color="#5F99AE" />
             </Select.ItemIndicator>
           </Select.Item>
           <Select.Item index={1} value="Female">
             Female
             <Select.ItemIndicator marginLeft="auto">
-              <Ionicons name="mail" size={30} color="#5F99AE" />
+              <Ionicons name="female" size={30} color="#5F99AE" />
             </Select.ItemIndicator>
           </Select.Item>
           <Select.Item index={2} value="Other">
             Other
             <Select.ItemIndicator marginLeft="auto">
-              <Ionicons name="mail" size={30} color="#5F99AE" />
+              <Ionicons name="person" size={30} color="#5F99AE" />
             </Select.ItemIndicator>
           </Select.Item>
         </Select>
-        <Label>Date of Birth</Label>
+        <XStack alignItems="center" space="$2">
+          <Ionicons name="calendar-outline" size={20} />
+          <Label>Date of Birth</Label>
+        </XStack>
         <Input
           placeholder="YYYY-MM-DD"
           value={form.dob}
           onChangeText={(text) => setForm({ ...form, dob: text })}
         />
-        <Label>About Me</Label>
+        <XStack alignItems="center" space="$2">
+          <Ionicons name="information-circle-outline" size={20} />
+          <Label>About Me</Label>
+        </XStack>
         <TextArea
           value={form.about_me}
           onChangeText={(text) => setForm({ ...form, about_me: text })}
         />
-        <Label>Profile Image</Label>
+        <XStack alignItems="center" space="$2">
+          <Ionicons name="image-outline" size={20} />
+          <Label>Profile Image</Label>
+        </XStack>
         {form.profile_image ? (
           <Avatar circular size="$20" alignSelf="center">
             <Avatar.Image accessibilityLabel="Cam" src={form.profile_image} />

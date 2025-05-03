@@ -65,13 +65,15 @@ function Home({ navigation }) {
             navigation.navigate("ProfileForm");
           }}
         ></TouchableOpacity>
-        <TouchableOpacity
+        <Button
+          theme="red"
+          borderRadius="$10"
           onPress={() => {
             auth().signOut();
           }}
         >
-          <Text>Log out</Text>
-        </TouchableOpacity>
+          Log out
+        </Button>
       </View>
     </View>
   );

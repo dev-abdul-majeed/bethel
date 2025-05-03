@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, Label, YStack, ScrollView } from "tamagui";
+import { Button, Input, Label, YStack, ScrollView, XStack } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import {
   getVehicleData,
@@ -7,6 +7,7 @@ import {
 } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
 import { Alert, Image, Platform } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const VehicleRegistration = ({ navigation, route }) => {
   const user = getAuth().currentUser;
@@ -95,52 +96,69 @@ const VehicleRegistration = ({ navigation, route }) => {
 
   const isSaveEnabled = vid ? hasChanges : isFormComplete;
 
+  const renderLabelWithIcon = (iconName, labelText) => (
+    <XStack alignItems="center" space="$2">
+      <Icon name={iconName} size={20} />
+      <Label>{labelText}</Label>
+    </XStack>
+  );
+
   return (
     <ScrollView>
       <YStack space="$3" padding="$4">
-        <Label>VehicleId: {form.vehicleId}</Label>
+        {renderLabelWithIcon("car-outline", `VehicleId: ${form.vehicleId}`)}
 
-        <Label>Car Brand</Label>
+        {renderLabelWithIcon("car-sport-outline", "Car Brand")}
         <Input
           value={form.brand}
           onChangeText={(text) => handleChange("brand", text)}
         />
-        <Label>Car Name</Label>
+
+        {renderLabelWithIcon("pricetag-outline", "Car Name")}
         <Input
           value={form.name}
           onChangeText={(text) => handleChange("name", text)}
         />
-        <Label>Year</Label>
+
+        {renderLabelWithIcon("calendar-outline", "Year")}
         <Input
           placeholder="YYYY"
           value={form.year}
           onChangeText={(text) => handleChange("year", text)}
           keyboardType="numeric"
         />
-        <Label>Registration Number</Label>
+
+        {renderLabelWithIcon("document-text-outline", "Registration Number")}
         <Input
           placeholder="ABC01 DEF"
           value={form.registrationNumber}
           onChangeText={(text) => handleChange("registrationNumber", text)}
         />
-        <Label>Current Mileage (km)</Label>
+
+        {renderLabelWithIcon("speedometer-outline", "Current Mileage (km)")}
         <Input
           value={form.mileage}
           onChangeText={(text) => handleChange("mileage", text)}
           keyboardType="numeric"
         />
-        <Label>Last Serviced Mileage (km)</Label>
+
+        {renderLabelWithIcon(
+          "construct-outline",
+          "Last Serviced Mileage (km)"
+        )}
         <Input
           value={form.last_serviced_mileage}
           onChangeText={(text) => handleChange("last_serviced_mileage", text)}
           keyboardType="numeric"
         />
-        <Label>Last Service Date</Label>
+
+        {renderLabelWithIcon("calendar-outline", "Last Service Date")}
         <Input
           value={form.last_service_date}
           onChangeText={(text) => handleChange("last_service_date", text)}
         />
-        <Label>Car Photo</Label>
+
+        {renderLabelWithIcon("image-outline", "Car Photo")}
         {form.car_photo ? (
           <Image height={200} source={{ uri: form.car_photo }} />
         ) : null}
