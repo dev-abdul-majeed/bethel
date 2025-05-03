@@ -18,6 +18,9 @@ import { useFonts } from "expo-font";
 import ProfileForm from "./src/screens/ProfileForm";
 import VehicleRegistration from "./src/screens/VehicleRegistration";
 import Vehicles from "./src/screens/Vehicles";
+import ManageBusiness from "./src/screens/ManageBusiness";
+import CreateBusiness from "./src/screens/CreateBusiness";
+import ChooseBusiness from "./src/screens/ChooseBusiness";
 
 export default function App() {
   const config = createTamagui(defaultConfig);
@@ -69,6 +72,9 @@ export default function App() {
                   component={VehicleRegistration}
                 />
                 <Stack.Screen name="Vehicles" component={Vehicles} />
+                <Stack.Screen name="ChooseBusiness" component={ChooseBusiness} options={{ headerShown: false }} />
+                <Stack.Screen name="CreateBusiness" component={CreateBusiness} options={{ headerShown: false }} />
+                <Stack.Screen name="ManageBusiness" component={ManageBusiness} options={{ headerShown: false }} />
               </Stack.Navigator>
             </>
           ) : (
