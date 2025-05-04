@@ -1,24 +1,35 @@
 import React from 'react';
+import { YStack, H1, Paragraph, Card } from 'tamagui';
 
 const ManageBusiness = () => {
+    const stats = {
+        profitToDate: 50000, // Example value
+        expensesToDate: 20000, // Example value
+        profitMarginToDate: '60%', // Example value
+    };
+
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Business Dashboard</h1>
-            <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
-                <div style={{ flex: 1, border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
-                    <h2>Overview</h2>
-                    <p>Summary of business metrics will go here.</p>
-                </div>
-                <div style={{ flex: 1, border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
-                    <h2>Recent Activity</h2>
-                    <p>Recent updates and logs will go here.</p>
-                </div>
-            </div>
-            <div style={{ marginTop: '20px', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
-                <h2>Detailed Reports</h2>
-                <p>Graphs and detailed analytics will go here.</p>
-            </div>
-        </div>
+        <YStack f={1} p="$4" bg="$background" space="$4">
+            <H1 ta="center">Business Stats</H1>
+            <Card elevate size="$4" bordered>
+                <YStack space="$2">
+                    <Paragraph size="$3" color="$color">Profit to Date:</Paragraph>
+                    <Paragraph size="$5" fontWeight="bold">${stats.profitToDate}</Paragraph>
+                </YStack>
+            </Card>
+            <Card elevate size="$4" bordered>
+                <YStack space="$2">
+                    <Paragraph size="$3" color="$color">Expenses to Date:</Paragraph>
+                    <Paragraph size="$5" fontWeight="bold">${stats.expensesToDate}</Paragraph>
+                </YStack>
+            </Card>
+            <Card elevate size="$4" bordered>
+                <YStack space="$2">
+                    <Paragraph size="$3" color="$color">Profit Margin to Date:</Paragraph>
+                    <Paragraph size="$5" fontWeight="bold">{stats.profitMarginToDate}</Paragraph>
+                </YStack>
+            </Card>
+        </YStack>
     );
 };
 

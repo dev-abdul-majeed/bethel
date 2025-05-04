@@ -185,3 +185,97 @@ export async function deleteVehicle(vehicleId, userId) {
     // Alert.alert("Failed to delete vehicle.");
   }
 }
+
+// ---------- Business FUNCTIONS ---------- //
+
+export async function uploadBusinessToFirebase(formData, user) {
+  try {
+    const imageUrl = await uploadImage(
+      `business_images/${user.uid}.jpg`,
+      formData.businessPhoto
+    );
+
+    const businessPayload = {
+      ...formData,
+      business_image: imageUrl,
+      user_id: user.uid,
+    };
+
+    const existingDoc = await getDocumentByField(
+      "business_data",
+      "user_id",
+      user.uid
+    );
+
+    await saveOrUpdateDocument(
+      "business_data",
+      businessPayload,
+      existingDoc?.id
+    );
+  } catch (error) {
+    console.error("Error saving business data:", error);
+  }
+}
+
+export async function getBusinessData(uid) {
+  try {
+    const existingDoc = await getDocumentByField(
+      "business_data",
+      "user_id",
+      uid
+    );
+    return existingDoc
+      ? { id: existingDoc.id, data: existingDoc.data() }
+      : null;
+  } catch (error) {
+    console.error("Error getting business data:", error);
+    return null;
+  }
+}
+
+export async function deleteBusiness(userId) {
+  try {
+    const existingDoc = await getDocumentByField(
+      "business_data",
+      "user_id",
+      userId
+    );
+
+    if (existingDoc) {
+      const docRef = doc(db, "business_data", existingDoc.id);
+      await deleteDoc(docRef);
+      console.log("Business document deleted from Firestore.");
+    } else {
+      console.warn("No such business document!");
+    }
+  } catch (error) {
+    console.error("Error deleting business:", error);
+  }
+}
+export async function getBusinessImageUrl(uid) {
+  try {
+    const existingDoc = await getDocumentByField(
+      "business_data",
+      "user_id",
+      uid
+    );
+    return existingDoc ? existingDoc.data().business_image : null;
+  } catch (error) {
+    console.error("Error getting business image URL:", error);
+    return null;
+  }
+}
+
+export async function getBusinessImagePath(uid) {
+  try {
+    const existingDoc = await getDocumentByField(
+      "business_data",
+      "user_id",
+      uid
+    );
+    return existingDoc ? existingDoc.data().business_image : null;
+  } catch (error) {
+    console.error("Error getting business image path:", error);
+    return null;
+  }
+}
