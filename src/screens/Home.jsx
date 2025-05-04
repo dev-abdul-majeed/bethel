@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import TopBar from "../components/shared/TopBar";
 import auth, { getAuth } from "@react-native-firebase/auth";
 import ViewProfileCard from "../components/ViewProfileCard";
-import { getUserProfile } from "../services/firebaseUtils";
+import { getBusinessData, getUserProfile } from "../services/firebaseUtils";
 import { useIsFocused } from "@react-navigation/native";
 import { Card, H2, Paragraph, XStack, Button, Image } from "tamagui";
 
@@ -70,10 +70,11 @@ function Home({ navigation }) {
           <XStack flex={1} />
           <Button
             borderRadius="$10"
-            onPress={() => {
-              const businessExists = false; // Replace with actual logic to check business existence
+            onPress={ async () => {
+              const businessExists = await getBusinessData(user.uid); // Replace with actual logic to check business existence
               if (businessExists) {
-                navigation.navigate("ManageBusiness");
+                if (businessExists.data.businessType === "hospital") navigation.navigate("ManageHospital");
+                else navigation.navigate("ManageBusiness");
               } else {
                 navigation.navigate("ChooseBusiness");
               }
@@ -96,7 +97,7 @@ function Home({ navigation }) {
           <Button
             borderRadius="$10"
             onPress={() => {
-              navigation.navigate("Appointments");
+              navigation.navigate("ManageAppointments");
             }}
           >
             Book Now

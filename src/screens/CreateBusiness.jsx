@@ -2,10 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { YStack, Input, Button, Select, Text, RadioGroup, Radio, Label, XStack } from 'tamagui';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Icon from "react-native-vector-icons/Ionicons";
+import * as ImagePicker from "expo-image-picker";
+import { Image } from 'react-native';
+import { uploadBusinessToFirebase } from '../services/firebaseUtils';
+import { getAuth } from '@react-native-firebase/auth';
 
 const CreateBusiness = () => {
     const navigation = useNavigation();
     const route = useRoute();
+    const user = getAuth().currentUser;
+    // Art Studio
+
     const [businessName, setBusinessName] = useState('');
     const [businessType, setBusinessType] = useState('');
     const [operationalHours, setOperationalHours] = useState('');
@@ -14,6 +22,7 @@ const CreateBusiness = () => {
     const [email, setEmail] = useState('');
     const [payday, setPayday] = useState(''); // New payday field
     const [paymentFrequency, setPaymentFrequency] = useState('monthly'); // Renamed from payday
+    const [businessPhoto, setBusinessPhoto] = useState('');
 
     useEffect(() => {
         if (route.params?.type) {
@@ -21,7 +30,25 @@ const CreateBusiness = () => {
         }
     }, [route.params?.type]);
 
-    const handleCreateBusiness = () => {
+    const handlePickImage = async () => {
+        try {
+          const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 1,
+          });
+    
+          if (!result.canceled) {
+            setBusinessPhoto(result.assets[0].uri);
+            // handleChange("business_photo", result.assets[0].uri);
+          }
+        } catch (error) {
+          console.error("Image picking error:", error);
+          Alert.alert("Error selecting image.");
+        }
+      };
+
+    const handleCreateBusiness = async () => {
         if (
             businessName &&
             businessType &&
@@ -32,6 +59,18 @@ const CreateBusiness = () => {
             payday &&
             paymentFrequency
         ) {
+            await uploadBusinessToFirebase({
+                businessName,
+                businessType,
+                operationalHours,
+                locationAddress,
+                contact,
+                email,
+                payday,
+                paymentFrequency,
+                businessPhoto,
+            }, user );
+
             console.log('Business Created:', {
                 businessName,
                 businessType,
@@ -48,16 +87,25 @@ const CreateBusiness = () => {
         }
     };
 
+    const renderLabelWithIcon = (iconName, labelText) => (
+        <XStack alignItems="center" space="$2">
+            <Icon name={iconName} size={20} />
+            <Label>{labelText}</Label>
+        </XStack>
+    );
+
     return (
         <KeyboardAwareScrollView
             enableOnAndroid={true}
             keyboardShouldPersistTaps="handled"
             extraScrollHeight={160}
+            contentContainerStyle={{ paddingBottom: 45 }}
         >
             <YStack f={1} p="$4" bg="$background" space>
                 <Text fontSize="$6" fontWeight="bold">
                     Create a New Business
                 </Text>
+                {renderLabelWithIcon("business-outline", "Business Name")}
                 <Input
                     placeholder="Enter Business Name"
                     value={businessName}
@@ -68,6 +116,7 @@ const CreateBusiness = () => {
                     p="$2"
                     placeholderTextColor="#ccc"
                 />
+                {renderLabelWithIcon("briefcase-outline", "Business Type")}
                 <Input
                     placeholder="Enter Business Type"
                     value={businessType.charAt(0).toUpperCase() + businessType.slice(1)}
@@ -76,10 +125,10 @@ const CreateBusiness = () => {
                     borderColor="$borderColor"
                     borderRadius="$4"
                     p="$2"
-                    disabled={businessType !== ''} // Disable if already set from params
-                    style={{ color: businessType == 'hospital' ? '#808080' : '#fff' }} 
-
+                    disabled={businessType == 'hospital'}
+                    style={{ color: businessType == 'hospital' ? '#808080' : '#fffff' }}
                 />
+                {renderLabelWithIcon("time-outline", "Operational Hours")}
                 <Input
                     placeholder="Enter Operational Hours"
                     value={operationalHours}
@@ -89,6 +138,7 @@ const CreateBusiness = () => {
                     borderRadius="$4"
                     p="$2"
                 />
+                {renderLabelWithIcon("location-outline", "Location Address")}
                 <Input
                     placeholder="Enter Location Address"
                     value={locationAddress}
@@ -98,6 +148,7 @@ const CreateBusiness = () => {
                     borderRadius="$4"
                     p="$2"
                 />
+                {renderLabelWithIcon("call-outline", "Contact Number")}
                 <Input
                     placeholder="Enter Contact Number"
                     value={contact}
@@ -107,6 +158,7 @@ const CreateBusiness = () => {
                     borderRadius="$4"
                     p="$2"
                 />
+                {renderLabelWithIcon("mail-outline", "Email Address")}
                 <Input
                     placeholder="Enter Email Address"
                     value={email}
@@ -116,10 +168,19 @@ const CreateBusiness = () => {
                     borderRadius="$4"
                     p="$2"
                 />
+                {renderLabelWithIcon("calendar-outline", "Payday (Day of the Month)")}
                 <Input
-                    placeholder="Enter Payday"
+                    placeholder="Enter Payday (1-31)"
                     value={payday}
-                    onChangeText={setPayday}
+                    onChangeText={(text) => {
+                        const day = parseInt(text, 10);
+                        if (!isNaN(day) && day >= 1 && day <= 31) {
+                            setPayday(text);
+                        } else if (text === '') {
+                            setPayday('');
+                        }
+                    }}
+                    keyboardType="numeric"
                     borderWidth={1}
                     borderColor="$borderColor"
                     borderRadius="$4"
@@ -129,24 +190,47 @@ const CreateBusiness = () => {
                     Select Payment Frequency
                 </Text>
                 <RadioGroup aria-labelledby="Select one item" defaultValue="2" name="form">
-                    <XStack width={300} alignItems="center" space="$2">
+                    <XStack width={3} alignItems="center" space="$3">
                         <RadioGroupItemWithLabel size="$3" value="monthly" label="Monthly" />
                         <RadioGroupItemWithLabel size="$4" value="weekly" label="Weekly" />
                     </XStack>
                 </RadioGroup>
-                <Select
-                    value={paymentFrequency}
-                    onValueChange={setPaymentFrequency}
-                    borderWidth={1}
-                    borderColor="$borderColor"
-                    borderRadius="$4"
-                    p="$2"
+                
+                {!businessPhoto && <Button onPress={handlePickImage} style={{ marginBottom: 10 }}>
+                    Pick Business Photo
+                </Button>}
+                {businessPhoto ? (
+                    <>
+                        <Image
+                            height={200}
+                            source={{ uri: businessPhoto }}
+                            style={{ marginVertical: 10, borderRadius: 10 }}
+                        />
+                        <Button
+                            onPress={() => setBusinessPhoto('')}
+                            bg="#ff4d4d"
+                        >
+                            Remove Photo
+                        </Button>
+                    </>
+                ) : null}
+                <Button
+                    onPress={handleCreateBusiness}
+                    bg={
+                        businessName &&
+                        businessType &&
+                        operationalHours &&
+                        locationAddress &&
+                        contact &&
+                        email &&
+                        payday &&
+                        paymentFrequency
+                            ? '#007bff'
+                            : '#cccccc'
+                    }
                 >
-                    <Select.Item label="Select Payment Frequency" value="" />
-                    <Select.Item label="Weekly" value="weekly" />
-                    <Select.Item label="Monthly" value="monthly" />
-                </Select>
-                <Button onPress={handleCreateBusiness}>Create Business</Button>
+                    Create Business
+                </Button>
             </YStack>
         </KeyboardAwareScrollView>
     );

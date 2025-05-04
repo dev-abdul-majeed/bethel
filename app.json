@@ -14,8 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.abdul.bethel",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "com.abdul.bethel"
     },
     "android": {
       "adaptiveIcon": {
