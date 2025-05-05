@@ -8,6 +8,7 @@ import DoctorRegistration from "./DoctorRegistration";
 import ManageDoctors from "./ManageDoctors";
 
 const ManageHospital = ({ navigation }) => {
+  navigation.reset;
   const Tab = createBottomTabNavigator();
 
   return (

@@ -18,20 +18,18 @@ import { Image } from "react-native";
 import { uploadBusinessToFirebase } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
 
-const CreateBusiness = () => {
-  const navigation = useNavigation();
+const CreateBusiness = ({ navigation }) => {
   const route = useRoute();
   const user = getAuth().currentUser;
-  // Art Studio
 
-  const [businessName, setBusinessName] = useState("");
+  const [businessName, setBusinessName] = useState("s");
   const [businessType, setBusinessType] = useState("");
-  const [operationalHours, setOperationalHours] = useState("");
-  const [locationAddress, setLocationAddress] = useState("");
-  const [contact, setContact] = useState("");
-  const [email, setEmail] = useState("");
-  const [payday, setPayday] = useState(""); // New payday field
-  const [paymentFrequency, setPaymentFrequency] = useState("monthly"); // Renamed from payday
+  const [operationalHours, setOperationalHours] = useState("s");
+  const [locationAddress, setLocationAddress] = useState("s");
+  const [contact, setContact] = useState("s");
+  const [email, setEmail] = useState("s");
+  const [payday, setPayday] = useState("s");
+  const [paymentFrequency, setPaymentFrequency] = useState("monthly");
   const [businessPhoto, setBusinessPhoto] = useState("");
 
   useEffect(() => {
@@ -50,7 +48,6 @@ const CreateBusiness = () => {
 
       if (!result.canceled) {
         setBusinessPhoto(result.assets[0].uri);
-        // handleChange("business_photo", result.assets[0].uri);
       }
     } catch (error) {
       console.error("Image picking error:", error);
@@ -94,7 +91,13 @@ const CreateBusiness = () => {
         payday,
         paymentFrequency,
       });
-      navigation.goBack(); // Navigate back after creation
+      const newScreen =
+        businessType == "hospital" ? "ManageHospital" : "ManageBusiness";
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }, { name: newScreen }],
+      }); // Navigate back after creation and reset navigation stack with Home at the base
     } else {
       alert("Please fill all fields");
     }
