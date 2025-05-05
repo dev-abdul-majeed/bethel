@@ -70,10 +70,11 @@ function Home({ navigation }) {
           <XStack flex={1} />
           <Button
             borderRadius="$10"
-            onPress={ async () => {
-              const businessExists = await getBusinessData(user.uid); // Replace with actual logic to check business existence
+            onPress={async () => {
+              const businessExists = await getBusinessData(user.uid);
               if (businessExists) {
-                if (businessExists.data.businessType === "hospital") navigation.navigate("ManageHospital");
+                if (businessExists.data.businessType === "hospital")
+                  navigation.navigate("ManageHospital");
                 else navigation.navigate("ManageBusiness");
               } else {
                 navigation.navigate("ChooseBusiness");
@@ -88,9 +89,7 @@ function Home({ navigation }) {
       <Card elevate size="$4" width={"100%"} scale={0.95} borderRadius={30}>
         <Card.Header padded>
           <H2>Book Appointment</H2>
-          <Paragraph theme="alt2">
-            Schedule your appointments easily
-          </Paragraph>
+          <Paragraph theme="alt2">Schedule your appointments easily</Paragraph>
         </Card.Header>
         <Card.Footer padded>
           <XStack flex={1} />
