@@ -1,36 +1,77 @@
-import React from 'react';
-import { YStack, H1, Paragraph, Card } from 'tamagui';
+import { getAuth } from "@react-native-firebase/auth";
+import React from "react";
+import { Alert } from "react-native";
+import { YStack, H1, Paragraph, Card, Button, Text } from "tamagui";
 
-const ManageBusiness = () => {
-    const stats = {
-        profitToDate: 50000, // Example value
-        expensesToDate: 20000, // Example value
-        profitMarginToDate: '60%', // Example value
-    };
+const ManageBusiness = ({ navigation }) => {
+  const user = getAuth().currentUser;
+  const stats = {
+    profitToDate: 50000, // Example value
+    expensesToDate: 20000, // Example value
+    profitMarginToDate: "60%", // Example value
+  };
 
-    return (
-        <YStack f={1} p="$4" bg="$background" space="$4">
-            <H1 ta="center">Business Stats</H1>
-            <Card elevate size="$4" bordered>
-                <YStack space="$2">
-                    <Paragraph size="$3" color="$color">Profit to Date:</Paragraph>
-                    <Paragraph size="$5" fontWeight="bold">${stats.profitToDate}</Paragraph>
-                </YStack>
-            </Card>
-            <Card elevate size="$4" bordered>
-                <YStack space="$2">
-                    <Paragraph size="$3" color="$color">Expenses to Date:</Paragraph>
-                    <Paragraph size="$5" fontWeight="bold">${stats.expensesToDate}</Paragraph>
-                </YStack>
-            </Card>
-            <Card elevate size="$4" bordered>
-                <YStack space="$2">
-                    <Paragraph size="$3" color="$color">Profit Margin to Date:</Paragraph>
-                    <Paragraph size="$5" fontWeight="bold">{stats.profitMarginToDate}</Paragraph>
-                </YStack>
-            </Card>
+  const deleteBusiness = async () => {
+    try {
+      // Assuming you have a function to delete hospital data in firebaseUtils
+      await deleteBusiness(user.uid);
+      console.log("Business deleted successfully");
+    } catch (error) {
+      console.error("Error deleting hospital:", error);
+    } finally {
+      navigation.navigate("Home");
+    }
+  };
+
+  return (
+    <YStack f={1} p="$4" bg="$background" space="$4">
+      <H1 ta="center">Business Stats</H1>
+      <Card elevate size="$4" bordered>
+        <YStack space="$2">
+          <Paragraph size="$3" color="$color">
+            Profit to Date:
+          </Paragraph>
+          <Paragraph size="$5" fontWeight="bold">
+            ${stats.profitToDate}
+          </Paragraph>
         </YStack>
-    );
+      </Card>
+      <Card elevate size="$4" bordered>
+        <YStack space="$2">
+          <Paragraph size="$3" color="$color">
+            Expenses to Date:
+          </Paragraph>
+          <Paragraph size="$5" fontWeight="bold">
+            ${stats.expensesToDate}
+          </Paragraph>
+        </YStack>
+      </Card>
+      <Card elevate size="$4" bordered>
+        <YStack space="$2">
+          <Paragraph size="$3" color="$color">
+            Profit Margin to Date:
+          </Paragraph>
+          <Paragraph size="$5" fontWeight="bold">
+            {stats.profitMarginToDate}
+          </Paragraph>
+        </YStack>
+      </Card>
+      <Button
+        onPress={() => {
+          Alert.alert(
+            "Delete Business",
+            "Are you sure you want to delete this business?",
+            [
+              { text: "Cancel", style: "cancel" },
+              { text: "OK", onPress: deleteBusiness },
+            ]
+          );
+        }}
+      >
+        <Text>Delete Business</Text>
+      </Button>
+    </YStack>
+  );
 };
 
 export default ManageBusiness;
