@@ -1,19 +1,18 @@
 import { getAuth } from "@react-native-firebase/auth";
-import React from "react";
 import { Alert } from "react-native";
 import { YStack, H1, Paragraph, Card, Button, Text } from "tamagui";
+import { deleteBusiness } from "../services/firebaseUtils";
 
 const ManageBusiness = ({ navigation }) => {
   const user = getAuth().currentUser;
   const stats = {
-    profitToDate: 50000, // Example value
-    expensesToDate: 20000, // Example value
-    profitMarginToDate: "60%", // Example value
+    profitToDate: 50000,
+    expensesToDate: 20000,
+    profitMarginToDate: "60%",
   };
 
-  const deleteBusiness = async () => {
+  const handleDelete = async () => {
     try {
-      // Assuming you have a function to delete hospital data in firebaseUtils
       await deleteBusiness(user.uid);
       console.log("Business deleted successfully");
     } catch (error) {
@@ -63,7 +62,7 @@ const ManageBusiness = ({ navigation }) => {
             "Are you sure you want to delete this business?",
             [
               { text: "Cancel", style: "cancel" },
-              { text: "OK", onPress: deleteBusiness },
+              { text: "OK", onPress: handleDelete },
             ]
           );
         }}
