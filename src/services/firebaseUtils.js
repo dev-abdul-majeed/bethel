@@ -299,7 +299,6 @@ export async function getBusinessImagePath(uid) {
 
 export async function uploadDoctorToFirebase(formData, hospitalId) {
   try {
-
     console.log(formData);
     console.log(hospitalId);
     const imageUrl = await uploadImage(
@@ -309,10 +308,7 @@ export async function uploadDoctorToFirebase(formData, hospitalId) {
 
     console.log(imageUrl);
 
-    const businessDoc = await getDocumentById(
-      "business_data",
-      hospitalId
-    );
+    const businessDoc = await getDocumentById("business_data", hospitalId);
 
     console.log("businessDoc", businessDoc);
 
@@ -326,11 +322,7 @@ export async function uploadDoctorToFirebase(formData, hospitalId) {
       hospital_id: hospitalId,
     };
 
-    await saveOrUpdateDocument(
-      "doctors_data",
-      doctorPayload,
-      formData?.id
-    );
+    await saveOrUpdateDocument("doctors_data", doctorPayload, formData?.id);
   } catch (error) {
     console.error("Error saving doctor data:", error);
   }
@@ -369,5 +361,83 @@ export async function deleteDoctor(userId) {
     }
   } catch (error) {
     console.error("Error deleting doctor:", error);
+  }
+}
+
+export async function uploadAppointment(appointmentData) {
+  try {
+    const {
+      appointmentId,
+      doctorId,
+      patientId,
+      appointmentBooked,
+      date,
+      time,
+    } = appointmentData;
+
+    let docId = appointmentId;
+
+    // If appointmentId is provided, check if it exists
+    if (appointmentId) {
+      const docRef = doc(db, "appointments", appointmentId);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        docId = ""; // Will create new if not found
+      }
+    }
+
+    const payload = {
+      doctorId,
+      patientId,
+      appointmentBooked,
+      date,
+      time,
+    };
+
+    await saveOrUpdateDocument("appointments", payload, docId);
+    Alert.alert(
+      "Appointment saved successfully!",
+      "Your appointment has been successfully saved."
+    );
+  } catch (error) {
+    console.error("Error uploading appointment:", error);
+  }
+}
+
+export async function deleteAppointment(appointmentId) {
+  try {
+    const docRef = doc(db, "appointments", appointmentId);
+    await deleteDoc(docRef);
+    console.log("Appointment deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting appointment:", error);
+  }
+}
+
+export async function getAppointmentsByDoctorId(doctorId) {
+  try {
+    const q = query(
+      collection(db, "appointments"),
+      where("doctorId", "==", doctorId)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+  } catch (error) {
+    console.error("Error getting appointments by doctorId:", error);
+    return [];
+  }
+}
+
+export async function getAppointmentsByPatientId(patientId) {
+  try {
+    const q = query(
+      collection(db, "appointments"),
+      where("patientId", "==", patientId)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+  } catch (error) {
+    console.error("Error getting appointments by patientId:", error);
+    return [];
   }
 }
