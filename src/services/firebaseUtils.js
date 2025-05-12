@@ -50,12 +50,14 @@ async function getDocumentById(collectionName, docId) {
 }
 
 async function saveOrUpdateDocument(collectionName, payload, docId = "") {
+  let document = "";
   if (docId) {
     const docRef = doc(db, collectionName, docId);
-    await updateDoc(docRef, payload);
+    document = await updateDoc(docRef, payload);
   } else {
-    await addDoc(collection(db, collectionName), payload);
+    document = await addDoc(collection(db, collectionName), payload);
   }
+  return document;
 }
 
 // ---------- PROFILE FUNCTIONS ---------- //
@@ -254,6 +256,16 @@ export async function uploadDoctorToFirebase(
   doctorId = ""
 ) {
   try {
+    let previousImageUrl = null;
+
+    // If doctorId exists, fetch the existing doctor data
+    if (doctorId) {
+      const existingDoc = await getDocumentById("doctors_data", doctorId);
+      if (existingDoc) {
+        previousImageUrl = existingDoc.data.doctor_image;
+      }
+    }
+
     const imageUrl = await uploadImage(
       `doctor_images/${formData.name}_${Date.now()}.jpg`,
       formData.photo
@@ -272,7 +284,19 @@ export async function uploadDoctorToFirebase(
     };
 
     await saveOrUpdateDocument("doctors_data", doctorPayload, doctorId);
-  } catch (error) {}
+
+    // Delete the previous image from storage if it exists
+    if (previousImageUrl) {
+      const storageRef = ref(getStorage(), previousImageUrl);
+      try {
+        await deleteObject(storageRef);
+      } catch (err) {
+        console.error("Failed to delete previous image:", err);
+      }
+    }
+  } catch (error) {
+    console.error("Failed to upload doctor:", error);
+  }
 }
 
 export async function getDoctorData(doctorId) {
@@ -298,20 +322,30 @@ export async function getDoctorsByHospitalId(hospitalId) {
   }
 }
 
-export async function deleteDoctor(userId) {
+export async function deleteDoctor(doctorId) {
   try {
-    const existingDoc = await getDocumentByField(
-      "doctors_data",
-      "user_id",
-      userId
-    );
+    const existingDoc = await getDocumentById("doctors_data", doctorId);
 
     if (existingDoc) {
+      const doctorData = existingDoc.data;
+
+      // Delete the doctor's image from storage if it exists
+      if (doctorData.doctor_image) {
+        const storageRef = ref(getStorage(), doctorData.doctor_image);
+        try {
+          await deleteObject(storageRef);
+        } catch (err) {
+          console.error("Failed to delete doctor image from storage:", err);
+        }
+      }
+
+      // Delete the doctor document from Firestore
       const docRef = doc(db, "doctors_data", existingDoc.id);
       await deleteDoc(docRef);
-    } else {
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error("Failed to delete doctor:", error);
+  }
 }
 
 export async function uploadAppointment(appointmentData) {
@@ -332,7 +366,7 @@ export async function uploadAppointment(appointmentData) {
       const docRef = doc(db, "appointments", appointmentId);
       const docSnap = await getDoc(docRef);
       if (!docSnap.exists()) {
-        docId = ""; // Will create new if not found
+        docId = "";
       }
     }
 

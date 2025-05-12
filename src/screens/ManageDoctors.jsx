@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -13,7 +13,10 @@ import {
   Input,
 } from "tamagui";
 
-import { getDoctorsByHospitalId } from "../services/firebaseUtils";
+import {
+  deleteDoctor,
+  getDoctorsByHospitalId,
+} from "../services/firebaseUtils";
 import Icon from "react-native-vector-icons/Feather";
 import { Dimensions } from "react-native";
 
@@ -46,6 +49,19 @@ const ManageDoctors = ({ navigation, route }) => {
 
   const handleAddDoctor = () => {
     navigation.navigate("DoctorRegistration", { hospitalId });
+  };
+
+  const handleDelete = async (doctorId) => {
+    try {
+      await deleteDoctor(doctorId);
+      setDoctors((prevDoctors) =>
+        prevDoctors.filter((doctor) => doctor.id !== doctorId)
+      );
+      alert("Doctor deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting doctor:", error);
+      alert("Failed to delete doctor. Please try again.");
+    }
   };
 
   return (
@@ -143,7 +159,7 @@ const ManageDoctors = ({ navigation, route }) => {
                       minWidth={"$12"}
                       maxWidth={"$12"}
                     >
-                      {doctor.data.name}
+                      Dr. {doctor.data.name}
                     </Text>
                   </XStack>
                 </YStack>

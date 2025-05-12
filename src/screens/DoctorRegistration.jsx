@@ -1,15 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  Input,
-  Image,
-  XStack,
-  Label,
-  YStack,
-  Card,
-} from "tamagui";
+import { useEffect, useState } from "react";
+import { Button, Input, Image, XStack, Label, YStack } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import {
   getDoctorData,
@@ -17,7 +7,7 @@ import {
 } from "../services/firebaseUtils";
 import Icon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Alert } from "react-native";
+import { Alert, SafeAreaView, StyleSheet } from "react-native";
 
 const DoctorRegistration = ({ navigation, route }) => {
   const [form, setForm] = useState({
@@ -27,11 +17,13 @@ const DoctorRegistration = ({ navigation, route }) => {
     photo: "",
     about: "",
   });
+  const [loading, setLoading] = useState(false); // New loading state
   const { hospitalId, doctorId } = route.params;
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
+
   useEffect(() => {
     const fetchDoctorData = async () => {
       if (route.params && route.params.doctorId) {
@@ -54,6 +46,7 @@ const DoctorRegistration = ({ navigation, route }) => {
     };
     fetchDoctorData();
   }, []);
+
   const handlePickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -71,6 +64,7 @@ const DoctorRegistration = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Set loading to true
     try {
       await uploadDoctorToFirebase(form, hospitalId, doctorId);
       Alert.alert("Success", "Doctor registered successfully!");
@@ -83,32 +77,23 @@ const DoctorRegistration = ({ navigation, route }) => {
       });
     } catch (error) {
       Alert.alert("Error", "Something went wrong while saving doctor data.");
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
   const isFormComplete = Object.values(form).every((val) => val !== "");
 
   const renderLabelWithIcon = (iconName, labelText) => (
-    <XStack alignItems="center" space="$2">
-      <Icon name={iconName} size={20} />
-      <Label>{labelText}</Label>
+    <XStack alignItems="center" gap="$2">
+      <Icon name={iconName} size={30} color={"rgb(9, 99, 159)"} />
+      <Label size={"$5"}>{labelText}</Label>
     </XStack>
   );
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{ paddingBottom: 45 }}
-      enableOnAndroid={true}
-      keyboardShouldPersistTaps="handled"
-      extraScrollHeight={140}
-    >
+    <KeyboardAwareScrollView style={styles.view}>
       <YStack padding="$4" space="$2">
-        <Card elevate bordered size="$4" padding="$4">
-          <Text fontSize="$6" fontWeight="bold">
-            Doctor Registration
-          </Text>
-        </Card>
-
         {renderLabelWithIcon("person-outline", "Full Name")}
         <Input
           placeholder="Full Name"
@@ -135,7 +120,12 @@ const DoctorRegistration = ({ navigation, route }) => {
         {form.photo ? (
           <Image height={200} source={{ uri: form.photo }} />
         ) : null}
-        <Button onPress={handlePickImage}>Pick Photo</Button>
+        <Button
+          onPress={handlePickImage}
+          icon={<Icon name="add-circle" size={30} />}
+          backgroundColor={"rgb(192, 235, 216)"}
+          maxWidth={"$7"}
+        ></Button>
 
         {renderLabelWithIcon("information-circle-outline", "About")}
         <Input
@@ -147,12 +137,18 @@ const DoctorRegistration = ({ navigation, route }) => {
           textAlignVertical="top"
         />
 
-        <Button onPress={handleSubmit} disabled={!isFormComplete}>
-          Submit
+        <Button onPress={handleSubmit} disabled={!isFormComplete || loading}>
+          {loading ? "Submitting..." : "Submit"}
         </Button>
       </YStack>
     </KeyboardAwareScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  view: {
+    backgroundColor: "white",
+  },
+});
 
 export default DoctorRegistration;

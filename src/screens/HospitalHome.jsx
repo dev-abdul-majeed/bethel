@@ -82,7 +82,6 @@ const HospitalHome = ({ navigation, route }) => {
             </YStack>
           )}
         </YStack>
-        <Button onPress={handleManageDoctors}>Manage Doctors</Button>
         <Button
           onPress={() => {
             Alert.alert(
@@ -96,13 +95,6 @@ const HospitalHome = ({ navigation, route }) => {
           }}
         >
           <Text>Delete Hospital</Text>
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.pop();
-          }}
-        >
-          <Text>Home</Text>
         </Button>
       </YStack>
     </ScrollView>
