@@ -14,53 +14,27 @@ import {
   Image,
   ScrollView,
 } from "tamagui";
-import { getBusinessData, deleteBusiness } from "../services/firebaseUtils";
-import { getAuth } from "@react-native-firebase/auth";
+import { deleteBusiness } from "../services/firebaseUtils";
 
 const HospitalHome = ({ navigation, route }) => {
-  const { hospitalId } = route.params;
-  const user = getAuth().currentUser;
-  const [businessData, setBusinessData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getBusinessData(user.uid);
-        console.log("Business Data:", data);
-        setBusinessData(data.data);
-      } catch (error) {
-        console.error("Error fetching business data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const hospitalId = route.params.hospitalId;
+  const businessData = route.params.data;
 
   const deleteHospital = async () => {
     try {
       navigation.pop();
       // Assuming you have a function to delete hospital data in firebaseUtils
       await deleteBusiness(user.uid);
-      console.log("Hospital deleted successfully");
     } catch (error) {
-      console.error("Error deleting hospital:", error);
     } finally {
       setLoading(false);
     }
   };
   const handleManageDoctors = () => {
-    navigation.navigate("ManageDoctors", { hospitalId });
+    navigation.navigate("ManageDoctors", {
+      hospitalId: businessData.hospitalId,
+    });
   };
-
-  if (loading) {
-    return (
-      <View flex={1} justifyContent="center" alignItems="center">
-        <Spinner size="large" color="blue" />
-      </View>
-    );
-  }
 
   return (
     <ScrollView>

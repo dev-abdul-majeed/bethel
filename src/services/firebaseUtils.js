@@ -42,11 +42,9 @@ async function getDocumentById(collectionName, docId) {
     if (docSnap.exists()) {
       return { id: docSnap.id, data: docSnap.data() };
     } else {
-      console.warn("No such document!");
       return null;
     }
   } catch (error) {
-    console.error("Error getting document by ID:", error);
     return null;
   }
 }
@@ -85,7 +83,6 @@ export async function uploadProfileToFirebase(formData, user) {
 
     // Alert.alert("Profile saved successfully!");
   } catch (error) {
-    console.error("Error saving profile:", error);
     // Alert.alert("Oops, something went wrong!");
   }
 }
@@ -101,7 +98,6 @@ export async function getUserProfile(uid) {
       ? { id: existingDoc.id, data: existingDoc.data() }
       : null;
   } catch (error) {
-    console.error("Error getting user profile:", error);
     // Alert.alert("Failed to fetch profile.");
     return null;
   }
@@ -110,7 +106,6 @@ export async function getUserProfile(uid) {
 // ---------- VEHICLE FUNCTIONS ---------- //
 
 export async function uploadVehicleToFirebase(formData, user) {
-  console.log(formData);
   try {
     const imageUrl = await uploadImage(
       `vehicle_images/${user.uid}_${Date.now()}.jpg`,
@@ -131,7 +126,6 @@ export async function uploadVehicleToFirebase(formData, user) {
 
     // Alert.alert("Vehicle saved successfully!");
   } catch (error) {
-    console.error("Error saving vehicle data:", error);
     throw new Error("Failed to upload image."); // <-- throw here!
   }
 }
@@ -146,7 +140,6 @@ export async function getVehicleData(uid, vid) {
     }
     return null;
   } catch (error) {
-    console.error("Error getting vehicle:", error);
     // Alert.alert("Failed to fetch vehicle.");
     return null;
   }
@@ -162,7 +155,6 @@ export async function getVehiclesData(uid) {
 
     return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
   } catch (error) {
-    console.error("Error getting user vehicles:", error);
     // Alert.alert("Failed to fetch vehicles.");
     return [];
   }
@@ -174,14 +166,12 @@ export async function deleteVehicle(vehicleId, userId) {
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      console.warn("No such vehicle document!");
       return;
     }
 
     const vehicleData = docSnap.data();
 
     if (vehicleData.user_id !== userId) {
-      console.warn("User is not authorized to delete this vehicle.");
       return;
     }
 
@@ -189,16 +179,11 @@ export async function deleteVehicle(vehicleId, userId) {
       const storageRef = ref(getStorage(), vehicleData.car_photo);
       try {
         await deleteObject(storageRef);
-        console.log("Image deleted from storage.");
-      } catch (err) {
-        console.warn("Failed to delete image from storage:", err);
-      }
+      } catch (err) {}
     }
 
     await deleteDoc(docRef);
-    console.log("Vehicle document deleted from Firestore.");
   } catch (error) {
-    console.error("Error deleting vehicle:", error);
     // Alert.alert("Failed to delete vehicle.");
   }
 }
@@ -229,9 +214,7 @@ export async function uploadBusinessToFirebase(formData, user) {
       businessPayload,
       existingDoc?.id
     );
-  } catch (error) {
-    console.error("Error saving business data:", error);
-  }
+  } catch (error) {}
 }
 
 export async function getBusinessData(uid) {
@@ -245,7 +228,6 @@ export async function getBusinessData(uid) {
       ? { id: existingDoc.id, data: existingDoc.data() }
       : null;
   } catch (error) {
-    console.error("Error getting business data:", error);
     return null;
   }
 }
@@ -261,56 +243,23 @@ export async function deleteBusiness(userId) {
     if (existingDoc) {
       const docRef = doc(db, "business_data", existingDoc.id);
       await deleteDoc(docRef);
-      console.log("Business document deleted from Firestore.");
     } else {
-      console.warn("No such business document!");
     }
-  } catch (error) {
-    console.error("Error deleting business:", error);
-  }
-}
-export async function getBusinessImageUrl(uid) {
-  try {
-    const existingDoc = await getDocumentByField(
-      "business_data",
-      "user_id",
-      uid
-    );
-    return existingDoc ? existingDoc.data().business_image : null;
-  } catch (error) {
-    console.error("Error getting business image URL:", error);
-    return null;
-  }
+  } catch (error) {}
 }
 
-export async function getBusinessImagePath(uid) {
+export async function uploadDoctorToFirebase(
+  formData,
+  hospitalId,
+  doctorId = ""
+) {
   try {
-    const existingDoc = await getDocumentByField(
-      "business_data",
-      "user_id",
-      uid
-    );
-    return existingDoc ? existingDoc.data().business_image : null;
-  } catch (error) {
-    console.error("Error getting business image path:", error);
-    return null;
-  }
-}
-
-export async function uploadDoctorToFirebase(formData, hospitalId) {
-  try {
-    console.log(formData);
-    console.log(hospitalId);
     const imageUrl = await uploadImage(
       `doctor_images/${formData.name}_${Date.now()}.jpg`,
       formData.photo
     );
 
-    console.log(imageUrl);
-
     const businessDoc = await getDocumentById("business_data", hospitalId);
-
-    console.log("businessDoc", businessDoc);
 
     if (!businessDoc) {
       throw new Error("No business found for the given hospital ID.");
@@ -322,25 +271,30 @@ export async function uploadDoctorToFirebase(formData, hospitalId) {
       hospital_id: hospitalId,
     };
 
-    await saveOrUpdateDocument("doctors_data", doctorPayload, formData?.id);
+    await saveOrUpdateDocument("doctors_data", doctorPayload, doctorId);
+  } catch (error) {}
+}
+
+export async function getDoctorData(doctorId) {
+  try {
+    const existingDoc = await getDocumentById("doctors_data", doctorId);
+    return existingDoc ? { id: existingDoc.id, data: existingDoc.data } : null;
   } catch (error) {
-    console.error("Error saving doctor data:", error);
+    return null;
   }
 }
 
-export async function getDoctorData(uid) {
+export async function getDoctorsByHospitalId(hospitalId) {
   try {
-    const existingDoc = await getDocumentByField(
-      "doctors_data",
-      "user_id",
-      uid
+    const q = query(
+      collection(db, "doctors_data"),
+      where("hospital_id", "==", hospitalId)
     );
-    return existingDoc
-      ? { id: existingDoc.id, data: existingDoc.data() }
-      : null;
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
   } catch (error) {
-    console.error("Error getting doctor data:", error);
-    return null;
+    return [];
   }
 }
 
@@ -355,13 +309,9 @@ export async function deleteDoctor(userId) {
     if (existingDoc) {
       const docRef = doc(db, "doctors_data", existingDoc.id);
       await deleteDoc(docRef);
-      console.log("Doctor document deleted from Firestore.");
     } else {
-      console.warn("No such doctor document!");
     }
-  } catch (error) {
-    console.error("Error deleting doctor:", error);
-  }
+  } catch (error) {}
 }
 
 export async function uploadAppointment(appointmentData) {
@@ -399,19 +349,14 @@ export async function uploadAppointment(appointmentData) {
       "Appointment saved successfully!",
       "Your appointment has been successfully saved."
     );
-  } catch (error) {
-    console.error("Error uploading appointment:", error);
-  }
+  } catch (error) {}
 }
 
 export async function deleteAppointment(appointmentId) {
   try {
     const docRef = doc(db, "appointments", appointmentId);
     await deleteDoc(docRef);
-    console.log("Appointment deleted successfully.");
-  } catch (error) {
-    console.error("Error deleting appointment:", error);
-  }
+  } catch (error) {}
 }
 
 export async function getAppointmentsByDoctorId(doctorId) {
@@ -423,7 +368,6 @@ export async function getAppointmentsByDoctorId(doctorId) {
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
   } catch (error) {
-    console.error("Error getting appointments by doctorId:", error);
     return [];
   }
 }
@@ -437,7 +381,6 @@ export async function getAppointmentsByPatientId(patientId) {
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
   } catch (error) {
-    console.error("Error getting appointments by patientId:", error);
     return [];
   }
 }

@@ -1,23 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
-import { View } from "tamagui";
+import { Spinner, View } from "tamagui";
 import HospitalHome from "./HospitalHome";
 import DoctorRegistration from "./DoctorRegistration";
 import ManageDoctors from "./ManageDoctors";
 import AppointmentForm from "./DoctorAppointments/AppointmentForm";
 import AppointmentsList from "./DoctorAppointments/AppointmentsList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { getBusinessData } from "../services/firebaseUtils";
+import { getAuth } from "@react-native-firebase/auth";
 
 const ManageHospital = ({ navigation, route }) => {
-  const { hospitalId } = route.params;
+  const user = getAuth().currentUser;
+
+  const [businessData, setBusinessData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getBusinessData(user.uid);
+        setBusinessData({ ...data.data, hospitalId: data.id });
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   navigation.reset;
 
   const Tab = createBottomTabNavigator();
 
   const Stack = createNativeStackNavigator();
 
+  if (loading)
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Spinner />
+      </View>
+    );
   return (
     <View style={styles.container}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -43,18 +68,35 @@ const ManageHospital = ({ navigation, route }) => {
               <Tab.Screen
                 name="Home"
                 component={HospitalHome}
+                initialParams={{
+                  hospitalId: businessData.hospitalId,
+                  data: businessData,
+                }}
                 navigation={navigation}
               />
-              <Tab.Screen name="Add Doctor" component={DoctorRegistration} />
-              <Tab.Screen name="Manage Doctors" component={ManageDoctors} />
+              <Tab.Screen
+                name="Add Doctor"
+                component={DoctorRegistration}
+                initialParams={{ hospitalId: businessData.hospitalId }}
+              />
+              <Tab.Screen
+                name="Manage Doctors"
+                component={ManageDoctors}
+                initialParams={{ hospitalId: businessData.hospitalId }}
+              />
               <Tab.Screen
                 name="Manage Appointments"
                 component={AppointmentsList}
+                initialParams={{ hospitalId: businessData.hospitalId }}
               />
             </Tab.Navigator>
           )}
         </Stack.Screen>
-        <Stack.Screen name="Manage Appointment" component={AppointmentForm} />
+        <Stack.Screen
+          name="Manage Appointment"
+          component={AppointmentForm}
+          initialParams={{ hospitalId: businessData.hospitalId }}
+        />
       </Stack.Navigator>
     </View>
   );

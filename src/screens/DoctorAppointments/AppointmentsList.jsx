@@ -16,7 +16,6 @@ const AppointmentsList = ({ navigation }) => {
         const data = await getAppointmentsByDoctorId(doctorId);
         setAppointments(data || []);
       } catch (error) {
-        console.error("Failed to fetch appointments:", error);
       } finally {
         setLoading(false);
       }

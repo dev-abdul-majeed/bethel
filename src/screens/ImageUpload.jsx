@@ -80,16 +80,12 @@ const ImageUpload = () => {
           setUploadStatus("Upload complete!");
 
           setDownloadUrl(downloadURL);
-
-          // console.log("File available at:", downloadURL);
         }
       );
     } catch (error) {
       setUploading(false);
 
       setUploadStatus("Error: " + error.message);
-
-      // console.log(error.message);
     }
   };
 

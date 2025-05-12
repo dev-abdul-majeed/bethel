@@ -19,7 +19,6 @@ const AppointmentForm = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
-    console.log("Submit appointment called");
     const appointment = {
       ...form,
       doctorId: 123,
@@ -28,9 +27,7 @@ const AppointmentForm = ({ navigation, route }) => {
     };
     try {
       await uploadAppointment(appointment);
-    } catch (e) {
-      console.log("Something went wrong while uploading appointment: ", e);
-    }
+    } catch (e) {}
   };
 
   return (

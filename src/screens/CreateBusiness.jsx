@@ -50,7 +50,6 @@ const CreateBusiness = ({ navigation }) => {
         setBusinessPhoto(result.assets[0].uri);
       }
     } catch (error) {
-      console.error("Image picking error:", error);
       Alert.alert("Error selecting image.");
     }
   };
@@ -81,16 +80,6 @@ const CreateBusiness = ({ navigation }) => {
         user
       );
 
-      console.log("Business Created:", {
-        businessName,
-        businessType,
-        operationalHours,
-        locationAddress,
-        contact,
-        email,
-        payday,
-        paymentFrequency,
-      });
       const newScreen =
         businessType == "hospital" ? "ManageHospital" : "ManageBusiness";
 

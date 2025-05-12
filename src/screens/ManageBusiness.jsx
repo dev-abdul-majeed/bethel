@@ -14,9 +14,7 @@ const ManageBusiness = ({ navigation }) => {
   const handleDelete = async () => {
     try {
       await deleteBusiness(user.uid);
-      console.log("Business deleted successfully");
     } catch (error) {
-      console.error("Error deleting hospital:", error);
     } finally {
       navigation.navigate("Home");
     }

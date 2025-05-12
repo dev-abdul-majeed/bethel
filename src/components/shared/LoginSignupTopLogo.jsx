@@ -13,7 +13,6 @@ const LoginSignupTopLogo = () => {
 
   useEffect(() => {
     if (loaded || error) {
-      // console.log("Loading fonts arthemis: ", error);
     }
   }, [loaded, error]);
 
