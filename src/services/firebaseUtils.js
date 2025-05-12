@@ -34,6 +34,23 @@ async function getDocumentByField(collectionName, field, value) {
   return snapshot.docs.length > 0 ? snapshot.docs[0] : null;
 }
 
+async function getDocumentById(collectionName, docId) {
+  try {
+    const docRef = doc(db, collectionName, docId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { id: docSnap.id, data: docSnap.data() };
+    } else {
+      console.warn("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document by ID:", error);
+    return null;
+  }
+}
+
 async function saveOrUpdateDocument(collectionName, payload, docId = "") {
   if (docId) {
     const docRef = doc(db, collectionName, docId);
@@ -277,5 +294,80 @@ export async function getBusinessImagePath(uid) {
   } catch (error) {
     console.error("Error getting business image path:", error);
     return null;
+  }
+}
+
+export async function uploadDoctorToFirebase(formData, hospitalId) {
+  try {
+
+    console.log(formData);
+    console.log(hospitalId);
+    const imageUrl = await uploadImage(
+      `doctor_images/${formData.name}_${Date.now()}.jpg`,
+      formData.photo
+    );
+
+    console.log(imageUrl);
+
+    const businessDoc = await getDocumentById(
+      "business_data",
+      hospitalId
+    );
+
+    console.log("businessDoc", businessDoc);
+
+    if (!businessDoc) {
+      throw new Error("No business found for the given hospital ID.");
+    }
+
+    const doctorPayload = {
+      ...formData,
+      doctor_image: imageUrl,
+      hospital_id: hospitalId,
+    };
+
+    await saveOrUpdateDocument(
+      "doctors_data",
+      doctorPayload,
+      formData?.id
+    );
+  } catch (error) {
+    console.error("Error saving doctor data:", error);
+  }
+}
+
+export async function getDoctorData(uid) {
+  try {
+    const existingDoc = await getDocumentByField(
+      "doctors_data",
+      "user_id",
+      uid
+    );
+    return existingDoc
+      ? { id: existingDoc.id, data: existingDoc.data() }
+      : null;
+  } catch (error) {
+    console.error("Error getting doctor data:", error);
+    return null;
+  }
+}
+
+export async function deleteDoctor(userId) {
+  try {
+    const existingDoc = await getDocumentByField(
+      "doctors_data",
+      "user_id",
+      userId
+    );
+
+    if (existingDoc) {
+      const docRef = doc(db, "doctors_data", existingDoc.id);
+      await deleteDoc(docRef);
+      console.log("Doctor document deleted from Firestore.");
+    } else {
+      console.warn("No such doctor document!");
+    }
+  } catch (error) {
+    console.error("Error deleting doctor:", error);
   }
 }

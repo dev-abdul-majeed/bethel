@@ -36,8 +36,9 @@ const sampleDoctors = [
   },
 ]
 
-const ManageDoctors = () => {
-  const navigation = useNavigation()
+const ManageDoctors = ({ navigation, route}) => {
+//   const navigation = useNavigation()
+    const { hospitalId } = route.params;
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredDoctors = sampleDoctors.filter((doctor) =>
@@ -49,7 +50,7 @@ const ManageDoctors = () => {
   }
 
   const handleAddDoctor = () => {
-    navigation.navigate('DoctorRegistration')
+    navigation.navigate('DoctorRegistration', { hospitalId })
   }
 
   return (

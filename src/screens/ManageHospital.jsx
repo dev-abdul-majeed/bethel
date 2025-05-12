@@ -7,7 +7,9 @@ import HospitalHome from "./HospitalHome";
 import DoctorRegistration from "./DoctorRegistration";
 import ManageDoctors from "./ManageDoctors";
 
-const ManageHospital = ({ navigation }) => {
+const ManageHospital = ({ navigation, route }) => {
+    
+    const { hospitalId } = route.params;
   navigation.reset;
   const Tab = createBottomTabNavigator();
 
@@ -33,10 +35,10 @@ const ManageHospital = ({ navigation }) => {
         <Tab.Screen
           name="Home"
           component={HospitalHome}
-          navigation={navigation}
+            initialParams={{ hospitalId }}
         />
-        <Tab.Screen name="Add Doctor" component={DoctorRegistration} />
-        <Tab.Screen name="Manage Doctors" component={ManageDoctors} />
+        <Tab.Screen name="Add Doctor" component={DoctorRegistration} initialParams={hospitalId} />
+        <Tab.Screen name="Manage Doctors" component={ManageDoctors} initialParams={hospitalId} />
       </Tab.Navigator>
     </View>
   );

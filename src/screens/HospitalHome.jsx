@@ -17,7 +17,8 @@ import {
 import { getBusinessData, deleteBusiness } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
 
-const HospitalHome = ({ navigation }) => {
+const HospitalHome = ({ navigation, route }) => {
+  const { hospitalId } = route.params;
   const user = getAuth().currentUser;
   const [businessData, setBusinessData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +51,7 @@ const HospitalHome = ({ navigation }) => {
     }
   };
   const handleManageDoctors = () => {
-    navigation.navigate("ManageDoctors");
+    navigation.navigate("ManageDoctors", { hospitalId });
   };
 
   if (loading) {
