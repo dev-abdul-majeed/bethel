@@ -5,7 +5,6 @@ import {
   Button,
   Input,
   Image,
-  Alert,
   XStack,
   Label,
   YStack,
@@ -18,6 +17,7 @@ import {
 } from "../services/firebaseUtils";
 import Icon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Alert } from "react-native";
 
 const DoctorRegistration = ({ navigation, route }) => {
   const [form, setForm] = useState({
@@ -74,6 +74,13 @@ const DoctorRegistration = ({ navigation, route }) => {
     try {
       await uploadDoctorToFirebase(form, hospitalId, doctorId);
       Alert.alert("Success", "Doctor registered successfully!");
+      setForm({
+        name: "",
+        specialization: "",
+        experience: "",
+        photo: "",
+        about: "",
+      });
     } catch (error) {
       Alert.alert("Error", "Something went wrong while saving doctor data.");
     }
