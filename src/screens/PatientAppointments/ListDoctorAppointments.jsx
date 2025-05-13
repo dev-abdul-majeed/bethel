@@ -87,10 +87,33 @@ const ListDoctorAppointments = () => {
     <YStack gap="$2" backgroundColor={"white"} paddingBottom={100}>
       <TopNavHeader text={"Appointments List"} style={{ flex: 0 }} />
       <XStack flex={1} marginBottom={50} mx="$4" gap={"$2"}>
-        <Button flex={0.5} backgroundColor={"rgb(249, 179, 99)"}>
+        <Button
+          flex={0.5}
+          backgroundColor={"rgb(249, 179, 99)"}
+          onPress={fetchAppointments} // Fetch all appointments
+          icon={<Ionicons name="calendar-outline" size={25} />}
+        >
           All
         </Button>
-        <Button flex={0.5} backgroundColor={"rgb(149, 252, 134)"}>
+        <Button
+          flex={0.5}
+          backgroundColor={"rgb(149, 252, 134)"}
+          icon={<Ionicons name="funnel-outline" size={25} />}
+          onPress={async () => {
+            setLoading(true);
+            try {
+              const data = await getAppointmentsByDoctorId(doctorId);
+              const availableAppointments = data.filter(
+                (appt) => appt.data.status === "available"
+              );
+              setAppointments(availableAppointments);
+            } catch (error) {
+              Alert.alert("Something went wrong", error);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        >
           Available
         </Button>
       </XStack>
