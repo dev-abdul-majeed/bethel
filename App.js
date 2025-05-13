@@ -27,8 +27,8 @@ import ManageHospital from "./src/screens/ManageHospital";
 import ManageDoctors from "./src/screens/ManageDoctors";
 import DoctorRegistration from "./src/screens/DoctorRegistration";
 import AppointmentsHome from "./src/screens/PatientAppointments/AppointmentsHome";
-import ListHospitals from "./src/screens/ListHospitals";
-import ListDoctors from "./src/screens/ListDoctors";
+import ListHospitals from "./src/screens/PatientAppointments/ListHospitals";
+import ListDoctors from "./src/screens/PatientAppointments/ListDoctors";
 export default function App() {
   const config = createTamagui(defaultConfig);
 
