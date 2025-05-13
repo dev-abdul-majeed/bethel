@@ -443,12 +443,12 @@ export async function cancelPatientAppointment(appointmentId) {
 
 export async function getHospitalsList() {
   try {
-    const q = query(
-      collection(db, "business_data", where("business_type", "==", "hospital"))
-    );
+    const hospitalsRef = collection(db, "business_data");
+    const q = query(hospitalsRef, where("businessType", "==", "hospital"));
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
   } catch (error) {
+    console.error("Failed to fetch hospitals:", error);
     return [];
   }
 }

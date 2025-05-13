@@ -4,6 +4,8 @@ import { View, Text, Button, Spinner, YStack } from "tamagui";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import TopNavHeader from "../../components/shared/TopNavHeader";
 import { Ionicons } from "@expo/vector-icons";
+import { getAppointmentsByPatientId } from "../../services/firebaseUtils";
+import { getAuth } from "@react-native-firebase/auth";
 
 // Dummy data
 const dummyAppointments = [
@@ -65,6 +67,9 @@ const cancelAppointment = async (id) => {
 };
 
 const AppointmentsHome = ({ navigation }) => {
+
+  const user = getAuth().currentUser;
+
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -74,7 +79,7 @@ const AppointmentsHome = ({ navigation }) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getUserAppointments();
+      const data = await getAppointmentsByPatientId(user.uid);
       setAppointments(data);
     } catch (err) {
       setError("Failed to fetch appointments. Please try again.");
@@ -120,12 +125,21 @@ const AppointmentsHome = ({ navigation }) => {
       borderRadius="$2"
       key={item.id}
     >
-      <Text fontSize="$5" fontWeight="bold">
-        {item.doctorName}
+      <Text fontSize="$6" fontWeight="bold">
+        {item.data?.doctorName || "Dr John Doe"}
       </Text>
-      <Text>Date: {item.date}</Text>
-      <Text>Time: {item.time}</Text>
-      <Text>Location: {item.location}</Text>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="calendar-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Date: {item.data?.date}</Text>
+      </YStack>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="time-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Time: {item.data?.time}</Text>
+      </YStack>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="location-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Location: {item.data?.location}</Text>
+      </YStack>
       <Button
         size="$3"
         marginTop="$2"
@@ -163,7 +177,7 @@ const AppointmentsHome = ({ navigation }) => {
   return (
     <View flex={1} padding="$4">
       <TopNavHeader text={"My Appointments"} style={{
-    flex: 0,
+        flex: 0,
       }
     } />
 
