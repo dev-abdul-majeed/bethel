@@ -11,6 +11,7 @@ import {
   Image,
   Separator,
   Input,
+  H3,
 } from "tamagui";
 
 import {
@@ -18,7 +19,7 @@ import {
   getDoctorsByHospitalId,
 } from "../services/firebaseUtils";
 import Icon from "react-native-vector-icons/Feather";
-import { Dimensions } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 const screenWidth = Dimensions.get("window").width;
 const ManageDoctors = ({ navigation, route }) => {
@@ -65,8 +66,14 @@ const ManageDoctors = ({ navigation, route }) => {
   };
 
   return (
-    <YStack flex={1} padding="$4" backgroundColor="$background">
-      <XStack gap="$2" marginBottom="$4" alignItems="center">
+    <YStack flex={1} backgroundColor="white">
+      <H3 style={styles.h3}>Manage Doctors</H3>
+      <XStack
+        gap="$2"
+        marginBottom="$4"
+        alignItems="center"
+        paddingHorizontal={10}
+      >
         <XStack
           flex={1}
           alignItems="center"
@@ -95,16 +102,15 @@ const ManageDoctors = ({ navigation, route }) => {
         </XStack>
 
         <Button
-          icon={<Icon name="plus" size={16} color="white" />}
-          backgroundColor="#4CAF50"
+          icon={<Icon name="plus-circle" size={16} color="white" />}
+          backgroundColor="rgb(0, 128, 255)"
           paddingHorizontal="$4"
           paddingVertical="$2"
           borderRadius="$3"
           onPress={handleAddDoctor}
+          textProps={{ color: "white" }}
         >
-          <Text color="white" fontSize="$5">
-            Add
-          </Text>
+          Add
         </Button>
       </XStack>
 
@@ -128,14 +134,10 @@ const ManageDoctors = ({ navigation, route }) => {
                 padding="$4"
                 marginBottom="$5"
                 backgroundColor="white"
-                borderRadius="$4"
                 width="100%"
                 maxWidth={screenWidth - 32} // Adds padding around the card
                 alignSelf="center"
-                elevation={3}
-                shadowColor="rgb(0,0,0)"
-                shadowOpacity={0.8}
-                shadowRadius={4}
+                borderColor={"rgb(15, 112, 191)"}
               >
                 <YStack alignItems="center" marginBottom="$4">
                   <XStack
@@ -188,7 +190,7 @@ const ManageDoctors = ({ navigation, route }) => {
                   alignItems="center"
                 >
                   <Button
-                    backgroundColor="rgb(83, 154, 129)"
+                    backgroundColor="rgb(37, 221, 132)"
                     icon={<Icon name="edit" size={16} color="white" />}
                     color="white"
                     onPress={() => handleDoctorPress(doctor.id)}
@@ -231,5 +233,18 @@ const ManageDoctors = ({ navigation, route }) => {
     </YStack>
   );
 };
+
+const styles = StyleSheet.create({
+  h3: {
+    backgroundColor: "rgb(255, 255, 255)",
+    paddingTop: 40,
+    width: "100%",
+    borderRadius: 20,
+    textAlign: "center",
+    paddingBottom: 10,
+    elevation: 7,
+    marginBottom: 30,
+  },
+});
 
 export default ManageDoctors;

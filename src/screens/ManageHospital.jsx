@@ -64,6 +64,7 @@ const ManageHospital = ({ navigation, route }) => {
                 },
                 tabBarActiveTintColor: "#007BFF",
                 tabBarInactiveTintColor: "gray",
+                headerShown: false,
               })}
             >
               <Tab.Screen
@@ -73,7 +74,6 @@ const ManageHospital = ({ navigation, route }) => {
                   hospitalId: businessData.hospitalId,
                   data: businessData,
                 }}
-                navigation={navigation}
               />
               <Tab.Screen
                 name="Add Doctor"
@@ -88,11 +88,7 @@ const ManageHospital = ({ navigation, route }) => {
             </Tab.Navigator>
           )}
         </Stack.Screen>
-        <Stack.Screen
-          name="Manage Appointments"
-          component={AppointmentsPage}
-          screenOptions={{ headerShown: true }}
-        />
+        <Stack.Screen name="Manage Appointments" component={AppointmentsPage} />
       </Stack.Navigator>
     </View>
   );

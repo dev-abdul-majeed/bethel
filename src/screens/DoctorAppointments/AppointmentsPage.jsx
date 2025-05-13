@@ -1,9 +1,10 @@
-import { ScrollView, Text, YStack, H1, Spinner, XStack, H4 } from "tamagui";
+import { ScrollView, Text, YStack, H1, Spinner, XStack, H4, H3 } from "tamagui";
 import AppointmentForm from "./AppointmentForm";
 import AppointmentsList from "./AppointmentsList";
 import { useEffect, useState } from "react";
 import { getAppointmentsByDoctorId } from "../../services/firebaseUtils";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { StyleSheet } from "react-native";
 
 const AppointmentsPage = ({ navigation, route }) => {
   const doctorId = route.params.doctorId;
@@ -36,10 +37,16 @@ const AppointmentsPage = ({ navigation, route }) => {
 
   return (
     <ScrollView>
-      <YStack f={1} p="$4" marginTop={"$5"}>
-        <XStack alignItems="center" justifyContent="center" mb="$4" gap="$5">
+      <YStack f={1} backgroundColor={"white"} paddingBottom={100}>
+        <XStack
+          alignItems="center"
+          justifyContent="center"
+          mb="$4"
+          gap="$5"
+          style={styles.h3}
+        >
           <Ionicons name="calendar-outline" size={28} color="#4CAF50" />
-          <H4>Manage Appointments</H4>
+          <H3>Manage Appointments</H3>
         </XStack>
 
         <AppointmentForm
@@ -55,5 +62,17 @@ const AppointmentsPage = ({ navigation, route }) => {
     </ScrollView>
   );
 };
+const styles = StyleSheet.create({
+  h3: {
+    backgroundColor: "rgb(255, 255, 255)",
+    paddingTop: 40,
+    width: "100%",
+    borderRadius: 20,
+    textAlign: "center",
+    paddingBottom: 10,
+    elevation: 7,
+    marginBottom: 30,
+  },
+});
 
 export default AppointmentsPage;

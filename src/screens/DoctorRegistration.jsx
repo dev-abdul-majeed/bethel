@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Input, Image, XStack, Label, YStack } from "tamagui";
+import { Button, Input, Image, XStack, Label, YStack, Spinner } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import {
   getDoctorData,
@@ -8,7 +8,8 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Alert, View, StyleSheet } from "react-native";
-
+import TopNavHeader from "../components/shared/TopNavHeader";
+import { Ionicons } from "@expo/vector-icons";
 const DoctorRegistration = ({ navigation, route }) => {
   const [form, setForm] = useState({
     name: "",
@@ -28,6 +29,7 @@ const DoctorRegistration = ({ navigation, route }) => {
     const fetchDoctorData = async () => {
       if (route.params && route.params.doctorId) {
         try {
+          setLoading(true);
           const doctorData = await getDoctorData(doctorId);
 
           if (doctorData) {
@@ -41,6 +43,8 @@ const DoctorRegistration = ({ navigation, route }) => {
           }
         } catch (error) {
           Alert.alert("Error", "Could not load doctor data.");
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -79,6 +83,7 @@ const DoctorRegistration = ({ navigation, route }) => {
       Alert.alert("Error", "Something went wrong while saving doctor data.");
     } finally {
       setLoading(false); // Set loading to false
+      navigation.pop();
     }
   };
 
@@ -100,10 +105,13 @@ const DoctorRegistration = ({ navigation, route }) => {
       }}
     >
       <View>
-        <YStack padding="$4" space="$2">
+        <TopNavHeader text={"Doctors Form"} />
+        <YStack gap="$2" paddingHorizontal={15}>
+          {loading && <Spinner size="large" />}
           {renderLabelWithIcon("person-outline", "Full Name")}
           <Input
             placeholder="Full Name"
+            backgroundColor={"white"}
             value={form.name}
             onChangeText={(text) => handleChange("name", text)}
           />
@@ -111,6 +119,7 @@ const DoctorRegistration = ({ navigation, route }) => {
           {renderLabelWithIcon("medkit-outline", "Specialization")}
           <Input
             placeholder="Specialization"
+            backgroundColor={"white"}
             value={form.specialization}
             onChangeText={(text) => handleChange("specialization", text)}
           />
@@ -118,6 +127,7 @@ const DoctorRegistration = ({ navigation, route }) => {
           {renderLabelWithIcon("time-outline", "Experience (in years)")}
           <Input
             placeholder="Experience"
+            backgroundColor={"white"}
             value={form.experience}
             onChangeText={(text) => handleChange("experience", text)}
             keyboardType="numeric"
@@ -129,14 +139,15 @@ const DoctorRegistration = ({ navigation, route }) => {
           ) : null}
           <Button
             onPress={handlePickImage}
-            icon={<Icon name="add-circle" size={30} />}
-            backgroundColor={"rgb(192, 235, 216)"}
-            maxWidth={"$7"}
+            icon={<Icon name="add-circle" size={30} color={"white"} />}
+            backgroundColor={"rgb(9, 99, 159)"}
+            maxWidth={"$6"}
           ></Button>
 
           {renderLabelWithIcon("information-circle-outline", "About")}
           <Input
             placeholder="Write about the doctor..."
+            backgroundColor={"white"}
             value={form.about}
             onChangeText={(text) => handleChange("about", text)}
             multiline
@@ -144,8 +155,23 @@ const DoctorRegistration = ({ navigation, route }) => {
             textAlignVertical="top"
           />
 
-          <Button onPress={handleSubmit} disabled={!isFormComplete || loading}>
-            {loading ? "Submitting..." : "Submit"}
+          <Button
+            width={150}
+            alignSelf="center"
+            marginTop={40}
+            onPress={handleSubmit}
+            disabled={!isFormComplete || loading}
+            backgroundColor="rgb(4, 197, 149)"
+            textProps={{ color: "white" }}
+            icon={
+              loading ? (
+                () => <Spinner size="large" color="white" />
+              ) : (
+                <Ionicons name="enter" size={20} color="white" />
+              )
+            }
+          >
+            {loading ? "" : "Submit"}
           </Button>
         </YStack>
       </View>
@@ -156,6 +182,8 @@ const DoctorRegistration = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   view: {
     backgroundColor: "white",
+    paddingBottom: 50,
+    marginBottom: 50,
   },
 });
 

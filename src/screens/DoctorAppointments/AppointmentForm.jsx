@@ -49,7 +49,7 @@ const AppointmentForm = ({ doctorId, onAppointmentCreated }) => {
   };
 
   return (
-    <View>
+    <View paddingHorizontal={15}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Create Appointment</Text>
       {show && (
         <RNDateTimePicker
@@ -65,13 +65,18 @@ const AppointmentForm = ({ doctorId, onAppointmentCreated }) => {
         <XStack gap="$3" alignItems="center" justifyContent="center">
           <Input
             placeholder="Select Date"
+            backgroundColor={"white"}
             value={date.toDateString()}
             disabled
             width={170}
           />
           <Button
+            textProps={{ color: "white" }}
             onPress={showDatepicker}
-            icon={<Ionicons name="calendar-outline" size={20} />}
+            icon={
+              <Ionicons name="calendar-outline" size={20} color={"white"} />
+            }
+            backgroundColor={"rgb(92, 94, 244)"}
           >
             Set Date
           </Button>
@@ -80,13 +85,16 @@ const AppointmentForm = ({ doctorId, onAppointmentCreated }) => {
         <XStack gap="$3" justifyContent="center">
           <Input
             placeholder="Select Time"
+            backgroundColor={"white"}
             value={date.toTimeString()}
             disabled
             width={170}
           />
           <Button
             onPress={showTimepicker}
-            icon={<Ionicons name="time-outline" size={20} />}
+            textProps={{ color: "white" }}
+            icon={<Ionicons name="time-outline" size={20} color={"white"} />}
+            backgroundColor={"rgb(92, 94, 244)"}
           >
             Set Time
           </Button>
@@ -94,7 +102,11 @@ const AppointmentForm = ({ doctorId, onAppointmentCreated }) => {
 
         <Button
           onPress={handleSubmit}
-          icon={<Ionicons name="checkmark-done-outline" size={20} />}
+          textProps={{ color: "white" }}
+          backgroundColor={"rgb(46, 215, 170)"}
+          icon={
+            <Ionicons name="checkmark-done-outline" size={20} color={"white"} />
+          }
           disabled={loading}
         >
           {loading ? "Submitting..." : "Submit"}
