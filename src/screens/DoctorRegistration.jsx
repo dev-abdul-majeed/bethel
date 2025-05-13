@@ -7,7 +7,7 @@ import {
 } from "../services/firebaseUtils";
 import Icon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Alert, SafeAreaView, StyleSheet } from "react-native";
+import { Alert, View, StyleSheet } from "react-native";
 
 const DoctorRegistration = ({ navigation, route }) => {
   const [form, setForm] = useState({
@@ -92,55 +92,63 @@ const DoctorRegistration = ({ navigation, route }) => {
   );
 
   return (
-    <KeyboardAwareScrollView style={styles.view}>
-      <YStack padding="$4" space="$2">
-        {renderLabelWithIcon("person-outline", "Full Name")}
-        <Input
-          placeholder="Full Name"
-          value={form.name}
-          onChangeText={(text) => handleChange("name", text)}
-        />
+    <KeyboardAwareScrollView
+      enableOnAndroid={true}
+      style={styles.view}
+      getTextInputRefs={() => {
+        return [this._textInputRef];
+      }}
+    >
+      <View>
+        <YStack padding="$4" space="$2">
+          {renderLabelWithIcon("person-outline", "Full Name")}
+          <Input
+            placeholder="Full Name"
+            value={form.name}
+            onChangeText={(text) => handleChange("name", text)}
+          />
 
-        {renderLabelWithIcon("medkit-outline", "Specialization")}
-        <Input
-          placeholder="Specialization"
-          value={form.specialization}
-          onChangeText={(text) => handleChange("specialization", text)}
-        />
+          {renderLabelWithIcon("medkit-outline", "Specialization")}
+          <Input
+            placeholder="Specialization"
+            value={form.specialization}
+            onChangeText={(text) => handleChange("specialization", text)}
+          />
 
-        {renderLabelWithIcon("time-outline", "Experience (in years)")}
-        <Input
-          placeholder="Experience"
-          value={form.experience}
-          onChangeText={(text) => handleChange("experience", text)}
-          keyboardType="numeric"
-        />
+          {renderLabelWithIcon("time-outline", "Experience (in years)")}
+          <Input
+            placeholder="Experience"
+            value={form.experience}
+            onChangeText={(text) => handleChange("experience", text)}
+            keyboardType="numeric"
+          />
 
-        {renderLabelWithIcon("image-outline", "Photo")}
-        {form.photo ? (
-          <Image height={200} source={{ uri: form.photo }} />
-        ) : null}
-        <Button
-          onPress={handlePickImage}
-          icon={<Icon name="add-circle" size={30} />}
-          backgroundColor={"rgb(192, 235, 216)"}
-          maxWidth={"$7"}
-        ></Button>
+          {renderLabelWithIcon("image-outline", "Photo")}
+          {form.photo ? (
+            <Image height={200} source={{ uri: form.photo }} />
+          ) : null}
+          <Button
+            onPress={handlePickImage}
+            icon={<Icon name="add-circle" size={30} />}
+            backgroundColor={"rgb(192, 235, 216)"}
+            maxWidth={"$7"}
+          ></Button>
 
-        {renderLabelWithIcon("information-circle-outline", "About")}
-        <Input
-          placeholder="Write about the doctor..."
-          value={form.about}
-          onChangeText={(text) => handleChange("about", text)}
-          multiline
-          numberOfLines={4}
-          textAlignVertical="top"
-        />
+          {renderLabelWithIcon("information-circle-outline", "About")}
+          <Input
+            placeholder="Write about the doctor..."
+            value={form.about}
+            onChangeText={(text) => handleChange("about", text)}
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+          />
 
-        <Button onPress={handleSubmit} disabled={!isFormComplete || loading}>
-          {loading ? "Submitting..." : "Submit"}
-        </Button>
-      </YStack>
+          <Button onPress={handleSubmit} disabled={!isFormComplete || loading}>
+            {loading ? "Submitting..." : "Submit"}
+          </Button>
+        </YStack>
+      </View>
     </KeyboardAwareScrollView>
   );
 };

@@ -11,6 +11,7 @@ import AppointmentsList from "./DoctorAppointments/AppointmentsList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { getBusinessData } from "../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
+import AppointmentsPage from "./DoctorAppointments/AppointmentsPage";
 
 const ManageHospital = ({ navigation, route }) => {
   const user = getAuth().currentUser;
@@ -84,18 +85,13 @@ const ManageHospital = ({ navigation, route }) => {
                 component={ManageDoctors}
                 initialParams={{ hospitalId: businessData.hospitalId }}
               />
-              <Tab.Screen
-                name="Manage Appointments"
-                component={AppointmentsList}
-                initialParams={{ hospitalId: businessData.hospitalId }}
-              />
             </Tab.Navigator>
           )}
         </Stack.Screen>
         <Stack.Screen
-          name="Manage Appointment"
-          component={AppointmentForm}
-          initialParams={{ hospitalId: businessData.hospitalId }}
+          name="Manage Appointments"
+          component={AppointmentsPage}
+          screenOptions={{ headerShown: true }}
         />
       </Stack.Navigator>
     </View>

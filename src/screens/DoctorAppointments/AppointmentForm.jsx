@@ -1,53 +1,93 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useState } from "react";
-import { Button, Input } from "tamagui";
+import { Button, Input, XStack, Text, View, YStack } from "tamagui";
 import { getAuth } from "@react-native-firebase/auth";
 import { uploadAppointment } from "../../services/firebaseUtils";
+import RNDateTimePicker, {
+  DateTimePickerAndroid,
+} from "@react-native-community/datetimepicker";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-const AppointmentForm = ({ navigation, route }) => {
-  const patientId = getAuth().currentUser;
-  const [form, setForm] = useState({
-    date: "",
-    time: "",
-  });
+const AppointmentForm = ({ doctorId }) => {
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
 
-  const handleChange = (key, value) => {
-    setForm((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
   };
 
-  const handleSubmit = async () => {
-    const appointment = {
-      ...form,
-      doctorId: 123,
-      patientId: patientId?.uid,
-      appointmentBooked: false,
-    };
-    try {
-      await uploadAppointment(appointment);
-    } catch (e) {}
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Create Appointment</Text>
-      <Input
-        placeholder="Select Date"
-        type="date"
-        style={{ marginBottom: 16, width: 250 }}
-        value={form.date}
-        onChangeText={(text) => handleChange("date", text)}
-      />
-      <Input
-        placeholder="Select Time"
-        type="time"
-        style={{ marginBottom: 16, width: 250 }}
-        value={form.time}
-        onChangeText={(text) => handleChange("time", text)}
-      />
-      <Button onPress={handleSubmit}>Submit</Button>
+      {show && (
+        <RNDateTimePicker
+          value={date}
+          minimumDate={date}
+          mode={mode}
+          is24Hour={true}
+          onChange={onChange}
+          minuteInterval={30}
+        />
+      )}
+      <YStack gap={"$4"}>
+        <XStack gap="$3" alignItems="center" justifyContent="center">
+          <Input
+            placeholder="Select Date"
+            type="date"
+            value={date.toDateString()}
+            disabled
+            width={170}
+          />
+          <Button
+            onPress={showDatepicker}
+            icon={<Ionicons name="calendar-outline" size={20} />}
+          >
+            Set Date
+          </Button>
+        </XStack>
+
+        <XStack gap="$3" justifyContent="center">
+          <Input
+            placeholder="Select Time"
+            type="time"
+            value={date.toTimeString()}
+            disabled
+            width={170}
+          />
+          <Button
+            onPress={showTimepicker}
+            icon={<Ionicons name="time-outline" size={20} />}
+          >
+            Set Time
+          </Button>
+        </XStack>
+
+        <Button
+          onPress={handleSubmit}
+          icon={<Ionicons name="checkmark-done-outline" size={20} />}
+        >
+          Submit
+        </Button>
+      </YStack>
+      <YStack>
+        <Text>Previous Appointments</Text>
+      </YStack>
     </View>
   );
 };

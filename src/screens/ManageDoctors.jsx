@@ -202,6 +202,11 @@ const ManageDoctors = ({ navigation, route }) => {
                     color="white"
                     marginTop={20}
                     flex={0.5}
+                    onPress={() => {
+                      navigation.navigate("Manage Appointments", {
+                        doctorId: doctor.id,
+                      });
+                    }}
                   >
                     Appointments
                   </Button>

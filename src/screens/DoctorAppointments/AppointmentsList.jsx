@@ -1,29 +1,26 @@
 import { StyleSheet } from "react-native";
-import { getAppointmentsByDoctorId } from "../../services/firebaseUtils";
-import { useEffect, useState } from "react";
-import { View } from "react-native";
-import { Text, ListItem, YStack, Spinner } from "tamagui";
 
-const AppointmentsList = ({ navigation }) => {
-  const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+import {
+  Text,
+  YStack,
+  Spinner,
+  XStack,
+  Separator,
+  H1,
+  H4,
+  H3,
+  Button,
+} from "tamagui";
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        // Replace 'doctorId' with the actual doctor ID as needed
-        const doctorId = 123;
-        const data = await getAppointmentsByDoctorId(doctorId);
-        setAppointments(data || []);
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAppointments();
-  }, []);
+const AppointmentsList = ({ appointments, loadingAppointments }) => {
+  const getStatusColor = (status) => {
+    return status === "available" ? "#E6F4EA" : "#FDECEA"; // green or red tint
+  };
 
-  if (loading) {
+  const getBorderColor = (status) => {
+    return status === "available" ? "#34A853" : "#D93025";
+  };
+  if (loadingAppointments) {
     return (
       <YStack f={1} jc="center" ai="center">
         <Spinner size="large" />
@@ -38,21 +35,35 @@ const AppointmentsList = ({ navigation }) => {
         <Text>No appointments found.</Text>
       ) : (
         appointments.map((appt, idx) => (
-          <ListItem
+          <XStack
             key={appt.id || idx}
-            title={appt.data.appointmentBooked ? "Booked" : "Available"}
+            backgroundColor={getStatusColor(appt.status)}
+            borderLeftWidth={4}
+            borderLeftColor={getBorderColor(appt.status)}
+            borderRadius="$3"
+            padding="$3"
+            marginBottom="$3"
+            alignItems="center"
+            space="$3"
           >
-            <Text>Date: {appt.data.date || "No date"}</Text>
-            <Text>Time: {appt.data.time || "No time"}</Text>
-            <Text
-              onPress={() =>
-                navigation.navigate("Manage Appointment", { appointment: appt })
-              }
-              style={{ color: "#007AFF", marginTop: 8 }}
-            >
-              Edit Appointment
-            </Text>
-          </ListItem>
+            <YStack alignItems="center" width={170}>
+              <H3 fontWeight="700" color="#333">
+                {appt.date || "No date"}
+              </H3>
+            </YStack>
+
+            <Separator vertical alignSelf="stretch" borderColor={"white"} />
+
+            <YStack flex={1}>
+              <H4 fontSize="$5" color="#444">
+                Time: {appt.time || "No time"}
+              </H4>
+              <H3 fontSize="$4" color="#666">
+                Status: {appt.status.toUpperCase()}
+              </H3>
+              <Button icon>Delete</Button>
+            </YStack>
+          </XStack>
         ))
       )}
     </YStack>

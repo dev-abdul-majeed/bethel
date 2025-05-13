@@ -1,13 +1,16 @@
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-} from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Dimensions } from "react-native";
 import React, { useState } from "react";
 import auth from "@react-native-firebase/auth";
-import { Button, Input, Paragraph, Spinner, XStack, YStack } from "tamagui";
+import {
+  Button,
+  Input,
+  Paragraph,
+  Spinner,
+  XStack,
+  YStack,
+  View,
+  Text,
+} from "tamagui";
 import LoginSignupTopLogo from "../components/shared/LoginSignupTopLogo";
 import EmailPasswordField from "../components/inputFields/EmailPasswordField";
 import Ionicons from "@expo/vector-icons/Ionicons";
