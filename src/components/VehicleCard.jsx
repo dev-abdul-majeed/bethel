@@ -32,7 +32,6 @@ const VehicleCard = ({
           text: "Delete",
           style: "destructive",
           onPress: async () => {
-            console.log("Delete pressed", vid, getAuth().currentUser.uid);
             await deleteVehicle(vid, getAuth().currentUser.uid);
             afterDelete(!beforeDelete); // callback to refresh list or navigate back
           },

@@ -1,7 +1,7 @@
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import { Dimensions, StyleSheet } from "react-native";
+import { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { YStack } from "tamagui";
+import { YStack, Text } from "tamagui";
 import { useFonts } from "expo-font";
 
 const LoginSignupTopLogo = () => {
@@ -13,7 +13,6 @@ const LoginSignupTopLogo = () => {
 
   useEffect(() => {
     if (loaded || error) {
-      // console.log("Loading fonts arthemis: ", error);
     }
   }, [loaded, error]);
 

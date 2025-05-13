@@ -20,7 +20,6 @@ const Vehicles = ({ navigation }) => {
         const vehicleData = await getVehiclesData(user.uid);
         setVehicles(vehicleData);
       } catch (error) {
-        console.error("Failed to fetch vehicles:", error);
       } finally {
         setLoading(false); // stop loading no matter what
       }

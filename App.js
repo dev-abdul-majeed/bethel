@@ -1,3 +1,5 @@
+import "expo-dev-client";
+
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -80,19 +82,63 @@ export default function App() {
                   component={VehicleRegistration}
                 />
                 <Stack.Screen name="Vehicles" component={Vehicles} />
-                <Stack.Screen name="ChooseBusiness" component={ChooseBusiness} options={{ headerShown: false }} />
-                <Stack.Screen name="CreateBusiness" component={CreateBusiness} options={{ headerShown: false }} />
-                <Stack.Screen name="ManageBusiness" component={ManageBusiness} options={{ headerShown: false }} />
-                <Stack.Screen name="ManageHospital" component={ManageHospital} options={{ headerShown: false }} />
-                
-                <Stack.Screen name="ManageDoctors" component={ManageDoctors} options={{ headerShown: false }} />
-                <Stack.Screen name="DoctorRegistration" component={DoctorRegistration} options={{ headerShown: false }} />
-                <Stack.Screen name="DoctorAvailableDays" component={DoctorAvailableDays} options={{ headerShown: false }} />
-                
-                <Stack.Screen name="ManageAppointments" component={ManageAppointments} options={{ headerShown: false }} />
-                <Stack.Screen name="ListHospitals" component={ListHospitals} options={{ headerShown: false }} />
-                <Stack.Screen name="ListDoctors" component={ListDoctors} options={{ headerShown: false }} />
-                <Stack.Screen name="AppointmentTimeslots" component={AppointmentTimeslots} options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="ChooseBusiness"
+                  component={ChooseBusiness}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="CreateBusiness"
+                  component={CreateBusiness}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ManageBusiness"
+                  component={ManageBusiness}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ManageHospital"
+                  component={ManageHospital}
+                  options={{ headerShown: false }}
+                />
+
+                <Stack.Screen
+                  name="ManageDoctors"
+                  component={ManageDoctors}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="DoctorRegistration"
+                  component={DoctorRegistration}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="DoctorAvailableDays"
+                  component={DoctorAvailableDays}
+                  options={{ headerShown: false }}
+                />
+
+                <Stack.Screen
+                  name="ManageAppointments"
+                  component={ManageAppointments}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ListHospitals"
+                  component={ListHospitals}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ListDoctors"
+                  component={ListDoctors}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="AppointmentTimeslots"
+                  component={AppointmentTimeslots}
+                  options={{ headerShown: false }}
+                />
               </Stack.Navigator>
             </>
           ) : (

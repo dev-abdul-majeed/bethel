@@ -59,7 +59,6 @@ const VehicleRegistration = ({ navigation, route }) => {
         handleChange("car_photo", result.assets[0].uri);
       }
     } catch (error) {
-      console.error("Image picking error:", error);
       Alert.alert("Error selecting image.");
     }
   };
@@ -111,72 +110,72 @@ const VehicleRegistration = ({ navigation, route }) => {
       keyboardShouldPersistTaps="handled"
       extraScrollHeight={140}
     >
-    <ScrollView contentContainerStyle={{ paddingBottom: 45 }}>
-      <YStack space="$3" padding="$4">
-        {renderLabelWithIcon("car-outline", `VehicleId: ${form.vehicleId}`)}
+      <ScrollView contentContainerStyle={{ paddingBottom: 45 }}>
+        <YStack space="$3" padding="$4">
+          {renderLabelWithIcon("car-outline", `VehicleId: ${form.vehicleId}`)}
 
-        {renderLabelWithIcon("car-sport-outline", "Car Brand")}
-        <Input
-          value={form.brand}
-          onChangeText={(text) => handleChange("brand", text)}
-        />
+          {renderLabelWithIcon("car-sport-outline", "Car Brand")}
+          <Input
+            value={form.brand}
+            onChangeText={(text) => handleChange("brand", text)}
+          />
 
-        {renderLabelWithIcon("pricetag-outline", "Car Name")}
-        <Input
-          value={form.name}
-          onChangeText={(text) => handleChange("name", text)}
-        />
+          {renderLabelWithIcon("pricetag-outline", "Car Name")}
+          <Input
+            value={form.name}
+            onChangeText={(text) => handleChange("name", text)}
+          />
 
-        {renderLabelWithIcon("calendar-outline", "Year")}
-        <Input
-          placeholder="YYYY"
-          value={form.year}
-          onChangeText={(text) => handleChange("year", text)}
-          keyboardType="numeric"
-        />
+          {renderLabelWithIcon("calendar-outline", "Year")}
+          <Input
+            placeholder="YYYY"
+            value={form.year}
+            onChangeText={(text) => handleChange("year", text)}
+            keyboardType="numeric"
+          />
 
-        {renderLabelWithIcon("document-text-outline", "Registration Number")}
-        <Input
-          placeholder="ABC01 DEF"
-          value={form.registrationNumber}
-          onChangeText={(text) => handleChange("registrationNumber", text)}
-        />
+          {renderLabelWithIcon("document-text-outline", "Registration Number")}
+          <Input
+            placeholder="ABC01 DEF"
+            value={form.registrationNumber}
+            onChangeText={(text) => handleChange("registrationNumber", text)}
+          />
 
-        {renderLabelWithIcon("speedometer-outline", "Current Mileage (km)")}
-        <Input
-          value={form.mileage}
-          onChangeText={(text) => handleChange("mileage", text)}
-          keyboardType="numeric"
-        />
+          {renderLabelWithIcon("speedometer-outline", "Current Mileage (km)")}
+          <Input
+            value={form.mileage}
+            onChangeText={(text) => handleChange("mileage", text)}
+            keyboardType="numeric"
+          />
 
-        {renderLabelWithIcon(
-          "construct-outline",
-          "Last Serviced Mileage (km)"
-        )}
-        <Input
-          value={form.last_serviced_mileage}
-          onChangeText={(text) => handleChange("last_serviced_mileage", text)}
-          keyboardType="numeric"
-        />
+          {renderLabelWithIcon(
+            "construct-outline",
+            "Last Serviced Mileage (km)"
+          )}
+          <Input
+            value={form.last_serviced_mileage}
+            onChangeText={(text) => handleChange("last_serviced_mileage", text)}
+            keyboardType="numeric"
+          />
 
-        {renderLabelWithIcon("calendar-outline", "Last Service Date")}
-        <Input
-          value={form.last_service_date}
-          onChangeText={(text) => handleChange("last_service_date", text)}
-        />
+          {renderLabelWithIcon("calendar-outline", "Last Service Date")}
+          <Input
+            value={form.last_service_date}
+            onChangeText={(text) => handleChange("last_service_date", text)}
+          />
 
-        {renderLabelWithIcon("image-outline", "Car Photo")}
-        {form.car_photo ? (
-          <Image height={200} source={{ uri: form.car_photo }} />
-        ) : null}
-        <Button onPress={handlePickImage} disabled={loading}>
-          Pick Car Photo
-        </Button>
-        <Button onPress={handleSubmit} disabled={!isSaveEnabled || loading}>
-          {loading ? "Saving..." : "Save Vehicle"}
-        </Button>
-      </YStack>
-    </ScrollView>
+          {renderLabelWithIcon("image-outline", "Car Photo")}
+          {form.car_photo ? (
+            <Image height={200} source={{ uri: form.car_photo }} />
+          ) : null}
+          <Button onPress={handlePickImage} disabled={loading}>
+            Pick Car Photo
+          </Button>
+          <Button onPress={handleSubmit} disabled={!isSaveEnabled || loading}>
+            {loading ? "Saving..." : "Save Vehicle"}
+          </Button>
+        </YStack>
+      </ScrollView>
     </KeyboardAwareScrollView>
   );
 };
