@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ScrollView, RefreshControl } from "react-native";
+import { ScrollView, RefreshControl, TouchableOpacity, StyleSheet } from "react-native";
 import { View, Text, Button, Spinner, YStack } from "tamagui";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import TopNavHeader from "../../components/shared/TopNavHeader";
+import { Ionicons } from "@expo/vector-icons";
 
 // Dummy data
 const dummyAppointments = [
@@ -21,6 +23,27 @@ const dummyAppointments = [
   },
   {
     id: 3,
+    doctorName: "Dr. Emily Johnson",
+    date: "2023-10-03",
+    time: "11:00 AM",
+    location: "Clinic C",
+  },
+  {
+    id: 4,
+    doctorName: "Dr. John Doe",
+    date: "2023-10-01",
+    time: "10:00 AM",
+    location: "Clinic A",
+  },
+  {
+    id: 5,
+    doctorName: "Dr. Jane Smith",
+    date: "2023-10-02",
+    time: "2:00 PM",
+    location: "Clinic B",
+  },
+  {
+    id: 6,
     doctorName: "Dr. Emily Johnson",
     date: "2023-10-03",
     time: "11:00 AM",
@@ -139,7 +162,15 @@ const AppointmentsHome = ({ navigation }) => {
 
   return (
     <View flex={1} padding="$4">
-      <Button
+      <TopNavHeader text={"My Appointments"} style={{
+    flex: 0,
+      }
+    } />
+
+      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate("ListHospitals")}>
+        <Ionicons name="add-outline" size={24} color="white" />
+      </TouchableOpacity>
+      {/* <Button
         marginBottom="$4"
         backgroundColor="#007bff"
         color="#fff"
@@ -147,7 +178,7 @@ const AppointmentsHome = ({ navigation }) => {
         onPress={() => navigation.navigate("ListHospitals")}
       >
         Book New Appointment
-      </Button>
+      </Button> */}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
@@ -164,5 +195,25 @@ const AppointmentsHome = ({ navigation }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  floatingButton: {
+    backgroundColor: "#007bff", // Primary blue color
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 70,
+    right: 30,
+    elevation: 5, // For Android shadow
+    shadowColor: "#000", // For iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    zIndex: 1000, // Ensure it appears above other elements
+  },
+});
 
 export default AppointmentsHome;

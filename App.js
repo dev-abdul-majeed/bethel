@@ -27,6 +27,8 @@ import ManageHospital from "./src/screens/ManageHospital";
 import ManageDoctors from "./src/screens/ManageDoctors";
 import DoctorRegistration from "./src/screens/DoctorRegistration";
 import AppointmentsHome from "./src/screens/PatientAppointments/AppointmentsHome";
+import ListHospitals from "./src/screens/ListHospitals";
+import ListDoctors from "./src/screens/ListDoctors";
 export default function App() {
   const config = createTamagui(defaultConfig);
 
@@ -114,6 +116,17 @@ export default function App() {
                   component={AppointmentsHome}
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="ListHospitals"
+                  component={ListHospitals}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ListDoctors"
+                  component={ListDoctors}
+                  options={{ headerShown: false }}
+                />
+
               </Stack.Navigator>
             </>
           ) : (
