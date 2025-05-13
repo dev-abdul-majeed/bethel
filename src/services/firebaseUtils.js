@@ -420,3 +420,35 @@ export async function getAppointmentsByPatientId(patientId) {
     return [];
   }
 }
+
+export async function bookPatientAppointment(appointmentId, patientId) {
+  try {
+    const docRef = doc(db, "appointments", appointmentId);
+    await updateDoc(docRef, { patientId, status: "booked" });
+    Alert.alert("Appointment booked successfully!");
+  } catch (error) {
+    console.error("Failed to book appointment:", error);
+  }
+}
+
+export async function cancelPatientAppointment(appointmentId) {
+  try {
+    const docRef = doc(db, "appointments", appointmentId);
+    await updateDoc(docRef, { patientId: null, status: "available" });
+    Alert.alert("Appointment canceled successfully!");
+  } catch (error) {
+    console.error("Failed to cancel appointment:", error);
+  }
+}
+
+export async function getHospitalsList() {
+  try {
+    const q = query(
+      collection(db, "business_data", where("business_type", "==", "hospital"))
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+  } catch (error) {
+    return [];
+  }
+}
