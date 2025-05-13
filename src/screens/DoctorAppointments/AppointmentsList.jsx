@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-
+import { useState } from "react";
 import {
   Text,
   YStack,
@@ -11,8 +11,11 @@ import {
   H3,
   Button,
 } from "tamagui";
+import { deleteAppointment } from "../../services/firebaseUtils";
 
-const AppointmentsList = ({ appointments, loadingAppointments }) => {
+const AppointmentsList = ({ appointments, loadingAppointments, onDelete }) => {
+  const [deletingId, setDeletingId] = useState(null);
+
   const getStatusColor = (status) => {
     return status === "available" ? "#E6F4EA" : "#FDECEA"; // green or red tint
   };
@@ -20,6 +23,19 @@ const AppointmentsList = ({ appointments, loadingAppointments }) => {
   const getBorderColor = (status) => {
     return status === "available" ? "#34A853" : "#D93025";
   };
+
+  const handleDelete = async (appointmentId) => {
+    setDeletingId(appointmentId);
+    try {
+      await deleteAppointment(appointmentId);
+      onDelete(); // Notify parent to refresh the list
+    } catch (error) {
+      console.error("Failed to delete appointment:", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   if (loadingAppointments) {
     return (
       <YStack f={1} jc="center" ai="center">
@@ -36,10 +52,10 @@ const AppointmentsList = ({ appointments, loadingAppointments }) => {
       ) : (
         appointments.map((appt, idx) => (
           <XStack
-            key={appt.id || idx}
-            backgroundColor={getStatusColor(appt.status)}
+            key={appt.id}
+            backgroundColor={getStatusColor(appt.data.status)}
             borderLeftWidth={4}
-            borderLeftColor={getBorderColor(appt.status)}
+            borderLeftColor={getBorderColor(appt.data.status)}
             borderRadius="$3"
             padding="$3"
             marginBottom="$3"
@@ -48,7 +64,7 @@ const AppointmentsList = ({ appointments, loadingAppointments }) => {
           >
             <YStack alignItems="center" width={170}>
               <H3 fontWeight="700" color="#333">
-                {appt.date || "No date"}
+                {appt.data.date || "No date"}
               </H3>
             </YStack>
 
@@ -56,12 +72,18 @@ const AppointmentsList = ({ appointments, loadingAppointments }) => {
 
             <YStack flex={1}>
               <H4 fontSize="$5" color="#444">
-                Time: {appt.time || "No time"}
+                Time: {appt.data.time || "No time"}
               </H4>
               <H3 fontSize="$4" color="#666">
-                Status: {appt.status.toUpperCase()}
+                Status: {appt.data.status}
               </H3>
-              <Button icon>Delete</Button>
+              <Button
+                onPress={() => handleDelete(appt.id)}
+                disabled={deletingId === appt.id}
+                icon={<Text>X</Text>}
+              >
+                {deletingId === appt.id ? "Deleting..." : "Delete"}
+              </Button>
             </YStack>
           </XStack>
         ))

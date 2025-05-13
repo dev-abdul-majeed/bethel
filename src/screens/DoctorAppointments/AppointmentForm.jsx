@@ -1,20 +1,18 @@
 import { StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Button, Input, XStack, Text, View, YStack } from "tamagui";
-import { getAuth } from "@react-native-firebase/auth";
 import { uploadAppointment } from "../../services/firebaseUtils";
-import RNDateTimePicker, {
-  DateTimePickerAndroid,
-} from "@react-native-community/datetimepicker";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const AppointmentForm = ({ doctorId }) => {
+const AppointmentForm = ({ doctorId, onAppointmentCreated }) => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
+    const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
   };
@@ -32,13 +30,31 @@ const AppointmentForm = ({ doctorId }) => {
     showMode("time");
   };
 
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const appointmentData = {
+        doctorId,
+        date: date.toDateString(),
+        time: date.toTimeString(),
+        status: "available",
+      };
+      await uploadAppointment(appointmentData);
+      onAppointmentCreated(); // Notify parent component
+    } catch (error) {
+      console.error("Failed to create appointment:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Create Appointment</Text>
       {show && (
         <RNDateTimePicker
           value={date}
-          minimumDate={date}
+          minimumDate={new Date()}
           mode={mode}
           is24Hour={true}
           onChange={onChange}
@@ -49,7 +65,6 @@ const AppointmentForm = ({ doctorId }) => {
         <XStack gap="$3" alignItems="center" justifyContent="center">
           <Input
             placeholder="Select Date"
-            type="date"
             value={date.toDateString()}
             disabled
             width={170}
@@ -65,7 +80,6 @@ const AppointmentForm = ({ doctorId }) => {
         <XStack gap="$3" justifyContent="center">
           <Input
             placeholder="Select Time"
-            type="time"
             value={date.toTimeString()}
             disabled
             width={170}
@@ -81,12 +95,10 @@ const AppointmentForm = ({ doctorId }) => {
         <Button
           onPress={handleSubmit}
           icon={<Ionicons name="checkmark-done-outline" size={20} />}
+          disabled={loading}
         >
-          Submit
+          {loading ? "Submitting..." : "Submit"}
         </Button>
-      </YStack>
-      <YStack>
-        <Text>Previous Appointments</Text>
       </YStack>
     </View>
   );

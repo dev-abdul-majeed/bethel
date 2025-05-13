@@ -350,47 +350,50 @@ export async function deleteDoctor(doctorId) {
 
 export async function uploadAppointment(appointmentData) {
   try {
-    const {
-      appointmentId,
-      doctorId,
-      patientId,
-      appointmentBooked,
-      date,
-      time,
-    } = appointmentData;
+    const { doctorId, date, time, status } = appointmentData;
 
-    let docId = appointmentId;
+    // Check if an appointment already exists for the same doctor, date, and time
+    const existingAppointment = await getDocumentByField(
+      "appointments",
+      "doctorId",
+      doctorId
+    );
 
-    // If appointmentId is provided, check if it exists
-    if (appointmentId) {
-      const docRef = doc(db, "appointments", appointmentId);
-      const docSnap = await getDoc(docRef);
-      if (!docSnap.exists()) {
-        docId = "";
+    if (existingAppointment) {
+      const existingData = existingAppointment.data();
+      if (existingData.date === date && existingData.time === time) {
+        Alert.alert(
+          "Appointment Conflict",
+          "An appointment already exists for this doctor at the specified date and time."
+        );
+        return;
       }
     }
 
     const payload = {
       doctorId,
-      patientId,
-      appointmentBooked,
       date,
       time,
+      status,
     };
 
-    await saveOrUpdateDocument("appointments", payload, docId);
+    await saveOrUpdateDocument("appointments", payload);
     Alert.alert(
       "Appointment saved successfully!",
       "Your appointment has been successfully saved."
     );
-  } catch (error) {}
+  } catch (error) {
+    console.error("Failed to upload appointment:", error);
+  }
 }
 
 export async function deleteAppointment(appointmentId) {
   try {
     const docRef = doc(db, "appointments", appointmentId);
     await deleteDoc(docRef);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Failed to delete appointment:", error);
+  }
 }
 
 export async function getAppointmentsByDoctorId(doctorId) {
