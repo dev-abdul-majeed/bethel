@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import {
   getVehicleData,
   uploadVehicleToFirebase,
-} from "../services/firebaseUtils";
+} from "../../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
 import { Alert, Image, KeyboardAvoidingView, Platform } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";

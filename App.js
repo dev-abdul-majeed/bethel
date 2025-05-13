@@ -18,20 +18,15 @@ import { createTamagui, TamaguiProvider, View } from "tamagui";
 import { defaultConfig } from "@tamagui/config/v4";
 import { useFonts } from "expo-font";
 import ProfileForm from "./src/screens/ProfileForm";
-import VehicleRegistration from "./src/screens/VehicleRegistration";
-import Vehicles from "./src/screens/Vehicles";
+import VehicleRegistration from "./src/screens/Vehicles/VehicleRegistration";
+import Vehicles from "./src/screens/Vehicles/Vehicles";
 import ManageBusiness from "./src/screens/ManageBusiness";
 import CreateBusiness from "./src/screens/CreateBusiness";
 import ChooseBusiness from "./src/screens/ChooseBusiness";
 import ManageHospital from "./src/screens/ManageHospital";
 import ManageDoctors from "./src/screens/ManageDoctors";
 import DoctorRegistration from "./src/screens/DoctorRegistration";
-import DoctorAvailableDays from "./src/screens/DoctorAvaiableDays";
-import ManageAppointments from "./src/screens/ManageAppointments";
-import ListHospitals from "./src/screens/ListHospitals";
-import ListDoctors from "./src/screens/ListDoctors";
-import AppointmentTimeslots from "./src/screens/AppointmentTimeslots";
-
+import AppointmentsHome from "./src/screens/PatientAppointments/AppointmentsHome";
 export default function App() {
   const config = createTamagui(defaultConfig);
 
@@ -113,30 +108,10 @@ export default function App() {
                   component={DoctorRegistration}
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen
-                  name="DoctorAvailableDays"
-                  component={DoctorAvailableDays}
-                  options={{ headerShown: false }}
-                />
 
                 <Stack.Screen
-                  name="ManageAppointments"
-                  component={ManageAppointments}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="ListHospitals"
-                  component={ListHospitals}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="ListDoctors"
-                  component={ListDoctors}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="AppointmentTimeslots"
-                  component={AppointmentTimeslots}
+                  name="AppointmentsHome"
+                  component={AppointmentsHome}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

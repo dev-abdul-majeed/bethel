@@ -74,7 +74,9 @@ function Home({ navigation }) {
               const business = await getBusinessData(user.uid);
               if (business) {
                 if (business.data.businessType === "hospital")
-                  navigation.navigate("ManageHospital", { hospitalId: business.id });
+                  navigation.navigate("ManageHospital", {
+                    hospitalId: business.id,
+                  });
                 else navigation.navigate("ManageBusiness");
               } else {
                 navigation.navigate("ChooseBusiness");
@@ -96,7 +98,7 @@ function Home({ navigation }) {
           <Button
             borderRadius="$10"
             onPress={() => {
-              navigation.navigate("ManageAppointments");
+              navigation.navigate("AppointmentsHome");
             }}
           >
             Book Now

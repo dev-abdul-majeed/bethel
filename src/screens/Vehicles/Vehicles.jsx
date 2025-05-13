@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, ScrollView, YStack } from "tamagui";
-import VehicleCard from "../components/VehicleCard";
-import { getVehiclesData } from "../services/firebaseUtils";
+import VehicleCard from "../../components/VehicleCard";
+import { getVehiclesData } from "../../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
 import { useIsFocused } from "@react-navigation/native";
-import LoadingContent from "../components/shared/LoadingContent";
+import LoadingContent from "../../components/shared/LoadingContent";
 const Vehicles = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [vehicles, setVehicles] = useState([]);
