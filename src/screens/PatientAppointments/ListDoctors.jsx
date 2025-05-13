@@ -50,7 +50,7 @@ const ListDoctors = () => {
     );
 
     const handleDoctorPress = (doctorId) => {
-        navigation.navigate('DoctorAvailableDays', { doctorId, hospitalId });
+        navigation.navigate('ListDoctorAppointments', { doctorId });
     };
 
     useFocusEffect(

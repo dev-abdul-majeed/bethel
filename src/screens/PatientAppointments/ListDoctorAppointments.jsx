@@ -18,8 +18,8 @@ import {
 import { getAuth } from "@react-native-firebase/auth";
 import TopNavHeader from "../../components/shared/TopNavHeader";
 
-const ListDoctorAppointments = () => {
-  const doctorId = "DJi6QrV3XOjKz9qwGOAU";
+const ListDoctorAppointments = ({ route }) => {
+  const doctorId = route.params?.doctorId;
   const [loading, setLoading] = useState(false);
   const [appointments, setAppointments] = useState([]);
   const [bookingId, setBookingId] = useState(null);

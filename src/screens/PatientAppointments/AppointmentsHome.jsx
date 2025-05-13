@@ -53,13 +53,6 @@ const dummyAppointments = [
   },
 ];
 
-// Mock API functions
-const getUserAppointments = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(dummyAppointments), 1000); // Simulate network delay
-  });
-};
-
 const cancelAppointment = async (id) => {
   return new Promise((resolve) => {
     setTimeout(() => resolve(), 500); // Simulate network delay
@@ -91,7 +84,7 @@ const AppointmentsHome = ({ navigation }) => {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const data = await getUserAppointments();
+      const data = await getAppointmentsByPatientId(user.uid);
       setAppointments(data);
     } catch (err) {
       setError("Failed to refresh appointments.");
@@ -118,6 +111,7 @@ const AppointmentsHome = ({ navigation }) => {
   const renderAppointment = (item) => (
     <YStack
       padding="$4"
+      marginHorizontal="$4"
       marginBottom="$3"
       borderWidth={1}
       borderColor="#ccc"
@@ -175,7 +169,7 @@ const AppointmentsHome = ({ navigation }) => {
   }
 
   return (
-    <View flex={1} padding="$4">
+    <View flex={1} >
       <TopNavHeader text={"My Appointments"} style={{
         flex: 0,
       }
