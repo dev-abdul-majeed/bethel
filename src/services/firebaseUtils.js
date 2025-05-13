@@ -353,21 +353,20 @@ export async function uploadAppointment(appointmentData) {
     const { doctorId, date, time, status } = appointmentData;
 
     // Check if an appointment already exists for the same doctor, date, and time
-    const existingAppointment = await getDocumentByField(
-      "appointments",
-      "doctorId",
-      doctorId
+    const q = query(
+      collection(db, "appointments"),
+      where("doctorId", "==", doctorId),
+      where("date", "==", date),
+      where("time", "==", time)
     );
+    const snapshot = await getDocs(q);
 
-    if (existingAppointment) {
-      const existingData = existingAppointment.data();
-      if (existingData.date === date && existingData.time === time) {
-        Alert.alert(
-          "Appointment Conflict",
-          "An appointment already exists for this doctor at the specified date and time."
-        );
-        return;
-      }
+    if (!snapshot.empty) {
+      Alert.alert(
+        "Appointment Conflict",
+        "An appointment already exists for this doctor at the specified date and time."
+      );
+      return;
     }
 
     const payload = {

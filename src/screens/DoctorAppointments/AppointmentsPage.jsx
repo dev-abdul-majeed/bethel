@@ -1,8 +1,9 @@
-import { ScrollView, Text, View } from "tamagui";
+import { ScrollView, Text, YStack, H1, Spinner, XStack, H4 } from "tamagui";
 import AppointmentForm from "./AppointmentForm";
 import AppointmentsList from "./AppointmentsList";
 import { useEffect, useState } from "react";
 import { getAppointmentsByDoctorId } from "../../services/firebaseUtils";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const AppointmentsPage = ({ navigation, route }) => {
   const doctorId = route.params.doctorId;
@@ -35,16 +36,22 @@ const AppointmentsPage = ({ navigation, route }) => {
 
   return (
     <ScrollView>
-      <Text>Appointments for Doctor {route?.params?.doctorId}</Text>
-      <AppointmentForm
-        doctorId={doctorId}
-        onAppointmentCreated={handleAppointmentCreated}
-      />
-      <AppointmentsList
-        appointments={appointments}
-        loadingAppointments={loadingAppointments}
-        onDelete={handleAppointmentDeleted}
-      />
+      <YStack f={1} p="$4" marginTop={"$5"}>
+        <XStack alignItems="center" justifyContent="center" mb="$4" gap="$5">
+          <Ionicons name="calendar-outline" size={28} color="#4CAF50" />
+          <H4>Manage Appointments</H4>
+        </XStack>
+
+        <AppointmentForm
+          doctorId={doctorId}
+          onAppointmentCreated={handleAppointmentCreated}
+        />
+        <AppointmentsList
+          appointments={appointments}
+          loadingAppointments={loadingAppointments}
+          onDelete={handleAppointmentDeleted}
+        />
+      </YStack>
     </ScrollView>
   );
 };

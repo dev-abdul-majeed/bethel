@@ -12,6 +12,7 @@ import {
   Button,
 } from "tamagui";
 import { deleteAppointment } from "../../services/firebaseUtils";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const AppointmentsList = ({ appointments, loadingAppointments, onDelete }) => {
   const [deletingId, setDeletingId] = useState(null);
@@ -80,7 +81,9 @@ const AppointmentsList = ({ appointments, loadingAppointments, onDelete }) => {
               <Button
                 onPress={() => handleDelete(appt.id)}
                 disabled={deletingId === appt.id}
-                icon={<Text>X</Text>}
+                backgroundColor={"rgb(255, 116, 116)"}
+                icon={<Ionicons name="trash" size={20} color={"white"} />}
+                textProps={{ color: "white" }}
               >
                 {deletingId === appt.id ? "Deleting..." : "Delete"}
               </Button>
