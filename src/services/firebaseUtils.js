@@ -374,6 +374,7 @@ export async function uploadAppointment(appointmentData) {
       date,
       time,
       status,
+      patientId: null,
     };
 
     await saveOrUpdateDocument("appointments", payload);
