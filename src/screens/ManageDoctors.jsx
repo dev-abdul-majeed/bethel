@@ -146,7 +146,7 @@ const ManageDoctors = ({ navigation, route }) => {
                     gap={"$2"}
                   >
                     <Image
-                      source={{ uri: doctor.data.photo }}
+                      source={{ uri: doctor.data.doctor_image }}
                       width={130}
                       height={130}
                       borderRadius={12} // Rounded square

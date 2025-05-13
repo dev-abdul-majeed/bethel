@@ -37,7 +37,7 @@ const DoctorRegistration = ({ navigation, route }) => {
               name: doctorData.data.name || "",
               specialization: doctorData.data.specialization || "",
               experience: doctorData.data.experience || "",
-              photo: doctorData.data.photo || "",
+              photo: doctorData.data.doctor_image || "",
               about: doctorData.data.about || "",
             });
           }
