@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ScrollView, RefreshControl, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { View, Text, Button, Spinner, YStack } from "tamagui";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import TopNavHeader from "../../components/shared/TopNavHeader";
@@ -60,7 +65,6 @@ const cancelAppointment = async (id) => {
 };
 
 const AppointmentsHome = ({ navigation }) => {
-
   const user = getAuth().currentUser;
 
   const [appointments, setAppointments] = useState([]);
@@ -93,13 +97,8 @@ const AppointmentsHome = ({ navigation }) => {
     }
   };
 
-  const handleCancel = async (id) => {
-    try {
-      await cancelAppointment(id);
-      setAppointments((prev) => prev.filter((appt) => appt.id !== id));
-    } catch (err) {
-      setError("Failed to cancel the appointment. Please try again.");
-    }
+  const handleManage = async (doctorId) => {
+    navigation.navigate("ListDoctorAppointments", { doctorId });
   };
 
   useFocusEffect(
@@ -120,11 +119,19 @@ const AppointmentsHome = ({ navigation }) => {
       key={item.id}
     >
       <Text fontSize="$6" fontWeight="bold">
-        {item.data?.doctorName || "Dr John Doe"}
+        Dr. {item.data?.doctorName}
       </Text>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="location-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Hospital: {item.data?.hospitalName}</Text>
+      </YStack>
       <YStack flexDirection="row" alignItems="center" marginTop="$2">
         <Ionicons name="calendar-outline" size={16} color="#555" />
         <Text marginLeft="$2">Date: {item.data?.date}</Text>
+      </YStack>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="location-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Contact: {item.data?.hospitalContact}</Text>
       </YStack>
       <YStack flexDirection="row" alignItems="center" marginTop="$2">
         <Ionicons name="time-outline" size={16} color="#555" />
@@ -132,17 +139,25 @@ const AppointmentsHome = ({ navigation }) => {
       </YStack>
       <YStack flexDirection="row" alignItems="center" marginTop="$2">
         <Ionicons name="location-outline" size={16} color="#555" />
-        <Text marginLeft="$2">Location: {item.data?.location}</Text>
+        <Text marginLeft="$2">Location: {item.data?.hospitalLocation}</Text>
       </YStack>
       <Button
-        size="$3"
-        marginTop="$2"
-        backgroundColor="#ff4d4d"
-        color="#fff"
+        maxWidth="40%"
+        alignSelf="flex-end"
+        marginTop="$4"
+        backgroundColor="rgb(11, 170, 125)"
         borderRadius="$2"
-        onPress={() => handleCancel(item.id)}
+        onPress={() => handleManage(item.data.doctorId)}
+        textProps={{ color: "white" }}
+        iconAfter={
+          <Ionicons
+            name="caret-forward-circle-outline"
+            size={25}
+            color={"white"}
+          />
+        }
       >
-        Cancel
+        Manage
       </Button>
     </YStack>
   );
@@ -169,24 +184,21 @@ const AppointmentsHome = ({ navigation }) => {
   }
 
   return (
-    <View flex={1} >
-      <TopNavHeader text={"My Appointments"} style={{
-        flex: 0,
-      }
-    } />
+    <View flex={1}>
+      <TopNavHeader
+        text={"My Appointments"}
+        style={{
+          flex: 0,
+        }}
+      />
 
-      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.navigate("ListHospitals")}>
-        <Ionicons name="add-outline" size={24} color="white" />
-      </TouchableOpacity>
-      {/* <Button
-        marginBottom="$4"
-        backgroundColor="#007bff"
-        color="#fff"
-        borderRadius="$2"
+      <TouchableOpacity
+        style={styles.floatingButton}
         onPress={() => navigation.navigate("ListHospitals")}
       >
-        Book New Appointment
-      </Button> */}
+        <Ionicons name="add-outline" size={24} color="white" />
+      </TouchableOpacity>
+
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />

@@ -352,6 +352,27 @@ export async function uploadAppointment(appointmentData) {
   try {
     const { doctorId, date, time, status } = appointmentData;
 
+    // Fetch doctor's data
+    const doctorDoc = await getDocumentById("doctors_data", doctorId);
+    if (!doctorDoc) {
+      Alert.alert("Error", "Doctor not found.");
+      return;
+    }
+    const doctorName = doctorDoc.data.name;
+
+    // Fetch hospital's data using doctor.hospital_id
+    const hospitalDoc = await getDocumentById(
+      "business_data",
+      doctorDoc.data.hospital_id
+    );
+    if (!hospitalDoc) {
+      Alert.alert("Error", "Hospital not found.");
+      return;
+    }
+    const hospitalName = hospitalDoc.data.businessName;
+    const hospitalLocation = hospitalDoc.data.locationAddress;
+    const hospitalContact = hospitalDoc.data.contact;
+
     // Check if an appointment already exists for the same doctor, date, and time
     const q = query(
       collection(db, "appointments"),
@@ -371,6 +392,10 @@ export async function uploadAppointment(appointmentData) {
 
     const payload = {
       doctorId,
+      doctorName,
+      hospitalName,
+      hospitalLocation,
+      hospitalContact,
       date,
       time,
       status,
@@ -424,9 +449,38 @@ export async function getAppointmentsByPatientId(patientId) {
 
 export async function bookPatientAppointment(appointmentId, patientId) {
   try {
+    // Check if the patient already has 2 booked appointments
+    const q = query(
+      collection(db, "appointments"),
+      where("patientId", "==", patientId),
+      where("status", "==", "booked")
+    );
+    const snapshot = await getDocs(q);
+
+    if (snapshot.size >= 2) {
+      Alert.alert(
+        "Booking Limit Reached",
+        "You can only have 2 active appointments at a time."
+      );
+      return;
+    }
+
     const docRef = doc(db, "appointments", appointmentId);
-    await updateDoc(docRef, { patientId, status: "booked" });
-    Alert.alert("Appointment booked successfully!");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const appointmentData = docSnap.data();
+
+      if (appointmentData.status === "booked") {
+        Alert.alert("Error", "This appointment is already booked.");
+        return;
+      }
+
+      await updateDoc(docRef, { patientId, status: "booked" });
+      Alert.alert("Appointment booked successfully!");
+    } else {
+      Alert.alert("Error", "Appointment not found.");
+    }
   } catch (error) {
     console.error("Failed to book appointment:", error);
   }
