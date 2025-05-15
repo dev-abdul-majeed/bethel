@@ -33,7 +33,7 @@ const LoginSignupTopLogo = () => {
         <Text style={styles.logo} fontSize={"$15"}>
           Bethel
         </Text>
-        <Text style={styles.tagline} fontSize={"$9"}>
+        <Text style={styles.tagline} fontSize={w * 0.07}>
           A City of the Future!
         </Text>
       </YStack>
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     elevation: 7,
     marginBottom: 50,
     paddingTop: 30,
+    minWidth: "fit-content",
   },
   logo: {
     fontFamily: "arthemis",
