@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
 import { H3 } from "tamagui";
 
-const TopNavHeader = ({ text }) => {
-  return <H3 style={styles.h3}>{text}</H3>;
+const TopNavHeader = ({ text, style  }) => {
+  return <H3 style={[styles.h3, style]}>{text}</H3>;
 };
 
 const styles = StyleSheet.create({

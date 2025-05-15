@@ -20,13 +20,16 @@ import { useFonts } from "expo-font";
 import ProfileForm from "./src/screens/ProfileForm";
 import VehicleRegistration from "./src/screens/Vehicles/VehicleRegistration";
 import Vehicles from "./src/screens/Vehicles/Vehicles";
-import ManageBusiness from "./src/screens/ManageBusiness";
+import ManageBusiness from "./src/screens/BusinessManagement/ManageBusiness";
 import CreateBusiness from "./src/screens/CreateBusiness";
 import ChooseBusiness from "./src/screens/ChooseBusiness";
 import ManageHospital from "./src/screens/ManageHospital";
 import ManageDoctors from "./src/screens/ManageDoctors";
 import DoctorRegistration from "./src/screens/DoctorRegistration";
 import AppointmentsHome from "./src/screens/PatientAppointments/AppointmentsHome";
+import ListHospitals from "./src/screens/PatientAppointments/ListHospitals";
+import ListDoctors from "./src/screens/PatientAppointments/ListDoctors";
+import ListDoctorAppointments from "./src/screens/PatientAppointments/ListDoctorAppointments";
 export default function App() {
   const config = createTamagui(defaultConfig);
 
@@ -114,6 +117,22 @@ export default function App() {
                   component={AppointmentsHome}
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="ListHospitals"
+                  component={ListHospitals}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ListDoctors"
+                  component={ListDoctors}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ListDoctorAppointments"
+                  component={ListDoctorAppointments}
+                  options={{ headerShown: false }}
+                />
+                
               </Stack.Navigator>
             </>
           ) : (

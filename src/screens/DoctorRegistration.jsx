@@ -83,7 +83,7 @@ const DoctorRegistration = ({ navigation, route }) => {
       Alert.alert("Error", "Something went wrong while saving doctor data.");
     } finally {
       setLoading(false); // Set loading to false
-      navigation.pop();
+      navigation.goBack();
     }
   };
 

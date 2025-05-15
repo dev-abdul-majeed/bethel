@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ScrollView, RefreshControl } from "react-native";
+import {
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { View, Text, Button, Spinner, YStack } from "tamagui";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import TopNavHeader from "../../components/shared/TopNavHeader";
+import { Ionicons } from "@expo/vector-icons";
+import { getAppointmentsByPatientId } from "../../services/firebaseUtils";
+import { getAuth } from "@react-native-firebase/auth";
 
 // Dummy data
 const dummyAppointments = [
@@ -26,14 +35,28 @@ const dummyAppointments = [
     time: "11:00 AM",
     location: "Clinic C",
   },
+  {
+    id: 4,
+    doctorName: "Dr. John Doe",
+    date: "2023-10-01",
+    time: "10:00 AM",
+    location: "Clinic A",
+  },
+  {
+    id: 5,
+    doctorName: "Dr. Jane Smith",
+    date: "2023-10-02",
+    time: "2:00 PM",
+    location: "Clinic B",
+  },
+  {
+    id: 6,
+    doctorName: "Dr. Emily Johnson",
+    date: "2023-10-03",
+    time: "11:00 AM",
+    location: "Clinic C",
+  },
 ];
-
-// Mock API functions
-const getUserAppointments = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(dummyAppointments), 1000); // Simulate network delay
-  });
-};
 
 const cancelAppointment = async (id) => {
   return new Promise((resolve) => {
@@ -42,6 +65,8 @@ const cancelAppointment = async (id) => {
 };
 
 const AppointmentsHome = ({ navigation }) => {
+  const user = getAuth().currentUser;
+
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -51,7 +76,7 @@ const AppointmentsHome = ({ navigation }) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getUserAppointments();
+      const data = await getAppointmentsByPatientId(user.uid);
       setAppointments(data);
     } catch (err) {
       setError("Failed to fetch appointments. Please try again.");
@@ -63,7 +88,7 @@ const AppointmentsHome = ({ navigation }) => {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const data = await getUserAppointments();
+      const data = await getAppointmentsByPatientId(user.uid);
       setAppointments(data);
     } catch (err) {
       setError("Failed to refresh appointments.");
@@ -72,13 +97,8 @@ const AppointmentsHome = ({ navigation }) => {
     }
   };
 
-  const handleCancel = async (id) => {
-    try {
-      await cancelAppointment(id);
-      setAppointments((prev) => prev.filter((appt) => appt.id !== id));
-    } catch (err) {
-      setError("Failed to cancel the appointment. Please try again.");
-    }
+  const handleManage = async (doctorId) => {
+    navigation.navigate("ListDoctorAppointments", { doctorId });
   };
 
   useFocusEffect(
@@ -90,6 +110,7 @@ const AppointmentsHome = ({ navigation }) => {
   const renderAppointment = (item) => (
     <YStack
       padding="$4"
+      marginHorizontal="$4"
       marginBottom="$3"
       borderWidth={1}
       borderColor="#ccc"
@@ -97,21 +118,46 @@ const AppointmentsHome = ({ navigation }) => {
       borderRadius="$2"
       key={item.id}
     >
-      <Text fontSize="$5" fontWeight="bold">
-        {item.doctorName}
+      <Text fontSize="$6" fontWeight="bold">
+        Dr. {item.data?.doctorName}
       </Text>
-      <Text>Date: {item.date}</Text>
-      <Text>Time: {item.time}</Text>
-      <Text>Location: {item.location}</Text>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="location-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Hospital: {item.data?.hospitalName}</Text>
+      </YStack>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="calendar-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Date: {item.data?.date}</Text>
+      </YStack>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="location-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Contact: {item.data?.hospitalContact}</Text>
+      </YStack>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="time-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Time: {item.data?.time}</Text>
+      </YStack>
+      <YStack flexDirection="row" alignItems="center" marginTop="$2">
+        <Ionicons name="location-outline" size={16} color="#555" />
+        <Text marginLeft="$2">Location: {item.data?.hospitalLocation}</Text>
+      </YStack>
       <Button
-        size="$3"
-        marginTop="$2"
-        backgroundColor="#ff4d4d"
-        color="#fff"
+        maxWidth="40%"
+        alignSelf="flex-end"
+        marginTop="$4"
+        backgroundColor="rgb(11, 170, 125)"
         borderRadius="$2"
-        onPress={() => handleCancel(item.id)}
+        onPress={() => handleManage(item.data.doctorId)}
+        textProps={{ color: "white" }}
+        iconAfter={
+          <Ionicons
+            name="caret-forward-circle-outline"
+            size={25}
+            color={"white"}
+          />
+        }
       >
-        Cancel
+        Manage
       </Button>
     </YStack>
   );
@@ -138,16 +184,21 @@ const AppointmentsHome = ({ navigation }) => {
   }
 
   return (
-    <View flex={1} padding="$4">
-      <Button
-        marginBottom="$4"
-        backgroundColor="#007bff"
-        color="#fff"
-        borderRadius="$2"
+    <View flex={1}>
+      <TopNavHeader
+        text={"My Appointments"}
+        style={{
+          flex: 0,
+        }}
+      />
+
+      <TouchableOpacity
+        style={styles.floatingButton}
         onPress={() => navigation.navigate("ListHospitals")}
       >
-        Book New Appointment
-      </Button>
+        <Ionicons name="add-outline" size={24} color="white" />
+      </TouchableOpacity>
+
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
@@ -164,5 +215,25 @@ const AppointmentsHome = ({ navigation }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  floatingButton: {
+    backgroundColor: "#007bff", // Primary blue color
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 70,
+    right: 30,
+    elevation: 5, // For Android shadow
+    shadowColor: "#000", // For iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    zIndex: 1000, // Ensure it appears above other elements
+  },
+});
 
 export default AppointmentsHome;
