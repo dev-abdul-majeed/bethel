@@ -5,7 +5,15 @@ import auth, { getAuth } from "@react-native-firebase/auth";
 import ViewProfileCard from "../components/ViewProfileCard";
 import { getBusinessData, getUserProfile } from "../services/firebaseUtils";
 import { useIsFocused } from "@react-navigation/native";
-import { Card, H2, Paragraph, XStack, Button, Image, ScrollView } from "tamagui";
+import {
+  Card,
+  H2,
+  Paragraph,
+  XStack,
+  Button,
+  Image,
+  ScrollView,
+} from "tamagui";
 
 function Home({ navigation }) {
   const isFocused = useIsFocused();
@@ -106,13 +114,11 @@ function Home({ navigation }) {
             </Button>
           </Card.Footer>
         </Card>
-        
+
         <Card elevate size="$4" width={"100%"} scale={0.95} borderRadius={30}>
           <Card.Header padded>
             <H2>Job Details</H2>
-            <Paragraph theme="alt2">
-              View your job details
-            </Paragraph>
+            <Paragraph theme="alt2">View your job details</Paragraph>
           </Card.Header>
           <Card.Footer padded>
             <XStack flex={1} />
@@ -152,7 +158,7 @@ function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     marginBottom: 30,
   },
   body: {

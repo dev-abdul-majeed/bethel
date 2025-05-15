@@ -1,59 +1,88 @@
-import React from "react";
+import { useFonts } from "expo-font";
+import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet } from "react-native";
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Avatar,
+  H1,
+  H3,
+  H4,
   Image,
-  StyleSheet,
-  SafeAreaView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // or 'react-native-vector-icons/Ionicons'
-import { Avatar } from "tamagui";
+  Separator,
+  Text,
+  View,
+  YStack,
+} from "tamagui";
 function TopBar({ navigation, info }) {
+  const [loaded, error] = useFonts({});
+
   const username = info?.first_name || ""; // Replace with actual user data
-  const img = info?.profile_image || "../../../assets/favicon.png";
+  const img = info?.profile_image || require("../../../assets/favicon.png");
   return (
     <View style={styles.topBar}>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("ProfileForm");
+      <Image
+        source={require("../../../assets/bethel-logo.png")}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: "100%",
+          height: "100%",
+          resizeMode: "cover",
+        }}
+      />
+      <LinearGradient
+        colors={["rgb(74, 25, 208)", "rgba(156, 156, 156, 0)"]}
+        start={{ x: 0.5, y: 1.0 }}
+        end={{ x: 0.5, y: 0.0 }}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
         }}
       >
-        <Avatar circular size="$8">
-          <Avatar.Image accessibilityLabel="Cam" src={img} />
-          <Avatar.Fallback backgroundColor="$blue10" />
-        </Avatar>
-      </TouchableOpacity>
-
-      <Text style={styles.bannerText}>Welcome {username}</Text>
+        <YStack
+          justifyContent="center"
+          alignItems="center"
+          gap={"$4"}
+          py={"$3"}
+        >
+          <Avatar circular size="$8" borderColor={"white"} borderWidth={3}>
+            <Avatar.Image accessibilityLabel="Cam" src={img} />
+            <Avatar.Fallback backgroundColor="$blue10" />
+          </Avatar>
+          <H3 style={[styles.bannerText, { color: "white" }]}>
+            Welcome {username}
+          </H3>
+          <Separator
+            horizontal
+            borderColor={"white"}
+            borderWidth={2}
+            width={"$3"}
+            borderRadius={5}
+          />
+        </YStack>
+      </LinearGradient>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   topBar: {
+    position: "relative",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     backgroundColor: "#f2f2f2",
-    padding: 10,
     elevation: 4,
-    marginTop: 0,
-    borderRadius: 20,
+    height: 200,
   },
   bannerText: {
-    fontSize: 18,
     fontWeight: "600",
-    flex: 1,
-    textAlign: "center",
-  },
-  profileImage: {
-    width: 56,
-    height: 56,
-    borderRadius: 180,
-    marginLeft: 8,
-    borderColor: "black",
-    borderWidth: 2,
+    fontFamily: "Nexa-ExtraLight",
   },
 });
 
