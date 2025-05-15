@@ -23,9 +23,19 @@ const LoginSignupTopLogo = () => {
       end={{ x: 0.5, y: 1.0 }}
       style={styles.topGradient}
     >
-      <YStack gap="$0" marginBottom="$10" alignItems="center">
-        <Text style={styles.logo}>Bethel</Text>
-        <Text style={styles.tagline}>A City of the Future!</Text>
+      <YStack
+        gap="$0"
+        marginBottom="$10"
+        width={w}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Text style={styles.logo} fontSize={"$15"}>
+          Bethel
+        </Text>
+        <Text style={styles.tagline} fontSize={"$9"}>
+          A City of the Future!
+        </Text>
       </YStack>
     </LinearGradient>
   );
@@ -38,19 +48,17 @@ const w = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   topGradient: {
     borderBottomRightRadius: 100,
-    elevation: 4,
+    elevation: 7,
     marginBottom: 50,
     paddingTop: 30,
   },
   logo: {
     fontFamily: "arthemis",
-    fontSize: 106,
     textAlign: "center",
-    width: w,
+
     color: "white",
   },
   tagline: {
-    fontSize: 26,
     fontFamily: "nexa-light",
     color: "white",
   },

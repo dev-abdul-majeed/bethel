@@ -19,7 +19,6 @@ const EmailPasswordField = ({
       keyboardType={keyboardType}
       autoCapitalize="none"
       style={styles.input}
-      size="$5"
     />
   );
 };
