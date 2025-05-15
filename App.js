@@ -30,6 +30,7 @@ import AppointmentsHome from "./src/screens/PatientAppointments/AppointmentsHome
 import ListHospitals from "./src/screens/PatientAppointments/ListHospitals";
 import ListDoctors from "./src/screens/PatientAppointments/ListDoctors";
 import ListDoctorAppointments from "./src/screens/PatientAppointments/ListDoctorAppointments";
+import EmployeeRegistration from "./src/screens/BusinessManagement/EmployeeRegistration";
 export default function App() {
   const config = createTamagui(defaultConfig);
 
@@ -132,7 +133,12 @@ export default function App() {
                   component={ListDoctorAppointments}
                   options={{ headerShown: false }}
                 />
-                
+
+                <Stack.Screen
+                  name="EmployeeRegistration"
+                  component={EmployeeRegistration}
+                  options={{ headerShown: false }}
+                />
               </Stack.Navigator>
             </>
           ) : (

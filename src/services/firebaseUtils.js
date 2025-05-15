@@ -524,3 +524,116 @@ export async function getUsers(businessId = null) {
     return [];
   }
 }
+
+
+export async function employUser({ business_id, employee_id, role, hourly_pay, scheduled_start_time, scheduled_end_time, scheduled_days, monthly_rating = 0, feedback = "", employment_date, employment_end_date = null }) {
+  try {
+
+    // Validate business and employee profiles
+    const businessProfile = await getDocumentById("business_data", business_id);
+    const employeeProfile = await getDocumentById("profile_data", employee_id);
+
+    if (!businessProfile || !employeeProfile) {
+      throw new Error("Invalid business or employee profile.");
+    }
+
+    const payload = {
+      business_id,
+      employee_id,
+      role,
+      hourly_pay,
+      scheduled_start_time,
+      scheduled_end_time,
+      scheduled_days,
+      monthly_rating,
+      feedback,
+      employment_date,
+      employment_end_date,
+    };
+
+    await saveOrUpdateDocument("employment_data", payload);
+    console.log("Employment record created successfully!");
+  } catch (error) {
+    console.error("Failed to create employment record:", error);
+  }
+}
+
+export async function getEmployeesByBusinessId(businessId) {
+  try {
+    const q = query(
+      collection(db, "employment_data"),
+      where("business_id", "==", businessId)
+    );
+    const snapshot = await getDocs(q);
+
+    const activeEmployees = await Promise.all(
+      snapshot.docs
+        .filter((doc) => {
+          const data = doc.data();
+          return !("employment_end_date" in data) || data.employment_end_date === null;
+        })
+        .map(async (doc) => {
+          const employmentData = doc.data();
+          const employeeProfile = await getDocumentById(
+            "profile_data",
+            employmentData.employee_id
+          );
+          return {
+            id: doc.id,
+            employmentData,
+            employeeProfile: employeeProfile ? employeeProfile.data : null,
+          };
+        })
+    );
+
+    return activeEmployees;
+  } catch (error) {
+    console.error("Failed to fetch active employees:", error);
+    return [];
+  }
+}
+
+export async function getBusinessEmployees(businessId) {
+  try {
+    const q = query(
+      collection(db, "employment_data"),
+      where("business_id", "==", businessId)
+    );
+    const snapshot = await getDocs(q);
+
+    const employees = snapshot.docs.map((doc) => {
+      const employmentData = doc.data();
+      return {
+        id: doc.id,
+        data: employmentData,
+      };
+    });
+
+    return employees;
+  } catch (error) {
+    console.error("Failed to fetch business employees:", error);
+    return [];
+  }
+}
+
+
+export async function terminateEmployee(employmentId) {
+  try {
+    const docRef = doc(db, "employment_data", employmentId);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      throw new Error("Employment record not found.");
+    }
+
+    const employmentData = docSnap.data();
+
+    // Add employment_end_date with the current date
+    const employmentEndDate = new Date().toISOString();
+    await updateDoc(docRef, { employment_end_date: employmentEndDate });
+
+    console.log("Employee terminated successfully!");
+  } catch (error) {
+    console.error("Failed to terminate employee:", error);
+  }
+}
