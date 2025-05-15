@@ -20,7 +20,7 @@ import { useFonts } from "expo-font";
 import ProfileForm from "./src/screens/ProfileForm";
 import VehicleRegistration from "./src/screens/Vehicles/VehicleRegistration";
 import Vehicles from "./src/screens/Vehicles/Vehicles";
-import ManageBusiness from "./src/screens/ManageBusiness";
+import ManageBusiness from "./src/screens/BusinessManagement/ManageBusiness";
 import CreateBusiness from "./src/screens/CreateBusiness";
 import ChooseBusiness from "./src/screens/ChooseBusiness";
 import ManageHospital from "./src/screens/ManageHospital";
@@ -132,6 +132,7 @@ export default function App() {
                   component={ListDoctorAppointments}
                   options={{ headerShown: false }}
                 />
+                
               </Stack.Navigator>
             </>
           ) : (

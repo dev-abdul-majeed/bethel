@@ -507,3 +507,20 @@ export async function getHospitalsList() {
     return [];
   }
 }
+
+export async function getUsers(businessId = null) {
+  try {
+    const q = businessId
+      ? query(
+          collection(db, "profile_data"),
+          where("business_id", "==", businessId)
+        )
+      : collection(db, "profile_data");
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+    return [];
+  }
+}
