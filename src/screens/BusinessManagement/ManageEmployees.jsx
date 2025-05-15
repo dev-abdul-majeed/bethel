@@ -1,41 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Alert, StyleSheet } from "react-native";
-import { View, Text, Button, Card, Spinner } from "tamagui";
-import { getUsers, terminateEmployee } from "../../services/firebaseUtils";
+import { ScrollView, Alert, StyleSheet, RefreshControl } from "react-native";
+import { View, Text, Button, Card, Spinner, Image } from "tamagui";
+import { getEmployeesByBusinessId, getUsers, terminateEmployee } from "../../services/firebaseUtils";
 import { useNavigation } from "@react-navigation/native";
 import TopNavHeader from "../../components/shared/TopNavHeader";
 
-const ManageEmployees = ({ route }) => {
+const ManageEmployees = ({ navigation, route }) => {
   const { businessId } = route.params;
-  const navigation = useNavigation();
 
-  const [employees, setEmployees] = useState([ {
-    id: "1",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Manager",
-},
-{
-    id: "2",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    role: "Cashier",
-},
-{
-    id: "3",
-    name: "Alice Johnson",
-    email: "alice.johnson@example.com",
-    role: "Chef",
-},]);
+  const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchEmployees = async () => {
     try {
-      const data = await getUsers(businessId);
-      console.log("Fetched employees:", data);
-    //   setEmployees(data);
+      if (error) setError(null);
+      
+      const data = await getEmployeesByBusinessId(businessId);
+      console.log("Fetched my employees:", data);
+      setEmployees(data);
     } catch (err) {
       setError("Failed to fetch employees. Please try again.");
     } finally {
@@ -45,7 +29,7 @@ const ManageEmployees = ({ route }) => {
 
   useEffect(() => {
     fetchEmployees();
-  }, [businessId]);
+  }, []);
 
   const handleTerminate = (employeeId) => {
     Alert.alert(
@@ -61,8 +45,10 @@ const ManageEmployees = ({ route }) => {
           style: "destructive",
           onPress: async () => {
             try {
-              await terminateEmployee(businessId, employeeId);
+                setRefreshing(true);
+              await terminateEmployee(employeeId);
               setEmployees((prev) => prev.filter((emp) => emp.id !== employeeId));
+              setRefreshing(false);
               Alert.alert("Success", "Employee terminated successfully.");
             } catch (err) {
               Alert.alert("Error", "Failed to terminate employee. Please try again.");
@@ -79,7 +65,7 @@ const ManageEmployees = ({ route }) => {
 
   const handleRefresh = () => {
     setRefreshing(true);
-    fetchUsers();
+    fetchEmployees();
     setRefreshing(false);
   };
 
@@ -105,7 +91,7 @@ const ManageEmployees = ({ route }) => {
         <Text color="red" fontSize="$5" textAlign="center">
           {error}
         </Text>
-        <Button marginTop="$4" onPress={() => window.location.reload()}>
+        <Button marginTop="$4" onPress={handleRefresh}>
           Retry
         </Button>
       </View>
@@ -115,37 +101,52 @@ const ManageEmployees = ({ route }) => {
   return (
     <View flex={1} backgroundColor="white">
       <TopNavHeader text="Employees" style={{ flex: 0 }} />
-    <ScrollView contentContainerStyle={styles.container}>
-      {employees.map((employee) => (
-        <Card key={employee.id} style={styles.card}>
-          <Text fontSize="$6" fontWeight="bold">
-            {employee.name}
-          </Text>
-          <Text fontSize="$5" marginTop="$2">
-            Email: {employee.email}
-          </Text>
-          <Text fontSize="$5" marginTop="$2">
-            Role: {employee.role || "N/A"}
-          </Text>
-          <View flexDirection="row" justifyContent="space-between" marginTop="$4">
-            <Button
-              onPress={() => handleManage(employee.id)}
-              backgroundColor="#007BFF"
-              textProps={{ color: "white" }}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+        contentContainerStyle={styles.container}
+      >
+        {employees.map((employee) => (
+          <Card key={employee.id} style={styles.card}>
+            <Image
+              source={{ uri: employee.employeeProfile.profile_image }}
+              style={{ width: "100%", height: 150, borderRadius: 8 }}
+              resizeMode="cover"
+            />
+            <Text fontSize="$6" fontWeight="bold">
+              {employee.employeeProfile.first_name}{" "}
+              {employee.employeeProfile.last_name}
+            </Text>
+            <Text fontSize="$5" marginTop="$2">
+              Gender: {employee.employeeProfile.gender || "N/A"}
+            </Text>
+            <Text fontSize="$5" marginTop="$2">
+              Role: {employee.employmentData.role || "N/A"}
+            </Text>
+            <View
+              flexDirection="row"
+              justifyContent="space-between"
+              marginTop="$4"
             >
-              Manage
-            </Button>
-            <Button
-              onPress={() => handleTerminate(employee.id)}
-              backgroundColor="red"
-              textProps={{ color: "white" }}
-            >
-              Terminate
-            </Button>
-          </View>
-        </Card>
-      ))}
-    </ScrollView>
+              <Button
+                onPress={() => handleManage(employee.id)}
+                backgroundColor="#007BFF"
+                textProps={{ color: "white" }}
+              >
+                Manage
+              </Button>
+              <Button
+                onPress={() => handleTerminate(employee.id)}
+                backgroundColor="red"
+                textProps={{ color: "white" }}
+              >
+                Terminate
+              </Button>
+            </View>
+          </Card>
+        ))}
+      </ScrollView>
     </View>
   );
 };

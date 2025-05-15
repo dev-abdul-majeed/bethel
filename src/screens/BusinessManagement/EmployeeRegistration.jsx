@@ -1,114 +1,190 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Spinner, YStack, ScrollView, Card, Image } from "tamagui";
-import { getUsers, employUser } from "../../services/firebaseUtils";
-import { RefreshControl } from "react-native";
-import TopNavHeader from "../../components/shared/TopNavHeader";
+import { ScrollView, Alert, StyleSheet, TextInput } from "react-native";
+import { View, Text, Button, Card, Spinner, Image, Select } from "tamagui";
+import { employUser } from "../../services/firebaseUtils";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const EmployeeRegistration = ({ route }) => {
-  const { businessId } = route.params;
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
+const EmployeeRegistration = ({ navigation, route }) => {
+    const { businessId, user } = route.params;
+    const [role, setRole] = useState("");
+    const [hourlyPay, setHourlyPay] = useState("");
+    const [scheduledStartTime, setScheduledStartTime] = useState("");
+    const [scheduledEndTime, setScheduledEndTime] = useState("");
+    const [scheduledDays, setScheduledDays] = useState("");
+    const [feedback, setFeedback] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const fetchUsers = async () => {
-    try {
-      const userList = await getUsers();
-      console.log("Fetched users:", userList);    
-      setUsers(userList);
-    } catch (err) {
-      setError("Failed to fetch users. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+    const dateOfJoining = new Date().toISOString().split("T")[0]; // Current date in YYYY-MM-DD format
 
-  const handleEmploy = async (userId) => {
-    try {
-      await employUser(businessId, userId);
-      alert("User successfully employed!");
-    } catch (err) {
-      alert("Failed to employ user. Please try again.");
-    }
-  };
+    const isFormValid =
+        role &&
+        hourlyPay &&
+        scheduledStartTime &&
+        scheduledEndTime &&
+        scheduledDays;
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchUsers();
-    setRefreshing(false);
-  };
-
-  if (refreshing) {
-    return (
-      <View flex={1} justifyContent="center" alignItems="center">
-        <Spinner size="large" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View flex={1} justifyContent="center" alignItems="center" padding="$4">
-        <Text color="red" fontSize="$5" textAlign="center">
-          {error}
-        </Text>
-        <Button marginTop="$4" onPress={handleRefresh}>
-          Retry
-        </Button>
-      </View>
-    );
-  }
-
-  return (
-    <View flex={1} backgroundColor="white">
-      <TopNavHeader text="Users" style={{ flex: 0 }} />
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+    const handleEmploy = async () => {
+        if (!isFormValid) {
+            Alert.alert("Error", "Please fill all the fields before hiring.");
+            return;
         }
-        flex={1}
-        padding="$4"
-      >
-        {users.map((user) => (
-          <Card
-            key={user.id}
-            padding="$4"
-            marginBottom="$4"
-            borderWidth={1}
-            borderColor="#ccc"
+
+        Alert.alert(
+            "Confirm Employment",
+            "Are you sure you want to employ this user?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "Employ",
+                    onPress: async () => {
+                        try {
+                            setLoading(true);
+                            await employUser({
+                              business_id: businessId,
+                              employee_id: user.id,
+                              role: role,
+                              hourly_pay: hourlyPay,
+                              scheduled_start_time: scheduledStartTime,
+                              scheduled_end_time: scheduledEndTime,
+                              scheduled_days: scheduledDays,
+                              monthly_rating: 0,
+                              feedback: feedback,
+                              employment_date: dateOfJoining,
+                            });
+                            Alert.alert("Success", "User successfully employed!", [
+                                {
+                                    text: "OK",
+                                    onPress: () => {
+                                        navigation.navigate("ManageBusiness", {
+                                            screen: "ManageBusiness",
+                                          });
+                                    },
+                                },
+                            ]);
+                        } catch (err) {
+                            Alert.alert("Error", "Failed to employ user. Please try again.");
+                        } finally {
+                            setLoading(false);
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+    if (loading) {
+        return (
+            <View flex={1} justifyContent="center" alignItems="center">
+                <Spinner size="large" />
+            </View>
+        );
+    }
+
+    return (
+      <KeyboardAwareScrollView  enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled"
+      extraScrollHeight={190} contentContainerStyle={styles.container}>
+        <Card shadowColor="green" shadowRadius="$4" style={styles.card}>
+          {user.data.profile_image && (
+            <Image
+              source={{ uri: user.data.profile_image }}
+              style={{
+                width: "100%",
+                height: 150,
+                borderRadius: 8,
+                marginBottom: 16,
+              }}
+              resizeMode="cover"
+            />
+          )}
+          <Text fontSize="$6" fontWeight="bold">
+            {user.data.first_name} {user.data.last_name}
+          </Text>
+          <Text fontSize="$5" marginTop="$2">
+            Gender: {user.data.gender || "N/A"}
+          </Text>
+          <Text fontSize="$5" marginTop="$2">
+            Date of Birth: {user.data.dob || "N/A"}
+          </Text>
+          <Text fontSize="$5" marginTop="$2">
+            Date of Joining: {dateOfJoining}
+          </Text>
+
+          <TextInput
+            placeholder="Enter Role (manager, staff, support)"
+            value={role}
+            onChangeText={setRole}
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="Hourly Pay"
+            value={hourlyPay}
+            onChangeText={setHourlyPay}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Scheduled Start Time (e.g., 09:00 AM)"
+            value={scheduledStartTime}
+            onChangeText={setScheduledStartTime}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Scheduled End Time (e.g., 05:00 PM)"
+            value={scheduledEndTime}
+            onChangeText={setScheduledEndTime}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Scheduled Days (e.g., Mon-Fri)"
+            value={scheduledDays}
+            onChangeText={setScheduledDays}
+            style={styles.input}
+          />
+          <Button
+            marginTop="$4"
+            onPress={handleEmploy}
+            backgroundColor={isFormValid ? "#007BFF" : "#ccc"}
+            textProps={{ color: "white" }}
+            disabled={!isFormValid}
           >
-            {user.data.profile_image && (
-              <Image
-                source={{ uri: user.data.profile_image }}
-                style={{ width: "100%", height: 150, borderRadius: 8 }}
-                resizeMode="cover"
-              />
-            )}
-            <Text fontSize="$6" fontWeight="bold" marginTop="$4">
-              {user.data.first_name} {user.data.last_name}
-            </Text>
-            <Text fontSize="$5" marginTop="$2">
-              Date of Birth: {user.data.dob}
-            </Text>
-            <Text fontSize="$5" marginTop="$2">
-              Gender: {user.data.gender || "N/A"}
-            </Text>
-            <Button
-              marginTop="$4"
-              onPress={() => handleEmploy(user.id)}
-              backgroundColor="rgb(11, 170, 125)"
-              textProps={{ color: "white" }}
-            >
-              Employ
-            </Button>
-          </Card>
-        ))}
-      </ScrollView>
-    </View>
-  );
+            Hire
+          </Button>
+        </Card>
+      </KeyboardAwareScrollView>
+    );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 16,
+        marginBottom: 100
+    },
+    card: {
+        padding: 16,
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        backgroundColor: "#fff",
+        elevation: 3,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        padding: 8,
+        marginTop: 16,
+        fontSize: 16,
+    },
+});
 
 export default EmployeeRegistration;

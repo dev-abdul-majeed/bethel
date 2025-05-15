@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { Spinner, View } from "tamagui";
 import BusinessHome from "./BusinessHome";
-import EmployeeRegistration from "./EmployeeRegistration";
+import UsersList from "./UsersList";
 import ManageEmployees from "./ManageEmployees";
 // import AppointmentForm from "./BusinessAppointments/AppointmentForm";
 // import AppointmentsList from "./BusinessAppointments/AppointmentsList";
@@ -77,7 +77,7 @@ const ManageBusiness = ({ navigation, route }) => {
               />
               <Tab.Screen
                 name="Add Employee"
-                component={EmployeeRegistration}
+                component={UsersList}
                 initialParams={{ businessId: businessData.businessId }}
               />
               <Tab.Screen
