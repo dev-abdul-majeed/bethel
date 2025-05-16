@@ -50,21 +50,10 @@ const VehicleCard = ({
         borderBottomRightRadius={150}
         borderBottomLeftRadius={150}
       >
-        <LinearGradient
-          colors={["rgba(0, 179, 179, 0.2)", "rgb(0, 147, 172)"]}
-          start={{ x: 0.96, y: 0.7 }}
-          end={{ x: 0.04, y: 0.3 }}
-          style={{
-            width: 500,
-            paddingLeft: 10,
-            borderRadius: 10,
-          }}
-        >
-          <H2 color={"white"}>{brand}</H2>
-          <H4 theme="alt2" color={"white"}>
-            {name}
-          </H4>
-        </LinearGradient>
+        <H2 color={"white"}>{brand}</H2>
+        <H4 theme="alt2" color={"white"}>
+          {name}
+        </H4>
         <Image
           resizeMode="cover"
           alignSelf="center"

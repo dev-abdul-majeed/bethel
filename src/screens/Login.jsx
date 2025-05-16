@@ -39,11 +39,11 @@ const Login = ({ navigation }) => {
         <View style={styles.loginCard}>
           <LoginSignupTopLogo />
           <YStack gap="$3" minWidth={"$17"} maxWidth={"$17"}>
-            <Paragraph size="$8" fontWeight="800" color={"#336D82"}>
+            <Paragraph size="$8" fontWeight="800" color={"#336D82"} right={20}>
               Welcome Back
             </Paragraph>
             <XStack gap={"$2"} justifyContent="center" alignItems="center">
-              <Ionicons name="mail" size={30} color="#5F99AE" />
+              <Ionicons name="mail" size={20} color="#5F99AE" />
               <EmailPasswordField
                 handleTextChange={setEmail}
                 placeholder="Email"
@@ -58,7 +58,7 @@ const Login = ({ navigation }) => {
               alignItems="center"
               alignContent="center"
             >
-              <MaterialIcons name="password" size={30} color="#5F99AE" />
+              <MaterialIcons name="password" size={20} color="#5F99AE" />
               <EmailPasswordField
                 handleTextChange={setPassword}
                 placeholder="Password"
@@ -67,7 +67,12 @@ const Login = ({ navigation }) => {
               />
             </XStack>
           </YStack>
-          <YStack gap="$10" alignItems="flex-end">
+          <YStack
+            gap="$10"
+            alignItems="flex-end"
+            minWidth={"$18"}
+            maxWidth={"$18"}
+          >
             <>
               <Button
                 size="$4"
@@ -79,6 +84,7 @@ const Login = ({ navigation }) => {
                 elevation="$1"
                 color={"#ffffff"}
                 backgroundColor={"#06C09D"}
+                alignSelf="flex-end"
                 icon={
                   loading
                     ? () => <Spinner size="large" color="#6D61A" />
