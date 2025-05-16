@@ -1,4 +1,3 @@
-// ProfileForm.tsx
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -12,6 +11,7 @@ import {
   XStack,
   View,
   Separator,
+  Spinner,
 } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -25,17 +25,19 @@ import { auth } from "../services/firebase";
 
 export default function ProfileForm() {
   const user = getAuth().currentUser;
+  const [loading, setLoading] = useState(true); // State for initial loading
+  const [saving, setSaving] = useState(false); // State for saving profile
 
   useEffect(() => {
-    // Fetch data from Firebase
     const initializeProfile = async () => {
       const profileData = await getUserProfile(user.uid);
       if (profileData) {
         setForm((prevForm) => ({
           ...prevForm,
-          ...profileData.data, // spread the fields correctly
+          ...profileData.data,
         }));
       }
+      setLoading(false); // Stop initial loading
     };
 
     initializeProfile();
@@ -62,8 +64,18 @@ export default function ProfileForm() {
   };
 
   const handleSubmit = async () => {
+    setSaving(true);
     await uploadProfileToFirebase(form, user);
+    setSaving(false);
   };
+
+  if (loading) {
+    return (
+      <View flex={1} justifyContent="center" alignItems="center">
+        <Spinner size="large" color={"rgb(93, 0, 255)"} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
@@ -222,12 +234,23 @@ export default function ProfileForm() {
             width={"50%"}
             alignSelf="center"
             mb={30}
-            icon={<Ionicons name="save-outline" color={"white"} size={25} />}
+            disabled={saving} // Disable button while saving
+            icon={
+              saving ? (
+                <Spinner size="small" color="white" />
+              ) : (
+                <Ionicons name="save-outline" color={"white"} size={25} />
+              )
+            }
           >
             <Text
-              style={{ color: "white", fontFamily: "Nexa-Heavy", fontSize: 15 }}
+              style={{
+                color: "white",
+                fontFamily: "Nexa-Heavy",
+                fontSize: 15,
+              }}
             >
-              Save Profile
+              {saving ? "Saving..." : "Save Profile"}
             </Text>
           </Button>
 
@@ -244,7 +267,11 @@ export default function ProfileForm() {
             }
           >
             <Text
-              style={{ color: "white", fontFamily: "Nexa-Heavy", fontSize: 15 }}
+              style={{
+                color: "white",
+                fontFamily: "Nexa-Heavy",
+                fontSize: 15,
+              }}
             >
               Log Out
             </Text>
