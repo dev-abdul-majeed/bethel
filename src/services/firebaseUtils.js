@@ -558,6 +558,7 @@ export async function employUser({ business_id, employee_id, role, hourly_pay, s
   }
 }
 
+// gets user data from employment_data and profile_data collections
 export async function getEmployeesByBusinessId(businessId) {
   try {
     const q = query(
@@ -590,6 +591,47 @@ export async function getEmployeesByBusinessId(businessId) {
   } catch (error) {
     console.error("Failed to fetch active employees:", error);
     return [];
+  }
+}
+
+export async function getEmployeeById(employeeId) {
+  try {
+    const docRef = doc(db, "employment_data", employeeId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const employmentData = docSnap.data();
+      const employeeProfile = await getDocumentById(
+        "profile_data",
+        employmentData.employee_id
+      );
+      return {
+        id: docSnap.id,
+        employmentData,
+        employeeProfile: employeeProfile ? employeeProfile.data : null,
+      };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Failed to fetch employee by ID:", error);
+    return null;
+  }
+}
+
+export async function updateEmploymentData(employmentId, updatedData) {
+  try {
+    const docRef = doc(db, "employment_data", employmentId);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      throw new Error("Employment record not found.");
+    }
+
+    await updateDoc(docRef, updatedData);
+    console.log("Employment data updated successfully!");
+  } catch (error) {
+    console.error("Failed to update employment data:", error);
   }
 }
 

@@ -3,6 +3,7 @@ import { ScrollView, Alert, StyleSheet, TextInput } from "react-native";
 import { View, Text, Button, Card, Spinner, Image, Select } from "tamagui";
 import { employUser } from "../../services/firebaseUtils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import TopNavHeader from "../../components/shared/TopNavHeader";
 
 const EmployeeRegistration = ({ navigation, route }) => {
     const { businessId, user } = route.params;
@@ -87,6 +88,8 @@ const EmployeeRegistration = ({ navigation, route }) => {
       <KeyboardAwareScrollView  enableOnAndroid={true}
       keyboardShouldPersistTaps="handled"
       extraScrollHeight={190} contentContainerStyle={styles.container}>
+      <TopNavHeader text={"Employee registration"} style={{ flex: 1  }} />
+
         <Card shadowColor="green" shadowRadius="$4" style={styles.card}>
           {user.data.profile_image && (
             <Image
