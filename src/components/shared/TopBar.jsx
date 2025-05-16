@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import {
   Avatar,
   H1,
@@ -33,9 +33,9 @@ function TopBar({ navigation, info }) {
         }}
       />
       <LinearGradient
-        colors={["rgb(74, 25, 208)", "rgba(156, 156, 156, 0)"]}
+        colors={["rgb(49, 1, 171)", "rgba(0, 255, 187, 0.4)"]}
         start={{ x: 0.5, y: 1.0 }}
-        end={{ x: 0.5, y: 0.0 }}
+        end={{ x: 0.5, y: 0.09 }}
         style={{
           position: "absolute",
           top: 0,
@@ -47,14 +47,24 @@ function TopBar({ navigation, info }) {
         <YStack
           justifyContent="center"
           alignItems="center"
-          gap={"$4"}
-          py={"$3"}
+          gap={"$3"}
+          pt={"$6"}
         >
-          <Avatar circular size="$8" borderColor={"white"} borderWidth={3}>
+          <Avatar
+            circular
+            size={70}
+            borderColor={"white"}
+            borderWidth={3}
+            onPress={() => {
+              navigation.navigate("ProfileForm");
+            }}
+          >
             <Avatar.Image accessibilityLabel="Cam" src={img} />
             <Avatar.Fallback backgroundColor="$blue10" />
           </Avatar>
-          <H3 style={[styles.bannerText, { color: "white" }]}>
+          <H3
+            style={[styles.bannerText, { color: "white", textAlign: "center" }]}
+          >
             Welcome {username}
           </H3>
           <Separator
@@ -62,14 +72,15 @@ function TopBar({ navigation, info }) {
             borderColor={"white"}
             borderWidth={2}
             width={"$3"}
-            borderRadius={5}
+            borderTopRightRadius={5}
+            borderTopLeftRadius={5}
           />
         </YStack>
       </LinearGradient>
     </View>
   );
 }
-
+const h = Dimensions.get("screen").height;
 const styles = StyleSheet.create({
   topBar: {
     position: "relative",
@@ -77,11 +88,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#f2f2f2",
-    elevation: 4,
+    elevation: 7,
     height: 200,
+    minHeight: h * 0.26,
+    marginBottom: 30,
   },
+
   bannerText: {
-    fontWeight: "600",
     fontFamily: "Nexa-ExtraLight",
   },
 });
