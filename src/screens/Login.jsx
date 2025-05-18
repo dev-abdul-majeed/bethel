@@ -17,8 +17,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState("dev.abdul.majeed@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("@gmail.com");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const signIn = async () => {

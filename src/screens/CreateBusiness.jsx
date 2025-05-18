@@ -22,14 +22,12 @@ const CreateBusiness = ({ navigation }) => {
   const route = useRoute();
   const user = getAuth().currentUser;
 
-  const [businessName, setBusinessName] = useState("s");
+  const [businessName, setBusinessName] = useState("");
   const [businessType, setBusinessType] = useState("");
-  const [operationalHours, setOperationalHours] = useState("s");
-  const [locationAddress, setLocationAddress] = useState("s");
-  const [contact, setContact] = useState("s");
-  const [email, setEmail] = useState("s");
-  const [payday, setPayday] = useState("s");
-  const [paymentFrequency, setPaymentFrequency] = useState("monthly");
+  const [locationAddress, setLocationAddress] = useState("");
+  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
+  const [payday, setPayday] = useState("");
   const [businessPhoto, setBusinessPhoto] = useState("");
 
   useEffect(() => {
@@ -174,14 +172,7 @@ const CreateBusiness = ({ navigation }) => {
         <Button
           onPress={handleCreateBusiness}
           bg={
-            businessName &&
-            businessType &&
-            operationalHours &&
-            locationAddress &&
-            contact &&
-            email &&
-            payday &&
-            paymentFrequency
+            businessName && businessType && locationAddress && contact && email
               ? "#007bff"
               : "#cccccc"
           }

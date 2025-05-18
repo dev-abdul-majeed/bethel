@@ -7,7 +7,7 @@ import {
 } from "../services/firebaseUtils";
 import Icon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Alert, View, StyleSheet } from "react-native";
+import { Alert, View, StyleSheet, Dimensions } from "react-native";
 import TopNavHeader from "../components/shared/TopNavHeader";
 import { Ionicons } from "@expo/vector-icons";
 const DoctorRegistration = ({ navigation, route }) => {
@@ -178,7 +178,7 @@ const DoctorRegistration = ({ navigation, route }) => {
     </KeyboardAwareScrollView>
   );
 };
-
+const h = Dimensions.get("screen").he;
 const styles = StyleSheet.create({
   view: {
     backgroundColor: "white",
