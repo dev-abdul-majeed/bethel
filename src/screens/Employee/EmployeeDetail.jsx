@@ -43,11 +43,11 @@ const EmployeeDetails = ({ navigation, route }) => {
       setPayroll(payrollDetails);
       setBusiness(businessDetails);
       setEmployee(employedd);
+      setLoading(false);
     } catch (error) {
       Alert.alert("Couldn't find your data");
-    } finally {
-      setLoading(false);
       navigation.goBack();
+    } finally {
     }
   };
 
