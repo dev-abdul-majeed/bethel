@@ -1,4 +1,6 @@
 import "expo-dev-client";
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs(true);
 
 import {
   ActivityIndicator,
