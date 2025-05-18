@@ -234,6 +234,16 @@ export async function getBusinessData(uid) {
   }
 }
 
+export async function getBusinessById(businessId) {
+  try {
+    const businessDoc = await getDocumentById("business_data", businessId);
+    return businessDoc ? { id: businessDoc.id, data: businessDoc.data } : null;
+  } catch (error) {
+    console.error("Failed to fetch business by ID:", error);
+    return null;
+  }
+}
+
 export async function deleteBusiness(userId) {
   try {
     const existingDoc = await getDocumentByField(
@@ -767,5 +777,58 @@ export async function savePayroll(employeeId, businessId, data) {
     }
   } catch (error) {
     throw new Error(error.message);
+  }
+}
+
+
+export async function getEmployeeEmploymentData(employeeId) {
+  try {
+    // Fetch employment data using employee_id
+    const employmentDoc = await getDocumentByField(
+      "employment_data",
+      "employee_id",
+      employeeId
+    );
+
+    if (!employmentDoc) {
+      throw new Error("Employment record not found for the given employee.");
+    }
+
+    const employmentData = employmentDoc.data();
+
+    // Fetch employee profile data using employee_id
+    const employeeProfile = await getDocumentById("profile_data", employeeId);
+
+    if (!employeeProfile) {
+      throw new Error("Employee profile not found.");
+    }
+
+    return {
+      employmentData,
+      employeeProfile: employeeProfile.data,
+    };
+  } catch (error) {
+    console.error("Failed to fetch employee employment data:", error);
+    return null;
+  }
+}
+
+export async function getPayrollDataByEmployeeId(employeeId) {
+  try {
+    const q = query(
+      collection(db, "payroll_data"),
+      where("employee_id", "==", employeeId)
+    );
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      return { id: doc.id, data: doc.data() };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Failed to fetch payroll data:", error);
+    return null;
   }
 }

@@ -1,158 +1,157 @@
-import React, { useState, useEffect } from "react";
-import { Alert, ScrollView, TextInput } from "react-native";
-import { Stack, Text, Card, YStack, Button, View } from "tamagui";
-import TopNavHeader from "../../components/shared/TopNavHeader";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import {
-  getEmployeeById,
-  logEmployeeWorkHours,
-} from "../../services/firebaseUtils";
+import React, { useState, useEffect } from 'react';
+import { ScrollView } from 'react-native';
+import { Stack, Text, Card, YStack, View, Avatar, Button, Separator, XStack } from 'tamagui';
+import TopNavHeader from '../../components/shared/TopNavHeader';
+import { getBusinessById, getEmployeeEmploymentData, getPayrollDataByEmployeeId } from '../../services/firebaseUtils';
+import { Ionicons } from '@expo/vector-icons';
 
 const EmployeeDetails = ({ navigation, route }) => {
-  const { employeeId } = route?.params; // Assuming you pass employeeId from the previous screen
-  const employee = {
-    name: "John Doe",
-    position: "Software Engineer",
-    payDay: "15th of every month",
-    salary: "$5000",
-  };
+    const { employeeId } = route?.params;
 
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [showPicker, setShowPicker] = useState(false);
-  const [hours, setHours] = useState("");
-  const [error, setError] = useState("");
-  const [employed, setEmployed] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [employee, setEmployee] = useState(null);
+    const [business, setBusiness] = useState(null);
+    const [payroll, setPayroll] = useState(null);
 
-  useEffect(() => {
-    checkIfEmployed();
-  }, []);
+    useEffect(() => {
+        checkIfEmployed();
+    }, []);
 
-  const checkIfEmployed = async () => {
-    const employedd = await getEmployeeById(employeeId);
-    setEmployed(employedd);
-  };
+    const checkIfEmployed = async () => {
+        setLoading(true);
+        const employedd = await getEmployeeEmploymentData(employeeId);
+        const businessDetails = await getBusinessById(employedd.employmentData.business_id);
+        const payrollDetails = await getPayrollDataByEmployeeId(employeeId);
+        console.log("payrollDetails", payrollDetails);
+        setPayroll(payrollDetails);
+        setBusiness(businessDetails);
+        setEmployee(employedd);
+        setLoading(false);
+    };
 
-  const handleDateChange = (_, date) => {
-    setShowPicker(false);
-    if (date) setSelectedDate(date);
-  };
+    const hourlyPayDetails = {
+        hourlyPay: employee?.employmentData.hourly_pay,
+        weeklyHours: employee?.employmentData.weekly_hours,
+        monthlyHours: employee?.employmentData.weekly_hours * 4,
+        actualMonthlyHours: employee?.employmentData.actual_monthly_hours,
+        salary: employee?.employmentData.actual_monthly_hours * employee?.employmentData.hourly_pay,
+        date: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
+    };
 
-  const handleHoursChange = (value) => {
-    const numeric = parseInt(value);
-    setHours(value);
-    if (isNaN(numeric)) {
-      setError("Please enter a number");
-    } else if (numeric < 1 || numeric > 8) {
-      setError("Hours must be between 1 and 8");
-    } else {
-      setError("");
+    if (loading) {
+        return (
+            <View flex={1} justifyContent="center" alignItems="center">
+                <Text>Loading...</Text>
+            </View>
+        );
     }
-  };
 
-  const handleSubmit = async () => {
-    if (error || !hours || !selectedDate) {
-      Alert.alert("Error", "Please select a date and valid hours");
-    } else {
-      await logEmployeeWorkHours({
-        employee_id: employeeId,
-        date: selectedDate,
-        hours: hours,
-      });
-      Alert.alert(
-        "Success",
-        `Logged ${hours} hours on ${selectedDate.toDateString()}`
-      );
-    }
-  };
+    return (
+        <ScrollView style={{ backgroundColor: 'white' }}>
+            <TopNavHeader text="Employee Details"  />
+            <YStack>
+                
+                <YStack
+                    padding={20}
+                    borderTopColor={"rgb(93, 0, 255)"}
+                    borderTopWidth={3}
+                    borderTopLeftRadius={30}
+                    borderTopRightRadius={30}
+                    top={30}
+                    mb={100}
+                    space="$4"
+                >
+                    <Card elevate padding="$4" borderRadius="$4" >
+                        <YStack space="$3">
+                        <Text fontSize="$6" fontWeight="bold" marginBottom="$2">
+                        Employment Overview
+                        </Text>
+                            <XStack alignItems="center" space="$2">
+                                <Ionicons name="business-outline" size={20} color="rgb(93, 0, 255)" />
+                                <Text fontSize="$5" fontWeight="600">
+                                    Business Name: {business?.data?.businessName}
+                                </Text>
+                            </XStack>
+                            <XStack alignItems="center" space="$2">
+                                <Ionicons name="briefcase-outline" size={20} color="rgb(93, 0, 255)" />
+                                <Text fontSize="$5" fontWeight="600">
+                                    Position: {employee.employmentData.role}
+                                </Text>
+                            </XStack>
+                        </YStack>
+                    </Card>
 
-  return (
-    <ScrollView>
-      <TopNavHeader text={"Your Job Details"} />
-      <YStack padding="$4" space="$4">
-        {!employed ? (
-          <YStack f={1} jc="center" ai="center">
-            <Text fontSize="$5" fontWeight="600">
-              Not Employed
-            </Text>
-          </YStack>
-        ) : (
-          <>
-            <Card
-              elevate
-              padding="$4"
-              borderRadius="$4"
-              shadowColor="green"
-              shadowRadius="$2"
-            >
-              <Stack space="$3">
-                <Text fontSize="$5" fontWeight="600">
-                  Name: {employee.name}
-                </Text>
-                <Text fontSize="$5" fontWeight="600">
-                  Position: {employee.position}
-                </Text>
-                <Text fontSize="$5" fontWeight="600">
-                  Pay Day: {employee.payDay}
-                </Text>
-                <Text fontSize="$5" fontWeight="600">
-                  Salary: {employee.salary}
-                </Text>
-              </Stack>
-            </Card>
-
-            <Card elevate bordered padding="$4" margin="$3">
-              <Text fontSize="$6" fontWeight="bold" marginBottom="$2">
-                Log Work Hours
-              </Text>
-
-              <Button onPress={() => setShowPicker(true)} marginBottom="$2">
-                {selectedDate ? selectedDate.toDateString() : "Select Date"}
-              </Button>
-
-              {showPicker && (
-                <DateTimePicker
-                  value={selectedDate || new Date()}
-                  mode="date"
-                  display={"default"}
-                  onChange={handleDateChange}
+                    <Separator
+                    horizontal
+                    borderColor={"rgb(167, 117, 255)"}
+                    borderWidth={2}
+                    width={"50%"}
+                    borderTopRightRadius={5}
+                    borderTopLeftRadius={5}
+                    alignSelf="center"
+                    marginVertical="$1"
                 />
-              )}
 
-              {selectedDate && (
-                <View>
-                  <TextInput
-                    placeholder="Enter number of hours (1–8)"
-                    keyboardType="numeric"
-                    value={hours}
-                    onChangeText={handleHoursChange}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: error ? "red" : "#ccc",
-                      padding: 10,
-                      borderRadius: 6,
-                      marginBottom: 6,
-                      marginTop: 8,
-                    }}
-                  />
-                  {error ? <Text color="red">{error}</Text> : null}
+                    <Card elevate bordered padding="$4" margin="$">
+                        <YStack space="$3">
+                        <Text fontSize="$6" fontWeight="bold" marginBottom="$2">
+                            Hourly Pay Details
+                        </Text>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="cash-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Hourly Pay: ${payroll.data.hourly_pay}</Text>
+                        </XStack>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="time-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Weekly Hours: {payroll.data.weekly_hours}</Text>
+                        </XStack>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="calendar-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Monthly Hours: {payroll.data.monthly_hours}</Text>
+                        </XStack>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="time-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Actual Monthly Hours: {payroll.data.actual_monthly_hours}</Text>
+                        </XStack>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="cash-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Salary: ${payroll.data.salary}</Text>
+                        </XStack>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="calendar-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Date: {payroll.data.date}</Text>
+                        </XStack>
+                        </YStack>
+                    </Card>
 
-                  <Button
-                    backgroundColor={!error && hours ? "#007BFF" : "#ccc"}
-                    disabled={!!error || !hours}
-                    onPress={handleSubmit}
-                    marginTop="$2"
-                  >
-                    Submit
-                  </Button>
-                </View>
-              )}
-            </Card>
-          </>
-        )}
-      </YStack>
-    </ScrollView>
-  );
+                    <Separator
+                    horizontal
+                    borderColor={"rgb(167, 117, 255)"}
+                    borderWidth={2}
+                    width={"50%"}
+                    borderTopRightRadius={5}
+                    borderTopLeftRadius={5}
+                    alignSelf="center"
+                    marginVertical="$1"
+                />
+
+                    <Card elevate bordered padding="$4">
+                        <Text fontSize="$6" fontWeight="bold" marginBottom="$2">
+                            Feedback and Rating
+                        </Text>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="star-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Rating: {employee.employmentData.monthly_rating || "No rating"}</Text>
+                        </XStack>
+                        <XStack alignItems="center" space="$2">
+                            <Ionicons name="chatbubble-outline" size={20} color="rgb(93, 0, 255)" />
+                            <Text>Feedback: {employee.employmentData.feedback || "No feedback"}</Text>
+                        </XStack>
+                    </Card>
+                </YStack>
+            </YStack>
+        </ScrollView>
+    );
 };
 
 export default EmployeeDetails;

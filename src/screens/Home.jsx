@@ -32,6 +32,7 @@ function Home({ navigation }) {
     about_me: "",
     profile_image: "",
   });
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     // Fetch data from Firebase
@@ -41,6 +42,7 @@ function Home({ navigation }) {
         setForm(
           { ...profileData.data } // spread the fields correctly
         );
+        setUserId(profileData.id); // Set the userId state
       }
     };
 
@@ -118,7 +120,8 @@ function Home({ navigation }) {
           leftLogo={"cash-outline"}
           buttonText={"Have a look"}
           handleButtonPress={() => {
-            navigation.navigate("EmployeeDetails", { employeeId: user.uid });
+            console.log("user.uid:", userId);
+            navigation.navigate("EmployeeDetails", { employeeId: userId });
           }}
           width="100%"
           top={450}
