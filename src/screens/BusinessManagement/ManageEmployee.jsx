@@ -22,6 +22,7 @@ import {
 import {
   employUser,
   getEmployeeById,
+  getEmployeeEmploymentData,
   getEmployeesByBusinessId,
   getUserProfile,
   savePayroll,
@@ -66,7 +67,8 @@ const ManageEmployee = ({ navigation, route }) => {
 
   const fetchUserInfo = async () => {
     setLoading(true);
-    const user = await getEmployeeById(employeeId);
+    const user = await getEmployeeEmploymentData(employeeId);
+    console.log("USER", user)
     setUser(user);
     setRole(user?.employmentData.role || "");
     setHourlyPay(user?.employmentData.hourly_pay || "");

@@ -139,7 +139,9 @@ const EmployeesList = ({ navigation, route }) => {
               marginTop="$4"
             >
               <Button
-                onPress={() => handleManage(employee.id)}
+                onPress={() => {
+                  console.log("Manage employee:", employee);
+                  handleManage(employee?.employmentData.employee_id)}}
                 backgroundColor="#007BFF"
                 textProps={{ color: "white" }}
               >
