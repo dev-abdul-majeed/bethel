@@ -1,12 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Spinner, YStack, ScrollView, Card, Image, XStack } from "tamagui";
-import { getUsers, employUser, getEmployeesByBusinessId, getBusinessEmployees } from "../../services/firebaseUtils";
+import {
+  View,
+  Text,
+  Button,
+  Spinner,
+  YStack,
+  ScrollView,
+  Card,
+  Image,
+  XStack,
+} from "tamagui";
+import {
+  getUsers,
+  employUser,
+  getEmployeesByBusinessId,
+  getBusinessEmployees,
+} from "../../services/firebaseUtils";
 import { RefreshControl, TextInput } from "react-native";
 import TopNavHeader from "../../components/shared/TopNavHeader";
 import { Ionicons } from "@expo/vector-icons";
+import { getAuth } from "@react-native-firebase/auth";
 
 const UsersList = ({ route, navigation }) => {
   const { businessId } = route.params;
+  const currentUserId = getAuth().currentUser.uid;
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -18,9 +35,12 @@ const UsersList = ({ route, navigation }) => {
   const fetchUsers = async () => {
     try {
       const userList = await getUsers();
-      console.log("Fetched users:", userList);
-      setUsers(userList);
-      setFilteredUsers(userList);
+      const filteredList = userList.filter(
+        (user) => user.data.user_id !== currentUserId
+      );
+      console.log("Fetched users:", filteredList);
+      setUsers(filteredList);
+      setFilteredUsers(filteredList);
     } catch (err) {
       setError("Failed to fetch users. Please try again.");
     } finally {
@@ -40,17 +60,13 @@ const UsersList = ({ route, navigation }) => {
   };
 
   const checkIfAlreadyEmployed = (userId) => {
-
-    return employees.some((employee) =>{
-        console.log("Checking if user is already employed:", employee.data?.employee_id, userId);
-        console.log("Employment end date:", employee.data?.employment_end_date);
-     return employee.data?.employee_id === userId &&
-      employee.data?.employment_end_date === null // exists and is truthy
-    }
-    );
+    return employees.some((employee) => {
+      return (
+        employee.data?.employee_id === userId &&
+        employee.data?.employment_end_date === null
+      ); // exists and is truthy
+    });
   };
-  
-  
 
   useEffect(() => {
     console.log("Fetching users...");
@@ -111,20 +127,24 @@ const UsersList = ({ route, navigation }) => {
       <XStack gap="$2" marginBottom={10} mx="$1" px="$4">
         <Button
           flex={0.5}
-          backgroundColor={"rgb(249, 179, 99)"}
+          backgroundColor={"rgb(173, 50, 249)"}
           onPress={handleRefresh}
-          icon={<Ionicons name="calendar-outline" size={25} />}
+          icon={<Ionicons name="people-outline" size={25} color={"white"} />}
+          textProps={{ color: "white" }}
         >
           All
         </Button>
         <Button
           flex={0.5}
-          backgroundColor={"rgb(149, 252, 134)"}
-          icon={<Ionicons name="funnel-outline" size={25} />}
+          backgroundColor={"rgb(0, 155, 147)"}
+          icon={<Ionicons name="funnel-outline" size={25} color={"white"} />}
+          textProps={{ color: "white" }}
           onPress={async () => {
             setLoading(true);
             try {
-              setFilteredUsers(users.filter((user) => !checkIfAlreadyEmployed(user.id)));
+              setFilteredUsers(
+                users.filter((user) => !checkIfAlreadyEmployed(user.id))
+              );
             } catch (error) {
               Alert.alert("Something went wrong", error);
             } finally {
@@ -188,11 +208,17 @@ const UsersList = ({ route, navigation }) => {
               <Button
                 marginTop="$4"
                 onPress={() => handleEmploy(user.id)}
-                backgroundColor={checkIfAlreadyEmployed(user.id) ? "rgb(249, 179, 99)" : "rgb(11, 170, 125)"}
+                backgroundColor={
+                  checkIfAlreadyEmployed(user.id)
+                    ? "rgb(249, 179, 99)"
+                    : "rgb(11, 170, 125)"
+                }
                 textProps={{ color: "white" }}
                 disabled={checkIfAlreadyEmployed(user.id)}
               >
-                {checkIfAlreadyEmployed(user.id) ? "Already Employed" : "Employ"}
+                {checkIfAlreadyEmployed(user.id)
+                  ? "Already Employed"
+                  : "Employ"}
               </Button>
             </Card>
           ))}

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, Alert, StyleSheet, RefreshControl } from "react-native";
 import { View, Text, Button, Card, Spinner, Image } from "tamagui";
-import { getEmployeesByBusinessId, getUsers, terminateEmployee } from "../../services/firebaseUtils";
+import {
+  getEmployeesByBusinessId,
+  getUsers,
+  terminateEmployee,
+} from "../../services/firebaseUtils";
 import { useNavigation } from "@react-navigation/native";
 import TopNavHeader from "../../components/shared/TopNavHeader";
 
@@ -16,7 +20,7 @@ const EmployeesList = ({ navigation, route }) => {
   const fetchEmployees = async () => {
     try {
       if (error) setError(null);
-      
+
       const data = await getEmployeesByBusinessId(businessId);
       console.log("Fetched my employees:", data);
       setEmployees(data);
@@ -45,13 +49,18 @@ const EmployeesList = ({ navigation, route }) => {
           style: "destructive",
           onPress: async () => {
             try {
-                setRefreshing(true);
+              setRefreshing(true);
               await terminateEmployee(employeeId);
-              setEmployees((prev) => prev.filter((emp) => emp.id !== employeeId));
+              setEmployees((prev) =>
+                prev.filter((emp) => emp.id !== employeeId)
+              );
               setRefreshing(false);
               Alert.alert("Success", "Employee terminated successfully.");
             } catch (err) {
-              Alert.alert("Error", "Failed to terminate employee. Please try again.");
+              Alert.alert(
+                "Error",
+                "Failed to terminate employee. Please try again."
+              );
             }
           },
         },
@@ -60,7 +69,7 @@ const EmployeesList = ({ navigation, route }) => {
   };
 
   const handleManage = (employeeId) => {
-    navigation.navigate("ManageEmployee", { employeeId });
+    navigation.navigate("ManageEmployee", { employeeId, businessId });
   };
 
   const handleRefresh = () => {

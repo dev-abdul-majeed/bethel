@@ -55,26 +55,15 @@ const CreateBusiness = ({ navigation }) => {
   };
 
   const handleCreateBusiness = async () => {
-    if (
-      businessName &&
-      businessType &&
-      operationalHours &&
-      locationAddress &&
-      contact &&
-      email &&
-      payday &&
-      paymentFrequency
-    ) {
+    if (businessName && businessType && locationAddress && contact && email) {
       await uploadBusinessToFirebase(
         {
           businessName,
           businessType,
-          operationalHours,
+
           locationAddress,
           contact,
           email,
-          payday,
-          paymentFrequency,
           businessPhoto,
         },
         user
@@ -124,7 +113,7 @@ const CreateBusiness = ({ navigation }) => {
         {renderLabelWithIcon("briefcase-outline", "Business Type")}
         <Input
           placeholder="Enter Business Type"
-          value={businessType.charAt(0).toUpperCase() + businessType.slice(1)}
+          value={businessType}
           onChangeText={setBusinessType}
           borderWidth={1}
           borderColor="$borderColor"
@@ -133,16 +122,7 @@ const CreateBusiness = ({ navigation }) => {
           disabled={businessType == "hospital"}
           style={{ color: businessType == "hospital" ? "#808080" : "#fffff" }}
         />
-        {renderLabelWithIcon("time-outline", "Operational Hours")}
-        <Input
-          placeholder="Enter Operational Hours"
-          value={operationalHours}
-          onChangeText={setOperationalHours}
-          borderWidth={1}
-          borderColor="$borderColor"
-          borderRadius="$4"
-          p="$2"
-        />
+
         {renderLabelWithIcon("location-outline", "Location Address")}
         <Input
           placeholder="Enter Location Address"
@@ -173,52 +153,6 @@ const CreateBusiness = ({ navigation }) => {
           borderRadius="$4"
           p="$2"
         />
-        {businessType != "hospital" ? (
-          <>
-            {renderLabelWithIcon(
-              "calendar-outline",
-              "Payday (Day of the Month)"
-            )}
-            <Input
-              placeholder="Enter Payday (1-31)"
-              value={payday}
-              onChangeText={(text) => {
-                const day = parseInt(text, 10);
-                if (!isNaN(day) && day >= 1 && day <= 31) {
-                  setPayday(text);
-                } else if (text === "") {
-                  setPayday("");
-                }
-              }}
-              keyboardType="numeric"
-              borderWidth={1}
-              borderColor="$borderColor"
-              borderRadius="$4"
-              p="$2"
-            />
-            <Text fontSize="$5" fontWeight="bold">
-              Select Payment Frequency
-            </Text>
-            <RadioGroup
-              aria-labelledby="Select one item"
-              defaultValue="2"
-              name="form"
-            >
-              <XStack width={3} alignItems="center" space="$3">
-                <RadioGroupItemWithLabel
-                  size="$3"
-                  value="monthly"
-                  label="Monthly"
-                />
-                <RadioGroupItemWithLabel
-                  size="$4"
-                  value="weekly"
-                  label="Weekly"
-                />
-              </XStack>
-            </RadioGroup>
-          </>
-        ) : null}
 
         {!businessPhoto && (
           <Button onPress={handlePickImage} style={{ marginBottom: 10 }}>

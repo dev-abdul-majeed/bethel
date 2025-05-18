@@ -525,12 +525,23 @@ export async function getUsers(businessId = null) {
   }
 }
 
-
 // Employer side APIs
 
-export async function employUser({ business_id, employee_id, role, hourly_pay, scheduled_start_time, scheduled_end_time, scheduled_days, monthly_rating = 0, feedback = "", employment_date, employment_end_date = null }) {
+export async function employUser({
+  business_id,
+  employee_id,
+  role,
+  hourly_pay,
+  scheduled_start_time,
+  scheduled_end_time,
+  scheduled_days,
+  monthly_rating = 0,
+  feedback = "",
+  employment_date,
+  employment_end_date = null,
+  weekly_hours,
+}) {
   try {
-
     // Validate business and employee profiles
     const businessProfile = await getDocumentById("business_data", business_id);
     const employeeProfile = await getDocumentById("profile_data", employee_id);
@@ -547,6 +558,7 @@ export async function employUser({ business_id, employee_id, role, hourly_pay, s
       scheduled_start_time,
       scheduled_end_time,
       scheduled_days,
+      weekly_hours,
       monthly_rating,
       feedback,
       employment_date,
@@ -573,7 +585,10 @@ export async function getEmployeesByBusinessId(businessId) {
       snapshot.docs
         .filter((doc) => {
           const data = doc.data();
-          return !("employment_end_date" in data) || data.employment_end_date === null;
+          return (
+            !("employment_end_date" in data) ||
+            data.employment_end_date === null
+          );
         })
         .map(async (doc) => {
           const employmentData = doc.data();
@@ -660,7 +675,6 @@ export async function getBusinessEmployees(businessId) {
   }
 }
 
-
 export async function terminateEmployee(employmentId) {
   try {
     const docRef = doc(db, "employment_data", employmentId);
@@ -718,5 +732,40 @@ export async function logEmployeeWorkHours({ employee_id, date, hours }) {
     console.log("Employee work hours logged successfully!");
   } catch (error) {
     console.error("Failed to log employee work hours:", error);
+  }
+}
+
+export async function savePayroll(employeeId, businessId, data) {
+  try {
+    const { date } = data;
+
+    // Check if a payroll already exists for the same employee, business, and date
+    const existingPayroll = await getDocumentByField(
+      "payroll_data",
+      "date",
+      date
+    );
+
+    if (
+      existingPayroll &&
+      existingPayroll.data().employee_id === employeeId &&
+      existingPayroll.data().business_id === businessId
+    ) {
+      // Update the existing payroll
+      await saveOrUpdateDocument("payroll_data", data, existingPayroll.id);
+      console.log("Payroll data updated successfully!");
+    } else {
+      // Save a new payroll
+      const payload = {
+        employee_id: employeeId,
+        business_id: businessId,
+        ...data,
+      };
+
+      await saveOrUpdateDocument("payroll_data", payload);
+      console.log("Payroll data saved successfully!");
+    }
+  } catch (error) {
+    throw new Error(error.message);
   }
 }
