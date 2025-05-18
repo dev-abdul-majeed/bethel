@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input, Label, YStack, ScrollView, XStack } from "tamagui";
+import {
+  Button,
+  Input,
+  Label,
+  YStack,
+  ScrollView,
+  XStack,
+  Avatar,
+  Separator,
+  Spinner,
+} from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import {
   getVehicleData,
   uploadVehicleToFirebase,
 } from "../../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
-import { Alert, Image, KeyboardAvoidingView, Platform } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Alert, Image, View, Text } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const VehicleRegistration = ({ navigation, route }) => {
   const user = getAuth().currentUser;
@@ -27,18 +36,20 @@ const VehicleRegistration = ({ navigation, route }) => {
   });
 
   const [originalForm, setOriginalForm] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const initializeVehicle = async () => {
       if (vid) {
         const vehicleData = await getVehicleData(user.uid, vid);
         if (vehicleData) {
-          const loadedData = { ...form, ...vehicleData.data, vehicleId: vid };
-          setForm(loadedData);
-          setOriginalForm(loadedData); // store original for comparison
+          const loadedData = { ...vehicleData.data, vehicleId: vid };
+          setForm(loadedData); // Correctly populate form fields
+          setOriginalForm(loadedData);
         }
       }
+      setLoading(false);
     };
     initializeVehicle();
   }, [vid, user.uid]);
@@ -64,7 +75,7 @@ const VehicleRegistration = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setSaving(true);
     try {
       await uploadVehicleToFirebase(form, user);
       Alert.alert("Success", "Vehicle registered successfully!", [
@@ -73,11 +84,10 @@ const VehicleRegistration = ({ navigation, route }) => {
     } catch (error) {
       Alert.alert("Error", "Something went wrong while saving vehicle data.");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
-  // Check if all fields are filled
   const isFormComplete = Object.values({
     brand: form.brand,
     name: form.name,
@@ -89,7 +99,6 @@ const VehicleRegistration = ({ navigation, route }) => {
     car_photo: form.car_photo,
   }).every((val) => val !== "");
 
-  // Check if any field has changed
   const hasChanges =
     originalForm &&
     Object.keys(form).some((key) => form[key] !== originalForm[key]);
@@ -98,31 +107,111 @@ const VehicleRegistration = ({ navigation, route }) => {
 
   const renderLabelWithIcon = (iconName, labelText) => (
     <XStack alignItems="center" space="$2">
-      <Icon name={iconName} size={20} />
-      <Label>{labelText}</Label>
+      <Ionicons name={iconName} size={28} color="rgb(93, 0, 255)" />
+      <Label fontSize={18}>{labelText}</Label>
     </XStack>
   );
 
-  return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{ paddingBottom: 45 }}
-      enableOnAndroid={true}
-      keyboardShouldPersistTaps="handled"
-      extraScrollHeight={140}
-    >
-      <ScrollView contentContainerStyle={{ paddingBottom: 45 }}>
-        <YStack space="$3" padding="$4">
-          {renderLabelWithIcon("car-outline", `VehicleId: ${form.vehicleId}`)}
+  if (loading) {
+    return (
+      <View flex={1} justifyContent="center" alignItems="center">
+        <Spinner size="large" color="rgb(93, 0, 255)" />
+      </View>
+    );
+  }
 
+  return (
+    <ScrollView style={{ backgroundColor: "white" }}>
+      <YStack>
+        <View
+          style={{
+            height: "15%",
+            width: "100%",
+            backgroundColor: "rgb(93, 0, 255)",
+            position: "relative",
+            borderBottomRightRadius: 40,
+            borderBottomLeftRadius: 40,
+            elevation: 5,
+            marginBottom: 70,
+          }}
+        >
+          {form.car_photo ? (
+            <Image
+              height={200}
+              source={{ uri: form.car_photo }}
+              style={{
+                alignSelf: "center",
+                top: "25%",
+                borderWidth: 5,
+                borderColor: "white",
+                borderRadius: 100,
+                width: 150,
+                height: 150,
+              }}
+            />
+          ) : (
+            <Avatar
+              circular
+              size="$13"
+              alignSelf="center"
+              top={"25%"}
+              borderWidth={5}
+              borderColor={"white"}
+            >
+              <Avatar.Fallback backgroundColor="$blue10" />
+            </Avatar>
+          )}
+          <Button
+            onPress={handlePickImage}
+            width={60}
+            height={35}
+            padding={0}
+            elevation={10}
+            zIndex={1}
+            backgroundColor={"rgb(167, 117, 255)"}
+            left={"50%"}
+            icon={<Ionicons name="image-outline" size={30} color={"white"} />}
+          ></Button>
+        </View>
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: 36,
+            fontFamily: "Nexa-Heavy",
+            color: "rgb(93, 0, 255)",
+          }}
+        >
+          Vehicle Info
+        </Text>
+        <Separator
+          horizontal
+          borderColor={"rgb(167, 117, 255)"}
+          borderWidth={2}
+          width={"$3"}
+          borderTopRightRadius={5}
+          borderTopLeftRadius={5}
+          alignSelf="center"
+        />
+        <YStack
+          padding={20}
+          borderTopColor={"rgb(93, 0, 255)"}
+          borderTopWidth={3}
+          borderTopLeftRadius={30}
+          borderTopRightRadius={30}
+          top={30}
+          mb={100}
+        >
           {renderLabelWithIcon("car-sport-outline", "Car Brand")}
           <Input
             value={form.brand}
+            mb={15}
             onChangeText={(text) => handleChange("brand", text)}
           />
 
           {renderLabelWithIcon("pricetag-outline", "Car Name")}
           <Input
             value={form.name}
+            mb={15}
             onChangeText={(text) => handleChange("name", text)}
           />
 
@@ -130,6 +219,7 @@ const VehicleRegistration = ({ navigation, route }) => {
           <Input
             placeholder="YYYY"
             value={form.year}
+            mb={15}
             onChangeText={(text) => handleChange("year", text)}
             keyboardType="numeric"
           />
@@ -138,12 +228,14 @@ const VehicleRegistration = ({ navigation, route }) => {
           <Input
             placeholder="ABC01 DEF"
             value={form.registrationNumber}
+            mb={15}
             onChangeText={(text) => handleChange("registrationNumber", text)}
           />
 
           {renderLabelWithIcon("speedometer-outline", "Current Mileage (km)")}
           <Input
             value={form.mileage}
+            mb={15}
             onChangeText={(text) => handleChange("mileage", text)}
             keyboardType="numeric"
           />
@@ -154,6 +246,7 @@ const VehicleRegistration = ({ navigation, route }) => {
           )}
           <Input
             value={form.last_serviced_mileage}
+            mb={15}
             onChangeText={(text) => handleChange("last_serviced_mileage", text)}
             keyboardType="numeric"
           />
@@ -161,22 +254,38 @@ const VehicleRegistration = ({ navigation, route }) => {
           {renderLabelWithIcon("calendar-outline", "Last Service Date")}
           <Input
             value={form.last_service_date}
+            mb={15}
             onChangeText={(text) => handleChange("last_service_date", text)}
           />
 
-          {renderLabelWithIcon("image-outline", "Car Photo")}
-          {form.car_photo ? (
-            <Image height={200} source={{ uri: form.car_photo }} />
-          ) : null}
-          <Button onPress={handlePickImage} disabled={loading}>
-            Pick Car Photo
-          </Button>
-          <Button onPress={handleSubmit} disabled={!isSaveEnabled || loading}>
-            {loading ? "Saving..." : "Save Vehicle"}
+          <Button
+            onPress={handleSubmit}
+            backgroundColor={"rgb(93, 0, 255)"}
+            width={"50%"}
+            alignSelf="center"
+            mb={30}
+            disabled={!isSaveEnabled || saving}
+            icon={
+              saving ? (
+                <Spinner size="small" color="white" />
+              ) : (
+                <Ionicons name="save-outline" color={"white"} size={25} />
+              )
+            }
+          >
+            <Text
+              style={{
+                color: "white",
+                fontFamily: "Nexa-Heavy",
+                fontSize: 15,
+              }}
+            >
+              {saving ? "Saving..." : "Save Vehicle"}
+            </Text>
           </Button>
         </YStack>
-      </ScrollView>
-    </KeyboardAwareScrollView>
+      </YStack>
+    </ScrollView>
   );
 };
 

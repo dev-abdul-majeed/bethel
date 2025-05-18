@@ -76,7 +76,13 @@ export default function App() {
                     headerShown: false,
                   }}
                 />
-                <Stack.Screen name="ProfileForm" component={ProfileForm} />
+                <Stack.Screen
+                  name="Profile Form"
+                  component={ProfileForm}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
                 <Stack.Screen
                   name="VehicleRegistration"
                   component={VehicleRegistration}
@@ -142,11 +148,10 @@ export default function App() {
                 />
 
                 <Stack.Screen
-                name="EmployeeDetails"
-                component={EmployeeDetails}
-                options={{ headerShown: false }}
+                  name="EmployeeDetails"
+                  component={EmployeeDetails}
+                  options={{ headerShown: false }}
                 />
-
               </Stack.Navigator>
             </>
           ) : (

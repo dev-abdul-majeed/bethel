@@ -32,7 +32,7 @@ const HomeCard = ({
       borderColor={colorScheme}
       top={top}
       marginBottom={mb}
-      borderTopColor={colorScheme}
+      backgroundColor={"rgb(255, 255, 255)"}
     >
       <Image
         src={topImagePath}

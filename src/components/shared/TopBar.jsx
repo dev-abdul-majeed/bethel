@@ -56,7 +56,7 @@ function TopBar({ navigation, info }) {
             borderColor={"white"}
             borderWidth={3}
             onPress={() => {
-              navigation.navigate("ProfileForm");
+              navigation.navigate("Profile Form");
             }}
           >
             <Avatar.Image accessibilityLabel="Cam" src={img} />
