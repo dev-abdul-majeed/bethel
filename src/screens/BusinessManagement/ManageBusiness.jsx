@@ -5,13 +5,11 @@ import { StyleSheet } from "react-native";
 import { Spinner, View } from "tamagui";
 import BusinessHome from "./BusinessHome";
 import UsersList from "./UsersList";
-import ManageEmployees from "./ManageEmployees";
-// import AppointmentForm from "./BusinessAppointments/AppointmentForm";
-// import AppointmentsList from "./BusinessAppointments/AppointmentsList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { getBusinessData } from "../../services/firebaseUtils";
 import { getAuth } from "@react-native-firebase/auth";
-// import AppointmentsPage from "./BusinessAppointments/AppointmentsPage";
+import EmployeesList from "./EmployeesList";
+import ManageEmployee from "./ManageEmployee";
 
 const ManageBusiness = ({ navigation, route }) => {
   const user = getAuth().currentUser;
@@ -82,13 +80,13 @@ const ManageBusiness = ({ navigation, route }) => {
               />
               <Tab.Screen
                 name="Manage Employees"
-                component={ManageEmployees}
+                component={EmployeesList}
                 initialParams={{ businessId: businessData.businessId }}
               />
             </Tab.Navigator>
           )}
         </Stack.Screen>
-        {/* <Stack.Screen name="Manage Appointments" component={AppointmentsPage} /> */}
+        <Stack.Screen name="ManageEmployee" component={ManageEmployee} />
       </Stack.Navigator>
     </View>
   );

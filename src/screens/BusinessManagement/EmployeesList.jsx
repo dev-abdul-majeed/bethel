@@ -5,7 +5,7 @@ import { getEmployeesByBusinessId, getUsers, terminateEmployee } from "../../ser
 import { useNavigation } from "@react-navigation/native";
 import TopNavHeader from "../../components/shared/TopNavHeader";
 
-const ManageEmployees = ({ navigation, route }) => {
+const EmployeesList = ({ navigation, route }) => {
   const { businessId } = route.params;
 
   const [employees, setEmployees] = useState([]);
@@ -60,7 +60,7 @@ const ManageEmployees = ({ navigation, route }) => {
   };
 
   const handleManage = (employeeId) => {
-    navigation.navigate("EmployeeDetails", { employeeId });
+    navigation.navigate("ManageEmployee", { employeeId });
   };
 
   const handleRefresh = () => {
@@ -170,4 +170,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ManageEmployees;
+export default EmployeesList;

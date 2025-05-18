@@ -10,6 +10,7 @@ const BusinessHome = ({ route, navigation }) => {
   const [businessData, setBusinessData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
