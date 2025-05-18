@@ -19,7 +19,7 @@ import {
   getUserProfile,
   uploadProfileToFirebase,
 } from "../services/firebaseUtils";
-import { getAuth } from "@react-native-firebase/auth";
+import { getAuth, signOut } from "@react-native-firebase/auth";
 import { Text } from "react-native";
 import { auth } from "../services/firebase";
 
@@ -256,7 +256,7 @@ export default function ProfileForm() {
 
           <Button
             onPress={() => {
-              auth.signOut();
+              signOut(getAuth());
             }}
             backgroundColor={"rgb(247, 72, 72)"}
             width={"40%"}
