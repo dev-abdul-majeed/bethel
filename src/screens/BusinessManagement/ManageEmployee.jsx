@@ -275,10 +275,10 @@ const ManageEmployee = ({ navigation, route }) => {
                   {user.employmentData.employment_date || "N/A"}
                 </Text>
 
-                {/* <TextInput
+                <TextInput
                   placeholder="Enter Role (manager, staff, support)"
-                  value={role}
-                  onChangeText={setRole}
+                  value={feedback}
+                  onChangeText={setFeedback}
                   style={styles.input}
                 />
 
@@ -306,7 +306,7 @@ const ManageEmployee = ({ navigation, route }) => {
                   value={scheduledDays}
                   onChangeText={setScheduledDays}
                   style={styles.input}
-                /> */}
+                /> 
                 <Button
                   marginTop="$4"
                   onPress={handleEmploy}

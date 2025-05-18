@@ -526,6 +526,8 @@ export async function getUsers(businessId = null) {
 }
 
 
+// Employer side APIs
+
 export async function employUser({ business_id, employee_id, role, hourly_pay, scheduled_start_time, scheduled_end_time, scheduled_days, monthly_rating = 0, feedback = "", employment_date, employment_end_date = null }) {
   try {
 
@@ -677,5 +679,44 @@ export async function terminateEmployee(employmentId) {
     console.log("Employee terminated successfully!");
   } catch (error) {
     console.error("Failed to terminate employee:", error);
+  }
+}
+
+// Employee side APIs
+
+export async function logEmployeeWorkHours({ employee_id, date, hours }) {
+  try {
+    // Fetch employment data using employee_id
+    const employmentDoc = await getDocumentByField(
+      "employment_data",
+      "employee_id",
+      employee_id
+    );
+
+    if (!employmentDoc) {
+      throw new Error("Employment record not found for the given employee.");
+    }
+
+    const business_id = employmentDoc.data().business_id;
+
+    // Validate employee and business profiles
+    const employeeProfile = await getDocumentById("profile_data", employee_id);
+    const businessProfile = await getDocumentById("business_data", business_id);
+
+    if (!employeeProfile || !businessProfile) {
+      throw new Error("Invalid employee or business profile.");
+    }
+
+    const payload = {
+      employee_id,
+      business_id,
+      date,
+      hours,
+    };
+
+    await saveOrUpdateDocument("employee_log", payload);
+    console.log("Employee work hours logged successfully!");
+  } catch (error) {
+    console.error("Failed to log employee work hours:", error);
   }
 }

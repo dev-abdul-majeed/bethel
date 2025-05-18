@@ -118,7 +118,7 @@ function Home({ navigation }) {
           leftLogo={"cash-outline"}
           buttonText={"Have a look"}
           handleButtonPress={() => {
-            navigation.navigate("EmployeeDetails");
+            navigation.navigate("EmployeeDetails", { employeeId: user.uid });
           }}
           width="100%"
           top={450}
