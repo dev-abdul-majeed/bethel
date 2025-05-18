@@ -182,8 +182,8 @@ const DoctorRegistration = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   view: {
     backgroundColor: "white",
-    paddingBottom: 50,
-    marginBottom: 50,
+    paddingBottom: 100,
+    height: "150%",
   },
 });
 
