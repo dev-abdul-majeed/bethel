@@ -10,6 +10,7 @@ Bethel is a city management system designed to streamline operations for hospita
 - **User Profiles**: Create and update user profiles.
 
 ## Screenshots:
+<img width="222" height="500" alt="image" src="https://github.com/user-attachments/assets/80610a2f-fd81-40e6-88cf-22ce4fb5ecc5" />
 
 <img width="205" height="462" alt="image" src="https://github.com/user-attachments/assets/f06173e2-f51d-4e7d-9b2a-d46b5a8e611e" />
 <img width="202" height="455" alt="image" src="https://github.com/user-attachments/assets/fc85f5a2-87b3-44af-bece-7830551edf26" />
@@ -106,5 +107,5 @@ Before setting up the project, ensure you have the following installed:
 ## Technologies used:
 <img width="173" height="188" alt="image" src="https://github.com/user-attachments/assets/a159971a-8c6d-4ba8-aca9-75b3a59ebd56" />
 <img width="200" height="130" alt="image" src="https://github.com/user-attachments/assets/95d89151-e9e3-40dd-a91c-65f6f2f740ab" />
-<img width="549" height="105" alt="image" src="https://github.com/user-attachments/assets/d8a13535-837d-4bff-b229-7969fffdd5d1" />
+<img width="549" height="205" alt="image" src="https://github.com/user-attachments/assets/d8a13535-837d-4bff-b229-7969fffdd5d1" />
 
