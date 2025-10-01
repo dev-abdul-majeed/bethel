@@ -9,6 +9,18 @@ Bethel is a city management system designed to streamline operations for hospita
 - **Vehicle Management**: Register and manage vehicles.
 - **User Profiles**: Create and update user profiles.
 
+## Screenshots:
+
+<img width="205" height="462" alt="image" src="https://github.com/user-attachments/assets/f06173e2-f51d-4e7d-9b2a-d46b5a8e611e" />
+<img width="202" height="455" alt="image" src="https://github.com/user-attachments/assets/fc85f5a2-87b3-44af-bece-7830551edf26" />
+<img width="192" height="432" alt="image" src="https://github.com/user-attachments/assets/eb00e691-9c97-4807-9013-e0ce5031a9b5" />
+<img width="230" height="519" alt="image" src="https://github.com/user-attachments/assets/45f6b950-c64f-4ba8-8b64-3a629c357e9d" />
+<img width="190" height="428" alt="image" src="https://github.com/user-attachments/assets/55e84bb5-e8a9-43f6-9192-7c2a8ffd4be8" />
+<img width="212" height="478" alt="image" src="https://github.com/user-attachments/assets/fe9677e4-57ba-42bb-992f-a1d9a56eeffc" />
+<img width="236" height="531" alt="image" src="https://github.com/user-attachments/assets/7e1c1f21-bd8e-463c-af87-12d7a88a0e82" />
+<img width="217" height="489" alt="image" src="https://github.com/user-attachments/assets/13d6263e-389d-4155-bc7b-9d203d16fbaf" />
+
+
 ## Prerequisites
 
 Before setting up the project, ensure you have the following installed:
@@ -90,3 +102,9 @@ Before setting up the project, ensure you have the following installed:
 ├── ios/                  # iOS-specific files
 ├── android/              # Android-specific files
 ```
+
+## Technologies used:
+<img width="173" height="188" alt="image" src="https://github.com/user-attachments/assets/a159971a-8c6d-4ba8-aca9-75b3a59ebd56" />
+<img width="200" height="130" alt="image" src="https://github.com/user-attachments/assets/95d89151-e9e3-40dd-a91c-65f6f2f740ab" />
+<img width="549" height="105" alt="image" src="https://github.com/user-attachments/assets/d8a13535-837d-4bff-b229-7969fffdd5d1" />
+
